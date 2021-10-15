@@ -4,42 +4,56 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.bai1training.R;
+import com.example.bai1training.base.OnClickListener;
+import com.example.bai1training.base.SearchActionBarView;
 import com.example.bai1training.databinding.ActivityMainBinding;
+import com.example.bai1training.detailFilm.DetailFilmActivity;
+import com.example.bai1training.film.models.ResultRespone;
+import com.example.bai1training.film.models.Results;
 import com.example.bai1training.film.viewmodels.FilmViewModels;
 import com.example.bai1training.searchFilm.SearchFilmActivity;
+import com.example.bai1training.searchFilm.SearchFilmViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity {
-    FilmViewModels filmViewModels;
+public class MainActivity extends AppCompatActivity  {
+
     ActivityMainBinding binding;
     BottomNavigationView bottomNavigationView;
     ViewPager2 viewPager;
     ViewPagerAdapter adapter;
-    public static final String API_KEY ="42ccbde96fdbec040787f337977a26da";
-    public static final String HEADER_URL_IMAGE ="https://image.tmdb.org/t/p/w500";
-    private RelativeLayout relativeLayout;
+    public static final String API_KEY = "42ccbde96fdbec040787f337977a26da";
+    public static final String HEADER_URL_IMAGE = "https://image.tmdb.org/t/p/w500";
+    SearchActionBarView searchActionBarView;
+    public static String keySearch = "";
+    SearchFilmViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        mViewModel= ViewModelProviders.of(this).get(SearchFilmViewModel.class);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         initView();
+        initCallBackForSearchBar();
         setUpViewpager();
-        goToSearch();
+        searchActionBarView.requestFocus();
     }
 
     private void initView() {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         viewPager = findViewById(R.id.viewPager);
-        relativeLayout=findViewById(R.id.rl_shop_detail_bar);
+        searchActionBarView = findViewById(R.id.sb_search_all);
     }
 
     private void setUpViewpager() {
@@ -86,14 +100,35 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setOffscreenPageLimit(4);
     }
 
-    private void goToSearch(){
-        relativeLayout.setOnClickListener(new View.OnClickListener() {
+    private void initCallBackForSearchBar() {
+        searchActionBarView.setSearchViewCallBack(new SearchActionBarView.SearchViewCallback() {
             @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this, SearchFilmActivity.class);
-                startActivity(intent);
+            public void onTextChange(String s) {
+                if ("".equals(s)) {
+//                    mViewModel.getObsStateSearch().postValue(StateSearch.FOCUS_SEARCH);
+//                } else {
+//                    mViewModel.getObsStateSearch().postValue(StateSearch.SEARCHING);
+//                }}
+                }
+            }
+
+            @Override
+            public void onSubmitSearch(String s) {
+                if ("".equals(s.trim())) {
+                    Toast.makeText(getApplicationContext(), "Bạn phải nhập từ khóa tìm kiếm", Toast.LENGTH_LONG).show();
+                } else {
+                    keySearch = s.toLowerCase();
+                    keySearch = keySearch.trim();
+                    goToSearch(keySearch);
+                }
+
             }
         });
+    }
 
+    private void goToSearch(String key){
+        Intent intent =new Intent(this,SearchFilmActivity.class);
+        intent.putExtra(SearchFilmActivity.KEY,key);
+        startActivity(intent);
     }
 }

@@ -38,6 +38,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
     public static final String FROM_UP_COMING = "FROM_UP_COMING";
     public static final String FROM_TOP_RATE = "FROM_TOP_RATE";
     public static final String FROM_POPULAR = "FROM_POPULAR";
+    public static final String FROM_SEARCH = "FROM_SEARCH";
 
     public static final String LINK_HEADER_YOUTUBE="https://www.youtube.com/watch?v";
 
