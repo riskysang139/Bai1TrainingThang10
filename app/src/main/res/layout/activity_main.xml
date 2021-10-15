@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/img_bg"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:layout_marginTop="-20dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/vtecom_bg_header_search" />
+
+        <RelativeLayout
+            android:id="@+id/rl_shop_detail_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <ImageView
+                android:id="@+id/img_back"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:padding="19dp"
+                android:src="@drawable/vtecom_ic_back_black"
+                android:visibility="gone"
+                app:tint="@color/white" />
+
+            <RelativeLayout
+                android:id="@+id/rl_search"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginHorizontal="20dp"
+                android:layout_toStartOf="@+id/img_filter"
+                android:layout_toLeftOf="@+id/img_filter"
+                android:layout_toEndOf="@+id/img_back"
+                android:layout_toRightOf="@+id/img_back"
+                android:background="@drawable/vtecom_bg_search_box">
+
+                <ImageView
+                    android:id="@+id/img_home_search"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:padding="12dp"
+                    android:src="@drawable/vtecom_ic_search" />
+
+                <TextView
+                    android:id="@+id/tv_keyword_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/img_home_search"
+                    android:layout_toRightOf="@+id/img_home_search"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/pro_text_regular"
+                    android:maxLines="1"
+                    android:paddingEnd="10dp"
+                    android:paddingRight="10dp"
+                    android:text="Tìm kiếm"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/img_filter"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:padding="17dp"
+                android:src="@drawable/vtecom_ic_filter"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/bottom_navigation"
+            android:layout_marginTop="-24dp"
+            android:layout_below="@id/img_bg" />
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#eb0d39"
+            app:itemIconTint="@color/color_icon_bottom_navigation"
+            app:itemTextColor="@color/color_icon_bottom_navigation"
+            app:menu="@menu/menu_bottom_navigation" />
+    </RelativeLayout>
+
+</layout>
