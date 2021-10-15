@@ -43,5 +43,9 @@ public interface FilmApi {
     Observable<Results> getRecommendVideoTrailer(@Path("movie_id") String id,
                                                  @Query("api_key") String apiKey);
 
+    @GET("search/movie")
+    Observable<ResultRespone> getSearchMovies(@Query("api_key") String apiKey,
+                                        @Query("query") String query);
+
 }
 

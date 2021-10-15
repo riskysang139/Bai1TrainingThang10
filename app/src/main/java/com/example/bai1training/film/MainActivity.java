@@ -1,7 +1,10 @@
 package com.example.bai1training.film;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -10,6 +13,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.bai1training.R;
 import com.example.bai1training.databinding.ActivityMainBinding;
 import com.example.bai1training.film.viewmodels.FilmViewModels;
+import com.example.bai1training.searchFilm.SearchFilmActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     ViewPagerAdapter adapter;
     public static final String API_KEY ="42ccbde96fdbec040787f337977a26da";
     public static final String HEADER_URL_IMAGE ="https://image.tmdb.org/t/p/w500";
+    private RelativeLayout relativeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +33,13 @@ public class MainActivity extends AppCompatActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         initView();
         setUpViewpager();
+        goToSearch();
     }
 
     private void initView() {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         viewPager = findViewById(R.id.viewPager);
+        relativeLayout=findViewById(R.id.rl_shop_detail_bar);
     }
 
     private void setUpViewpager() {
@@ -77,5 +84,16 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
         viewPager.setOffscreenPageLimit(4);
+    }
+
+    private void goToSearch(){
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this, SearchFilmActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 }
