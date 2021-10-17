@@ -87,7 +87,7 @@ public class TopRateFragment extends Fragment implements OnClickListener {
     private void intRecycler() {
         topRateAdapter = new FilmAdapter(topRateMoviesList, requireActivity(), this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2, RecyclerView.VERTICAL, false);
-        rcvTopRate.addItemDecoration(new GridItemDecoration(46, 2));
+        rcvTopRate.addItemDecoration(new GridItemDecoration(60, 2));
         rcvTopRate.setLayoutManager(gridLayoutManager);
         rcvTopRate.setItemAnimator(new DefaultItemAnimator());
         rcvTopRate.setAdapter(topRateAdapter);

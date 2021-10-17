@@ -12,6 +12,7 @@ import com.example.bai1training.base.FilmApi;
 import com.example.bai1training.base.RetroClass;
 import com.example.bai1training.detailFilm.models.DetailFilm;
 import com.example.bai1training.detailFilm.models.VideoResponse;
+import com.example.bai1training.film.models.ResultRespone;
 import com.example.bai1training.film.models.Results;
 
 import java.util.ArrayList;
@@ -32,8 +33,9 @@ public class DetailFilmRepo {
 
     private MutableLiveData<DetailFilm> detailFilmMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<VideoResponse> videoTrailerMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<ResultRespone> similarFilmMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<ResultRespone> recommendMutableLiveData = new MutableLiveData<>();
 
-    private DetailFilm detailFilms;
 
     public DetailFilmRepo(Application application) {
     }
@@ -44,6 +46,14 @@ public class DetailFilmRepo {
 
     public MutableLiveData<VideoResponse> getVideoTrailerMutableLiveData() {
         return videoTrailerMutableLiveData;
+    }
+
+    public MutableLiveData<ResultRespone> getSimilarFilmMutableLiveData() {
+        return similarFilmMutableLiveData;
+    }
+
+    public MutableLiveData<ResultRespone> getRecommendMutableLiveData() {
+        return recommendMutableLiveData;
     }
 
     public void fetchDetailFilm(String id, String apiKey) {
@@ -95,16 +105,54 @@ public class DetailFilmRepo {
             }
         });
     }
-    @SuppressLint("CheckResult")
-    public void fetchAllData(String id, String apiKey) {
-//        FilmApi videoFilm = RetroClass.getFilmApi();
-//        Observable<DetailFilm> detailFilmObservable=videoFilm.getDetailMovies(id,apiKey);
-//        Observable<VideoResponse> videoTrailerResponseObservable=videoFilm.getDetailVideoTrailer(id,apiKey);
-//        Observable<Results> similarFilmObservable=videoFilm.getSimilarVideoTrailer(id,apiKey);
-//        Observable<Results> recommendFilmObservable=videoFilm.getRecommendVideoTrailer(id,apiKey);
-//
-//        com.example.bai1training.detailFilm.repo.Disposable disposable = videoFilm.getDetailMovies(id,apiKey)
-//                .subscribeOn(Schedulers.io())
-//                .
+
+    public void fetchSimilarFilm(String id, String apiKey) {
+        FilmApi videoFilm = RetroClass.getFilmApi();
+        Observable<ResultRespone> resultsObservable = videoFilm.getSimilarVideoTrailer(id, apiKey).subscribeOn(Schedulers.io());
+        resultsObservable.subscribe(new Observer<ResultRespone>() {
+            @Override
+            public void onSubscribe(@NonNull io.reactivex.disposables.Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull ResultRespone resultRespone) {
+                similarFilmMutableLiveData.postValue(resultRespone);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                Log.e("Sang", e.toString());
+            }
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+
+    public void fetchRecommendFilm(String id, String apiKey) {
+        FilmApi videoFilm = RetroClass.getFilmApi();
+        Observable<ResultRespone> resultsObservable = videoFilm.getRecommendVideoTrailer(id, apiKey).subscribeOn(Schedulers.io());
+        resultsObservable.subscribe(new Observer<ResultRespone>() {
+            @Override
+            public void onSubscribe(@NonNull io.reactivex.disposables.Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull ResultRespone resultRespone) {
+                recommendMutableLiveData.postValue(resultRespone);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                Log.e("Sang", e.toString());
+            }
+            @Override
+            public void onComplete() {
+
+            }
+        });
     }
 }

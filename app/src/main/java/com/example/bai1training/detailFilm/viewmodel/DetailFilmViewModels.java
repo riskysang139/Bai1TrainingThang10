@@ -1,4 +1,4 @@
-package com.example.bai1training.detailFilm;
+package com.example.bai1training.detailFilm.viewmodel;
 
 import android.app.Application;
 
@@ -9,10 +9,13 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.bai1training.detailFilm.models.DetailFilm;
 import com.example.bai1training.detailFilm.models.VideoResponse;
 import com.example.bai1training.detailFilm.repo.DetailFilmRepo;
+import com.example.bai1training.film.models.ResultRespone;
 
 public class DetailFilmViewModels extends AndroidViewModel {
     private MutableLiveData<DetailFilm> detailFilmLiveData;
     private MutableLiveData<VideoResponse> videoFilmLiveData;
+    private MutableLiveData<ResultRespone> similarFilmLiveData;
+    private MutableLiveData<ResultRespone> recommendFilmLiveData;
     private DetailFilmRepo detailFilmRepo;
 
     public DetailFilmViewModels(@NonNull Application application) {
@@ -27,9 +30,21 @@ public class DetailFilmViewModels extends AndroidViewModel {
     }
 
     public MutableLiveData<VideoResponse> getVideoFilmLiveData() {
-        if (detailFilmLiveData == null)
+        if (videoFilmLiveData == null)
             return videoFilmLiveData = detailFilmRepo.getVideoTrailerMutableLiveData();
         return videoFilmLiveData;
+    }
+
+    public MutableLiveData<ResultRespone> getSimilarFilmLiveData() {
+        if (similarFilmLiveData == null)
+            return similarFilmLiveData = detailFilmRepo.getSimilarFilmMutableLiveData();
+        return similarFilmLiveData;
+    }
+
+    public MutableLiveData<ResultRespone> getRecommendFilmLiveData() {
+        if (recommendFilmLiveData == null)
+            return recommendFilmLiveData = detailFilmRepo.getRecommendMutableLiveData();
+        return recommendFilmLiveData;
     }
 
     public void fetchDetailFilm(String id , String apiKey) {
@@ -38,5 +53,11 @@ public class DetailFilmViewModels extends AndroidViewModel {
 
     public void fetchVideoTrailerFilm(String id , String apiKey) {
         detailFilmRepo.fetchVideoFilm(id,apiKey);
+    }
+    public void fetchSimilarFilm(String id , String apiKey) {
+        detailFilmRepo.fetchSimilarFilm(id,apiKey);
+    }
+    public void fetchRecommendFilm(String id , String apiKey) {
+        detailFilmRepo.fetchRecommendFilm(id,apiKey);
     }
 }

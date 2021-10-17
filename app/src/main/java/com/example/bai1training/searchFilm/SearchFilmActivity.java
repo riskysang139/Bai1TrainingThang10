@@ -3,6 +3,8 @@ package com.example.bai1training.searchFilm;
 import android.content.Intent;
 import android.graphics.text.LineBreaker;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -38,6 +40,7 @@ public class SearchFilmActivity extends AppCompatActivity implements OnClickList
     RecyclerView rcvSearchFilm;
     SearchFilmViewModel mViewModel;
     RelativeLayout rlSearch;
+    ImageView imgBack;
     public static final String KEY="KEY";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,11 +50,13 @@ public class SearchFilmActivity extends AppCompatActivity implements OnClickList
         initView();
         getData();
         obServerData();
+        onComeBack();
     }
     private void initView() {
         resultSearchResultsList=new ArrayList<>();
         rcvSearchFilm= findViewById(R.id.rcv_search_film);
         rlSearch=findViewById(R.id.rl_search_header);
+        imgBack=findViewById(R.id.img_back);
     }
 
     private void obServerData(){
@@ -89,5 +94,14 @@ public class SearchFilmActivity extends AppCompatActivity implements OnClickList
             String key = intent.getStringExtra(KEY);
             mViewModel.fetchSearchResponse(MainActivity.API_KEY,key);
         }
+    }
+
+    private void onComeBack() {
+        imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }

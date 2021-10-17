@@ -80,8 +80,8 @@ public class NowPlayingFragment extends Fragment implements OnClickListener {
     }
     private void intRecycler() {
         filmAdapter = new FilmAdapter(nowPlayingMoviesList,requireActivity(),this);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3, RecyclerView.VERTICAL, false);
-        rcvNowplaying.addItemDecoration(new GridItemDecoration(12, 3));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2, RecyclerView.VERTICAL, false);
+        rcvNowplaying.addItemDecoration(new GridItemDecoration(60, 2));
         rcvNowplaying.setLayoutManager(gridLayoutManager);
         rcvNowplaying.setItemAnimator(new DefaultItemAnimator());
         rcvNowplaying.setAdapter(filmAdapter);
@@ -92,7 +92,7 @@ public class NowPlayingFragment extends Fragment implements OnClickListener {
         Intent intent = new Intent(getActivity(), DetailFilmActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(DetailFilmActivity.ID,resultFilm.getId()+"");
-        bundle.putString(DetailFilmActivity.KEY_FROM,DetailFilmActivity.FROM_NOW_PLAYING);
+        bundle.putString(DetailFilmActivity.KEY_FROM,DetailFilmActivity.FROM_DETAIL);
         intent.putExtras(bundle);
         getActivity().startActivity(intent);
     }

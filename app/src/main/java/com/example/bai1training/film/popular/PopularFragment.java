@@ -90,7 +90,7 @@ public class PopularFragment extends Fragment implements OnClickListener {
     private void intRecycler() {
         popularAdapter = new FilmAdapter(popularMoviesList, getActivity(), this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2, RecyclerView.VERTICAL, false);
-        rcvPopular.addItemDecoration(new GridItemDecoration(46, 2));
+        rcvPopular.addItemDecoration(new GridItemDecoration(60, 2));
         rcvPopular.setLayoutManager(gridLayoutManager);
         rcvPopular.setItemAnimator(new DefaultItemAnimator());
         rcvPopular.setAdapter(popularAdapter);

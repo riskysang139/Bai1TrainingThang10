@@ -90,7 +90,7 @@ public class UpComingFragment extends Fragment implements OnClickListener {
     private void intRecycler() {
         upcomingAdapter = new FilmAdapter(upComingMoviesList, requireActivity(), this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2, RecyclerView.VERTICAL, false);
-        rcvUpcoming.addItemDecoration(new GridItemDecoration(46, 2));
+        rcvUpcoming.addItemDecoration(new GridItemDecoration(60, 2));
         rcvUpcoming.setLayoutManager(gridLayoutManager);
         rcvUpcoming.setItemAnimator(new DefaultItemAnimator());
         rcvUpcoming.setAdapter(upcomingAdapter);

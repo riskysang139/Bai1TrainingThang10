@@ -36,11 +36,11 @@ public interface FilmApi {
                                                     @Query("api_key") String apiKey);
 
     @GET("movie/{movie_id}/similar")
-    Observable<Results> getSimilarVideoTrailer(@Path("movie_id") String id,
+    Observable<ResultRespone> getSimilarVideoTrailer(@Path("movie_id") String id,
                                                     @Query("api_key") String apiKey);
 
     @GET("movie/{movie_id}/recommendations")
-    Observable<Results> getRecommendVideoTrailer(@Path("movie_id") String id,
+    Observable<ResultRespone> getRecommendVideoTrailer(@Path("movie_id") String id,
                                                  @Query("api_key") String apiKey);
 
     @GET("search/movie")

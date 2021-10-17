@@ -1,6 +1,7 @@
 package com.example.bai1training.detailFilm.adaptert;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -45,14 +46,7 @@ public class VideoTrailerAdapter extends RecyclerView.Adapter<VideoTrailerAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Video video = videoList.get(position);
-
-        MediaController mediaController = new MediaController(context);
-        String video_url=DetailFilmActivity.LINK_HEADER_YOUTUBE+video.getKey();
-        Uri uri = Uri.parse(video_url);
-        holder.videoView.setVideoURI(uri);
-        mediaController.setAnchorView(holder.videoView);
-        holder.videoView.setMediaController(mediaController);
-
+//        holder.videoView.setImageResource(video.get);
 
     }
 
@@ -62,7 +56,7 @@ public class VideoTrailerAdapter extends RecyclerView.Adapter<VideoTrailerAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        VideoView videoView;
+        ImageView videoView;
         ImageView btnStart;
 
         public ViewHolder(@NonNull View itemView) {
@@ -75,17 +69,6 @@ public class VideoTrailerAdapter extends RecyclerView.Adapter<VideoTrailerAdapte
                     onClickVideoListener.OnClickStart(getAdapterPosition());
                 }
             });
-            videoView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onClickVideoListener.OnClickVideo(videoList.get(getAdapterPosition()), getAdapterPosition());
-                }
-            });
         }
-    }
-
-    private void setUpVideo(String video_url) {
-
-
     }
 }
