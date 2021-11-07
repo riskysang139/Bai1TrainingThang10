@@ -45,15 +45,13 @@ public class MainActivity extends AppCompatActivity  {
         mViewModel= ViewModelProviders.of(this).get(SearchFilmViewModel.class);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         initView();
-        initCallBackForSearchBar();
         setUpViewpager();
-        searchActionBarView.requestFocus();
     }
 
     private void initView() {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         viewPager = findViewById(R.id.viewPager);
-        searchActionBarView = findViewById(R.id.sb_search_all);
+//        searchActionBarView = findViewById(R.id.sb_search_all);
     }
 
     private void setUpViewpager() {

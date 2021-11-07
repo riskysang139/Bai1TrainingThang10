@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.bai1training.film.models.MovieAdver;
 import com.example.bai1training.film.models.ResultRespone;
 import com.example.bai1training.film.repo.FilmRepository;
 
@@ -14,6 +15,7 @@ public class FilmViewModels extends AndroidViewModel {
     private MutableLiveData<ResultRespone> mPopularMutableLiveData;
     private MutableLiveData<ResultRespone> mTopRateMutableLiveData;
     private MutableLiveData<ResultRespone> mUpcomingMutableLiveData;
+    private MutableLiveData<MovieAdver> movieAdverMutableLiveData;
 
     private FilmRepository filmRepository;
 
@@ -46,7 +48,13 @@ public class FilmViewModels extends AndroidViewModel {
         return mUpcomingMutableLiveData;
     }
 
-    public void fetchPopularMovies(String apiKey ,int page) {
+    public MutableLiveData<MovieAdver> getMovieAdverMutableLiveData() {
+        if(mNowPlayingMutableLiveData==null)
+            return movieAdverMutableLiveData;
+        return movieAdverMutableLiveData;
+    }
+
+    public void fetchPopularMovies(String apiKey , int page) {
         filmRepository.fetchPopularMovies(apiKey,page);
     }
 
@@ -59,4 +67,6 @@ public class FilmViewModels extends AndroidViewModel {
     }
 
     public void fetchUpcomingMovies(String apiKey ,int page) { filmRepository.fetchUpcomingMovies(apiKey,page); }
+
+    public void fetchMovieAdver(String apiKey ,int page) { filmRepository.fetchMovieAdver(); }
 }

@@ -18,8 +18,20 @@ public class RetroClass {
 
     }
 
+    private static Retrofit getInstanceAdver() {
+        return new Retrofit.Builder().baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build();
+
+    }
+
     public static FilmApi getFilmApi(){
         return getInstance().create(FilmApi.class);
+    }
+
+    public static FilmApi getAdver(){
+        return getInstanceAdver().create(FilmApi.class);
     }
 
 }

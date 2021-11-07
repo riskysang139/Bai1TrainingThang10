@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/maincolor">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/maincolor">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/maincolor">
+
+                <TextView
+                    android:id="@+id/txt_trang_chu"
+                    android:layout_width="@dimen/_250sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@color/maincolor"
+                    android:fontFamily="@font/roboto_regular"
+                    android:gravity="center|left"
+                    android:paddingStart="@dimen/_15sdp"
+                    android:paddingLeft="@dimen/_15sdp"
+                    android:text="Home"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/_22sdp"
+                    android:textStyle="bold"
+                    tools:ignore="RtlSymmetry,SpUsage" />
+
+                <ImageButton
+                    android:id="@+id/btn_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_alignParentRight="true"
+                    android:paddingRight="@dimen/_5sdp"
+                    android:background="@color/maincolor"
+                    android:src="@drawable/ic_baseline_search_24" />
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewAdver"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_210sdp"
+                    android:layout_below="@id/btn_search"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@color/maincolor"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:paddingLeft="@dimen/_15sdp"
+                    android:paddingRight="@dimen/_15sdp"/>
+
+                <Button
+                    android:id="@+id/btn_more_popular"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_below="@id/viewAdver"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:background="@color/maincolor"
+                    android:backgroundTint="@color/maincolor"
+                    android:drawableRight="@drawable/ic_baseline_more_horiz_24"
+                    android:fontFamily="@font/roboto_regular"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/_15sdp"
+                    android:paddingRight="@dimen/_5sdp"
+                    android:text="Poplular Movies"
+                    android:textAllCaps="false"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/_12sdp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcv_popular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/btn_more_popular"
+                    android:layout_marginTop="@dimen/_7sdp" />
+
+                <Button
+                    android:id="@+id/btn_top_rated"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_below="@id/rcv_popular"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:background="@color/maincolor"
+                    android:drawableRight="@drawable/ic_baseline_more_horiz_24"
+                    android:fontFamily="@font/roboto_regular"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/_15sdp"
+                    android:paddingRight="@dimen/_5sdp"
+                    android:text="Top Rated Movies"
+                    android:textAllCaps="false"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/_12sdp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcv_top_rate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/btn_top_rated"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:background="@color/maincolor" />
+
+                <Button
+                    android:id="@+id/btn_up_coming"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_below="@id/rcv_top_rate"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:background="@color/maincolor"
+                    android:backgroundTint="@color/maincolor"
+                    android:drawableRight="@drawable/ic_baseline_more_horiz_24"
+                    android:fontFamily="@font/roboto_regular"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/_15sdp"
+                    android:paddingRight="@dimen/_5sdp"
+                    android:text="Up coming"
+                    android:textAllCaps="false"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/_12sdp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcv_up_coming"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/btn_up_coming"
+                    android:layout_marginTop="@dimen/_5sdp" />
+
+                <Button
+                    android:id="@+id/btn_now_playing"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_below="@id/rcv_up_coming"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:background="@color/maincolor"
+                    android:backgroundTint="@color/maincolor"
+                    android:drawableRight="@drawable/ic_baseline_more_horiz_24"
+                    android:fontFamily="@font/roboto_regular"
+                    android:gravity="center|left"
+                    android:paddingRight="@dimen/_5sdp"
+                    android:text="Up Coming Movies"
+                    android:textAllCaps="false"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/_12sdp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcv_now_playing"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/btn_now_playing"
+                    android:layout_marginTop="@dimen/_5sdp" />
+            </RelativeLayout>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</layout>

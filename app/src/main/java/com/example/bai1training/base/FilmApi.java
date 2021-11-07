@@ -3,10 +3,12 @@ package com.example.bai1training.base;
 
 import com.example.bai1training.detailFilm.models.DetailFilm;
 import com.example.bai1training.detailFilm.models.VideoResponse;
+import com.example.bai1training.film.models.MovieAdver;
 import com.example.bai1training.film.models.ResultRespone;
 import com.example.bai1training.film.models.Results;
 
 import java.sql.ResultSet;
+import java.util.List;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
@@ -46,6 +48,11 @@ public interface FilmApi {
     @GET("search/movie")
     Observable<ResultRespone> getSearchMovies(@Query("api_key") String apiKey,
                                         @Query("query") String query);
+
+    @GET("Advertisement")
+    Observable<List<MovieAdver>> getAdver();
+
+
 
 }
 
