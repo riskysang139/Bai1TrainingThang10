@@ -6,7 +6,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetroClass {
-    private static final String BASE_URL ="http://demo9487644.mockable.io";
+    private static final String BASE_URL ="http://demo1329882.mockable.io/";
 
     private static final String BASE_URL_MOVIE_DB ="https://api.themoviedb.org/3/";
 

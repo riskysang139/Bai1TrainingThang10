@@ -1,27 +1,17 @@
-package com.example.bai1training.detailFilm.adaptert;
+package com.example.bai1training.detailFilm.adapter;
 
 import android.content.Context;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.MediaController;
-import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bai1training.R;
-import com.example.bai1training.base.OnClickListener;
 import com.example.bai1training.base.OnClickVideoListener;
-import com.example.bai1training.detailFilm.DetailFilmActivity;
-import com.example.bai1training.detailFilm.MediaControllerView;
 import com.example.bai1training.detailFilm.models.Video;
-import com.example.bai1training.detailFilm.models.VideoResponse;
 
 import java.util.List;
 

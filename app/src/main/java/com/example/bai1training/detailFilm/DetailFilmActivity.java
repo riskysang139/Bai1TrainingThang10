@@ -11,20 +11,25 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.example.bai1training.R;
 import com.example.bai1training.base.HorizontalItemDecoration;
+import com.example.bai1training.base.LoadingDialog;
 import com.example.bai1training.base.OnClickListener;
 import com.example.bai1training.base.OnClickVideoListener;
 import com.example.bai1training.databinding.ActivityDetailFilmBinding;
-import com.example.bai1training.detailFilm.adaptert.VideoTrailerAdapter;
+import com.example.bai1training.detailFilm.adapter.VideoTrailerAdapter;
 import com.example.bai1training.detailFilm.models.DetailFilm;
 import com.example.bai1training.detailFilm.models.Video;
 import com.example.bai1training.detailFilm.models.VideoResponse;
@@ -34,7 +39,11 @@ import com.example.bai1training.film.adapter.FilmAdapter;
 import com.example.bai1training.film.models.ResultRespone;
 import com.example.bai1training.film.models.Results;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DetailFilmActivity extends AppCompatActivity implements OnClickVideoListener, OnClickListener {
@@ -55,8 +64,12 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
 
     private static String id = "";
 
-    private ImageView btnPlay, btnBack;
-    private TextView txtTitle, txtDetail;
+    private static final DecimalFormat df = new DecimalFormat("0.0");
+
+    private ImageView btnPlay;
+    private RelativeLayout btnBack;
+    private TextView txtTitle, txtDetail, txtAdult, txtGenres, txtTimeFilm, txtRelease;
+    private RatingBar txtRated;
     private ImageView imgFilm;
     private DetailFilmViewModels detailFilmViewModels;
     private DetailFilm detailFilms;
@@ -65,6 +78,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
     private RecyclerView rcvTrailer, rcvSimilarFilm, rcvRecommendFilm;
     private List<Results> listSimilarFilm, listRecommendFilm;
     private FilmAdapter filmAdapter;
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +92,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         observerRecommendFilm();
         observeSimilarFilm();
         onComeback();
+        delayLoading();
     }
 
     private void initView() {
@@ -86,10 +101,16 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         btnBack = findViewById(R.id.btn_back);
         txtDetail = findViewById(R.id.detail_film);
         txtTitle = findViewById(R.id.title_film);
+        txtAdult = findViewById(R.id.tv_adult);
+        txtGenres = findViewById(R.id.tv_genres);
+        txtRated = findViewById(R.id.tv_rated);
+        txtTimeFilm = findViewById(R.id.time_film);
+        txtRelease = findViewById(R.id.year_release);
         imgFilm = findViewById(R.id.video_view_click);
         rcvTrailer = findViewById(R.id.rcv_trailer_films);
         rcvRecommendFilm = findViewById(R.id.rcv_reconmmend);
         rcvSimilarFilm = findViewById(R.id.rcv_similar_films);
+        loadingDialog = findViewById(R.id.progress_loading);
         videoList = new ArrayList<>();
         listRecommendFilm = new ArrayList<>();
         listSimilarFilm = new ArrayList<>();
@@ -187,7 +208,15 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
     private void setUpViewDetail() {
         txtTitle.setText(detailFilms.getTitle());
         txtDetail.setText(detailFilms.getOverview());
-        Glide.with(this).load(MainActivity.HEADER_URL_IMAGE + detailFilms.getBackdropPath()).centerCrop().into(imgFilm);
+        Glide.with(this).load(MainActivity.HEADER_URL_IMAGE + detailFilms.getPosterPath()).into(imgFilm);
+        txtRated.setRating(Float.parseFloat(detailFilms.getVoteAverage() / 2 + ""));
+        txtGenres.setText("•    " + detailFilms.getGenres().get(0).getName() + ", " + detailFilms.getGenres().get(1).getName() + "    •");
+        txtTimeFilm.setText(detailFilms.getRuntime() + " mins");
+        if (detailFilms.getAdult())
+            txtAdult.setVisibility(View.VISIBLE);
+        else
+            txtAdult.setVisibility(View.GONE);
+        txtRelease.setText(convertDate(detailFilms.getReleaseDate()));
     }
 
     private void setUpVideoAdapter() {
@@ -202,9 +231,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         filmAdapter = new FilmAdapter(listRecommendFilm, this, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        rcvRecommendFilm.addItemDecoration(new HorizontalItemDecoration(40));
         rcvRecommendFilm.setLayoutManager(layoutManager);
-        rcvRecommendFilm.setItemAnimator(new DefaultItemAnimator());
         rcvRecommendFilm.setAdapter(filmAdapter);
     }
 
@@ -212,9 +239,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         filmAdapter = new FilmAdapter(listSimilarFilm, this, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        rcvSimilarFilm.addItemDecoration(new HorizontalItemDecoration(40));
         rcvSimilarFilm.setLayoutManager(layoutManager);
-        rcvSimilarFilm.setItemAnimator(new DefaultItemAnimator());
         rcvSimilarFilm.setAdapter(filmAdapter);
     }
 
@@ -232,9 +257,24 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
     public void onClickNowDetailFilm(Results resultFilm, int position) {
         Intent intent = new Intent(this, DetailFilmActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString(DetailFilmActivity.ID,resultFilm.getId()+"");
-        bundle.putString(DetailFilmActivity.KEY_FROM,DetailFilmActivity.FROM_DETAIL);
+        bundle.putString(DetailFilmActivity.ID, resultFilm.getId() + "");
+        bundle.putString(DetailFilmActivity.KEY_FROM, DetailFilmActivity.FROM_DETAIL);
         intent.putExtras(bundle);
         this.startActivity(intent);
+    }
+
+    private String convertDate(String date) {
+        String year = date.substring(0, 4);
+        return year;
+    }
+    private void delayLoading() {
+        Handler handler =new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadingDialog.setVisibility(View.GONE);
+            }
+        },3000);
+        loadingDialog.setVisibility(View.GONE);
     }
 }

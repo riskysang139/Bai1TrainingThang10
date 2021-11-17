@@ -1,7 +1,8 @@
-package com.example.bai1training.film.viewmodels;
+package com.example.bai1training.allfilm;
 
 import android.app.Application;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
@@ -11,7 +12,7 @@ import com.example.bai1training.film.repo.FilmRepository;
 
 import java.util.List;
 
-public class FilmViewModels extends AndroidViewModel {
+public class AllFilmViewModels extends AndroidViewModel {
     private MutableLiveData<ResultRespone> mNowPlayingMutableLiveData;
 
     private MutableLiveData<ResultRespone> mPopularMutableLiveData;
@@ -19,11 +20,11 @@ public class FilmViewModels extends AndroidViewModel {
     private MutableLiveData<ResultRespone> mUpcomingMutableLiveData;
     private MutableLiveData<List<MovieAdver>> movieAdverMutableLiveData;
 
-    private FilmRepository filmRepository;
+    private AllFilmRepo filmRepository;
 
-    public FilmViewModels(Application application) {
+    public AllFilmViewModels(Application application) {
         super(application);
-        filmRepository = new FilmRepository(application);
+        filmRepository = new AllFilmRepo(application);
     }
 
     public MutableLiveData<ResultRespone> getmNowPlayingMutableLiveData() {
@@ -50,12 +51,6 @@ public class FilmViewModels extends AndroidViewModel {
         return mUpcomingMutableLiveData;
     }
 
-    public MutableLiveData<List<MovieAdver>> getMovieAdverMutableLiveData() {
-        if(movieAdverMutableLiveData==null)
-            return movieAdverMutableLiveData = filmRepository.getmMovieAdverLiveData();
-        return movieAdverMutableLiveData;
-    }
-
     public void fetchPopularMovies(String apiKey , int page) {
         filmRepository.fetchPopularMovies(apiKey,page);
     }
@@ -70,5 +65,4 @@ public class FilmViewModels extends AndroidViewModel {
 
     public void fetchUpcomingMovies(String apiKey ,int page) { filmRepository.fetchUpcomingMovies(apiKey,page); }
 
-    public void fetchMovieAdver() { filmRepository.fetchMovieAdver(); }
 }

@@ -3,30 +3,21 @@ package com.example.bai1training.film;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.bai1training.R;
-import com.example.bai1training.base.OnClickListener;
 import com.example.bai1training.base.SearchActionBarView;
 import com.example.bai1training.databinding.ActivityMainBinding;
-import com.example.bai1training.detailFilm.DetailFilmActivity;
-import com.example.bai1training.film.models.ResultRespone;
-import com.example.bai1training.film.models.Results;
-import com.example.bai1training.film.viewmodels.FilmViewModels;
 import com.example.bai1training.searchFilm.SearchFilmActivity;
 import com.example.bai1training.searchFilm.SearchFilmViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
     BottomNavigationView bottomNavigationView;
@@ -42,7 +33,7 @@ public class MainActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        mViewModel= ViewModelProviders.of(this).get(SearchFilmViewModel.class);
+        mViewModel = ViewModelProviders.of(this).get(SearchFilmViewModel.class);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         initView();
         setUpViewpager();
@@ -64,7 +55,7 @@ public class MainActivity extends AppCompatActivity  {
                 super.onPageSelected(position);
                 switch (position) {
                     case 0:
-                        bottomNavigationView.getMenu().findItem(R.id.navigation_popular).setChecked(true);
+                        bottomNavigationView.getMenu().findItem(R.id.navigation_home).setChecked(true);
                         break;
                     case 1:
                         bottomNavigationView.getMenu().findItem(R.id.navigation_upcoming).setChecked(true);
@@ -80,7 +71,7 @@ public class MainActivity extends AppCompatActivity  {
         });
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
-                case R.id.navigation_popular:
+                case R.id.navigation_home:
                     viewPager.setCurrentItem(0);
                     break;
                 case R.id.navigation_upcoming:
@@ -124,9 +115,9 @@ public class MainActivity extends AppCompatActivity  {
         });
     }
 
-    private void goToSearch(String key){
-        Intent intent =new Intent(this,SearchFilmActivity.class);
-        intent.putExtra(SearchFilmActivity.KEY,key);
+    private void goToSearch(String key) {
+        Intent intent = new Intent(this, SearchFilmActivity.class);
+        intent.putExtra(SearchFilmActivity.KEY, key);
         startActivity(intent);
     }
 }

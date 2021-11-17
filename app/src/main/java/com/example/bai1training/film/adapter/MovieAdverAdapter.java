@@ -8,13 +8,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.appxemphim.R;
+import com.example.bai1training.R;
+import com.example.bai1training.film.models.MovieAdver;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class MovieAdverAdapter extends RecyclerView.Adapter<com.example.appxemphim.TrangChu.Advertist.MovieAdverAdapter.ViewHoder> {
+public class MovieAdverAdapter extends RecyclerView.Adapter<MovieAdverAdapter.ViewHoder> {
     private List<MovieAdver> movieAdverList;
     private ViewPager2 viewPager2;
     public MovieAdverAdapter(List<MovieAdver> movieAdverList, ViewPager2 viewPager2) {

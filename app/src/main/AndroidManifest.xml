@@ -25,6 +25,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".searchFilm.SearchFilmActivity"/>
+        <activity android:name=".allfilm.AllFilmActivity"/>
     </application>
 
 </manifest>
