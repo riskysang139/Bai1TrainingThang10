@@ -24,6 +24,7 @@ import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.example.bai1training.R;
+import com.example.bai1training.allfilm.AllFilmActivity;
 import com.example.bai1training.base.HorizontalItemDecoration;
 import com.example.bai1training.base.LoadingDialog;
 import com.example.bai1training.base.OnClickListener;
@@ -57,6 +58,9 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
     public static final String FROM_POPULAR = "FROM_POPULAR";
     public static final String FROM_SEARCH = "FROM_SEARCH";
     public static final String FROM_DETAIL = "FROM_DETAIL";
+    public static final String FROM_SIMILAR = "FROM_SIMILAR";
+    public static final String FROM_RECOMMEND = "FROM_RECOMMEND";
+
 
     public static final String LINK_HEADER_YOUTUBE = "https://www.youtube.com/watch?v=";
 
@@ -79,6 +83,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
     private List<Results> listSimilarFilm, listRecommendFilm;
     private FilmAdapter filmAdapter;
     private LoadingDialog loadingDialog;
+    private Button btnSimilar,btnRecommend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +98,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         observeSimilarFilm();
         onComeback();
         delayLoading();
+        actionMoreFilm();
     }
 
     private void initView() {
@@ -111,6 +117,8 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         rcvRecommendFilm = findViewById(R.id.rcv_reconmmend);
         rcvSimilarFilm = findViewById(R.id.rcv_similar_films);
         loadingDialog = findViewById(R.id.progress_loading);
+        btnRecommend=findViewById(R.id.btn_more_recommend);
+        btnSimilar=findViewById(R.id.btn_more_similar);
         videoList = new ArrayList<>();
         listRecommendFilm = new ArrayList<>();
         listSimilarFilm = new ArrayList<>();
@@ -231,6 +239,8 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         filmAdapter = new FilmAdapter(listRecommendFilm, this, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rcvRecommendFilm.addItemDecoration(new HorizontalItemDecoration(com.viettel.vtecommerce.utils.Converter.dpToPx(this, 15)));
+        rcvRecommendFilm.setItemAnimator(new DefaultItemAnimator());
         rcvRecommendFilm.setLayoutManager(layoutManager);
         rcvRecommendFilm.setAdapter(filmAdapter);
     }
@@ -239,6 +249,8 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         filmAdapter = new FilmAdapter(listSimilarFilm, this, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rcvSimilarFilm.addItemDecoration(new HorizontalItemDecoration(com.viettel.vtecommerce.utils.Converter.dpToPx(this, 15)));
+        rcvSimilarFilm.setItemAnimator(new DefaultItemAnimator());
         rcvSimilarFilm.setLayoutManager(layoutManager);
         rcvSimilarFilm.setAdapter(filmAdapter);
     }
@@ -260,7 +272,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         bundle.putString(DetailFilmActivity.ID, resultFilm.getId() + "");
         bundle.putString(DetailFilmActivity.KEY_FROM, DetailFilmActivity.FROM_DETAIL);
         intent.putExtras(bundle);
-        this.startActivity(intent);
+        startActivity(intent);
     }
 
     private String convertDate(String date) {
@@ -276,5 +288,30 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
             }
         },3000);
         loadingDialog.setVisibility(View.GONE);
+    }
+    private void actionMoreFilm(){
+        btnSimilar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DetailFilmActivity.this, AllFilmActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString(DetailFilmActivity.ID, id + "");
+                bundle.putString(DetailFilmActivity.KEY_FROM, DetailFilmActivity.FROM_SIMILAR);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+        btnRecommend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DetailFilmActivity.this, AllFilmActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString(DetailFilmActivity.ID, id + "");
+                bundle.putString(DetailFilmActivity.KEY_FROM, DetailFilmActivity.FROM_RECOMMEND);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
     }
 }

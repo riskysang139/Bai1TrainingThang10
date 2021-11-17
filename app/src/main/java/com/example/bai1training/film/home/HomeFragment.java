@@ -15,6 +15,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +26,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.bai1training.R;
 import com.example.bai1training.allfilm.AllFilmActivity;
+import com.example.bai1training.base.HorizontalItemDecoration;
 import com.example.bai1training.base.OnClickListener;
 import com.example.bai1training.base.OnClickListener2;
 import com.example.bai1training.databinding.FragmentHomeBinding;
@@ -171,6 +173,8 @@ public class HomeFragment extends Fragment implements OnClickListener, OnClickLi
         filmAdapter = new FilmAdapter(popularMoviesList, getActivity(), this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rcvPopular.addItemDecoration(new HorizontalItemDecoration(com.viettel.vtecommerce.utils.Converter.dpToPx(requireContext(), 15)));
+        rcvPopular.setItemAnimator(new DefaultItemAnimator());
         rcvPopular.setLayoutManager(layoutManager);
         rcvPopular.setAdapter(filmAdapter);
     }
@@ -195,6 +199,8 @@ public class HomeFragment extends Fragment implements OnClickListener, OnClickLi
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rcvUpComing.setLayoutManager(layoutManager);
+        rcvUpComing.addItemDecoration(new HorizontalItemDecoration(com.viettel.vtecommerce.utils.Converter.dpToPx(requireContext(), 15)));
+        rcvUpComing.setItemAnimator(new DefaultItemAnimator());
         rcvUpComing.setAdapter(filmAdapter);
     }
 

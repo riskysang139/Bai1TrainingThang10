@@ -23,6 +23,8 @@ public class AllFilmRepo {
     private MutableLiveData<ResultRespone> mPopularLiveData = new MutableLiveData<>();
     private MutableLiveData<ResultRespone> mTopRateLiveData = new MutableLiveData<>();
     private MutableLiveData<ResultRespone> mUpcomingLiveData = new MutableLiveData<>();
+    private MutableLiveData<ResultRespone> similarFilmMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<ResultRespone> recommendMutableLiveData = new MutableLiveData<>();
 
     public AllFilmRepo(Application application) {
     }
@@ -136,6 +138,56 @@ public class AllFilmRepo {
         });
     }
 
+    public void fetchSimilarFilm(String id, String apiKey) {
+        FilmApi videoFilm = RetroClass.getFilmApi();
+        Observable<ResultRespone> resultsObservable = videoFilm.getSimilarVideoTrailer(id, apiKey).subscribeOn(Schedulers.io());
+        resultsObservable.subscribe(new Observer<ResultRespone>() {
+            @Override
+            public void onSubscribe(@NonNull io.reactivex.disposables.Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull ResultRespone resultRespone) {
+                similarFilmMutableLiveData.postValue(resultRespone);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                Log.e("Sang", e.toString());
+            }
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+
+    public void fetchRecommendFilm(String id, String apiKey) {
+        FilmApi videoFilm = RetroClass.getFilmApi();
+        Observable<ResultRespone> resultsObservable = videoFilm.getRecommendVideoTrailer(id, apiKey).subscribeOn(Schedulers.io());
+        resultsObservable.subscribe(new Observer<ResultRespone>() {
+            @Override
+            public void onSubscribe(@NonNull io.reactivex.disposables.Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull ResultRespone resultRespone) {
+                recommendMutableLiveData.postValue(resultRespone);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                Log.e("Sang", e.toString());
+            }
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+
     public MutableLiveData<ResultRespone> getmNowPlayingLiveData() {
         return mNowPlayingLiveData;
     }
@@ -166,5 +218,12 @@ public class AllFilmRepo {
 
     public void setmUpcomingLiveData(MutableLiveData<ResultRespone> mUpcomingLiveData) {
         this.mUpcomingLiveData = mUpcomingLiveData;
+    }
+    public MutableLiveData<ResultRespone> getSimilarFilmMutableLiveData() {
+        return similarFilmMutableLiveData;
+    }
+
+    public MutableLiveData<ResultRespone> getRecommendMutableLiveData() {
+        return recommendMutableLiveData;
     }
 }

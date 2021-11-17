@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.bai1training.film.home.HomeFragment;
+import com.example.bai1training.user.UserFragment;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
     public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
@@ -22,8 +23,8 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
 //                return UpComingFragment.getInstance();
 //            case 2:
 //                return TopRateFragment.getInstance();
-//            case 3:
-//                return NowPlayingFragment.getInstance();
+            case 3:
+                return UserFragment.getInstance();
             default:
                 return HomeFragment.getInstance();
         }

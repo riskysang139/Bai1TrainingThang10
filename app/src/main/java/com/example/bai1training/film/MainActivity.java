@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                         bottomNavigationView.getMenu().findItem(R.id.navigation_top_rate).setChecked(true);
                         break;
                     case 3:
-                        bottomNavigationView.getMenu().findItem(R.id.navigation_now_playing).setChecked(true);
+                        bottomNavigationView.getMenu().findItem(R.id.navigation_user).setChecked(true);
                         break;
                 }
             }
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_top_rate:
                     viewPager.setCurrentItem(2);
                     break;
-                case R.id.navigation_now_playing:
+                case R.id.navigation_user:
                     viewPager.setCurrentItem(3);
                     break;
             }

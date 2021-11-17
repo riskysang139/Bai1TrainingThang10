@@ -1,7 +1,17 @@
 <resources>
-    <string name="app_name">Bai1Training</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="app_name">Movies Funny</string>
+    <string name="sign_up" translatable="false">Sign up</string>
+    <string name="login" translatable="false">Login</string>
+    <string name="title_top_trending" translatable="false">Comming soon</string>
+    <string name="title_user_fragment" translatable="false">Account</string>
+    <string name="history_deal" translatable="false">Transaction History</string>
+    <string name="no_adv" translatable="false">Ad Blocking</string>
+    <string name="free_data" translatable="false">Free Data</string>
+    <string name="feed_back" translatable="false">Feedback</string>
+    <string name="about_our">About us</string>
+    <string name="log_out" translatable="false">Log Out</string>
 </resources>

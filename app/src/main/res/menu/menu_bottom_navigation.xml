@@ -18,9 +18,9 @@
     </item>
 
     <item
-        android:id="@+id/navigation_now_playing"
-        android:icon="@drawable/ic_baseline_play_circle_filled_24"
-        android:title="Now Playing">
+        android:id="@+id/navigation_user"
+        android:icon="@drawable/ic_user"
+        android:title="Account">
 
     </item>
 

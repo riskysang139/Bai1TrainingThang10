@@ -19,6 +19,8 @@ public class AllFilmViewModels extends AndroidViewModel {
     private MutableLiveData<ResultRespone> mTopRateMutableLiveData;
     private MutableLiveData<ResultRespone> mUpcomingMutableLiveData;
     private MutableLiveData<List<MovieAdver>> movieAdverMutableLiveData;
+    private MutableLiveData<ResultRespone> similarFilmLiveData;
+    private MutableLiveData<ResultRespone> recommendFilmLiveData;
 
     private AllFilmRepo filmRepository;
 
@@ -51,6 +53,18 @@ public class AllFilmViewModels extends AndroidViewModel {
         return mUpcomingMutableLiveData;
     }
 
+    public MutableLiveData<ResultRespone> getSimilarFilmLiveData() {
+        if (similarFilmLiveData == null)
+            return similarFilmLiveData = filmRepository.getSimilarFilmMutableLiveData();
+        return similarFilmLiveData;
+    }
+
+    public MutableLiveData<ResultRespone> getRecommendFilmLiveData() {
+        if (recommendFilmLiveData == null)
+            return recommendFilmLiveData = filmRepository.getRecommendMutableLiveData();
+        return recommendFilmLiveData;
+    }
+
     public void fetchPopularMovies(String apiKey , int page) {
         filmRepository.fetchPopularMovies(apiKey,page);
     }
@@ -61,6 +75,13 @@ public class AllFilmViewModels extends AndroidViewModel {
 
     public void fetchNowPlayingMovies(String apiKey ,int page) {
         filmRepository.fetchNowPalyingMovies(apiKey,page);
+    }
+
+    public void fetchSimilarFilm(String id , String apiKey) {
+        filmRepository.fetchSimilarFilm(id,apiKey);
+    }
+    public void fetchRecommendFilm(String id , String apiKey) {
+        filmRepository.fetchRecommendFilm(id,apiKey);
     }
 
     public void fetchUpcomingMovies(String apiKey ,int page) { filmRepository.fetchUpcomingMovies(apiKey,page); }

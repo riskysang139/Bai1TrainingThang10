@@ -6,7 +6,6 @@
         android:id="@+id/rl_film"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/_15sdp"
         android:backgroundTint="@color/maincolor"
         android:backgroundTintMode="add">
 

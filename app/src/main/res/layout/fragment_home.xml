@@ -31,8 +31,7 @@
                     android:paddingLeft="@dimen/_15sdp"
                     android:text="Home"
                     android:textColor="#ffffff"
-                    android:textSize="@dimen/_22sdp"
-                    tools:ignore="RtlSymmetry,SpUsage" />
+                    android:textSize="@dimen/_22sdp" />
 
                 <ImageButton
                     android:id="@+id/btn_search"
