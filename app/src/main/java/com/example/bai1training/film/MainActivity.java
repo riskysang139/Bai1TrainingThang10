@@ -57,12 +57,12 @@ public class MainActivity extends AppCompatActivity {
                     case 0:
                         bottomNavigationView.getMenu().findItem(R.id.navigation_home).setChecked(true);
                         break;
-                    case 1:
-                        bottomNavigationView.getMenu().findItem(R.id.navigation_upcoming).setChecked(true);
-                        break;
-                    case 2:
-                        bottomNavigationView.getMenu().findItem(R.id.navigation_top_rate).setChecked(true);
-                        break;
+//                    case 1:
+//                        bottomNavigationView.getMenu().findItem(R.id.navigation_upcoming).setChecked(true);
+//                        break;
+//                    case 2:
+//                        bottomNavigationView.getMenu().findItem(R.id.navigation_top_rate).setChecked(true);
+//                        break;
                     case 3:
                         bottomNavigationView.getMenu().findItem(R.id.navigation_user).setChecked(true);
                         break;

@@ -1,14 +1,13 @@
-package com.example.bai1training.allfilm;
+package com.example.bai1training.allfilm.viewmodel;
 
 import android.app.Application;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.bai1training.allfilm.repo.AllFilmRepo;
 import com.example.bai1training.film.models.MovieAdver;
 import com.example.bai1training.film.models.ResultRespone;
-import com.example.bai1training.film.repo.FilmRepository;
 
 import java.util.List;
 

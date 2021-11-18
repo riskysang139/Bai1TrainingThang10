@@ -3,6 +3,10 @@ package com.example.bai1training.allfilm;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,21 +14,18 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bai1training.R;
+import com.example.bai1training.allfilm.viewmodel.AllFilmViewModels;
 import com.example.bai1training.base.GridItemDecoration;
 import com.example.bai1training.base.OnClickListener;
 import com.example.bai1training.databinding.ActivityAllFilmBinding;
 import com.example.bai1training.detailFilm.DetailFilmActivity;
-import com.example.bai1training.detailFilm.models.DetailFilm;
 import com.example.bai1training.film.MainActivity;
 import com.example.bai1training.film.adapter.FilmAdapter;
-import com.example.bai1training.film.adapter.FilmAdapter2;
 import com.example.bai1training.film.models.ResultRespone;
 import com.example.bai1training.film.models.Results;
-import com.example.bai1training.film.viewmodels.FilmViewModels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,9 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
     private static final String TAG = "Tag";
     private String fromScreen = "";
     private String id = "";
+    private String title = "";
+    private TextView txtTitle;
+    private RelativeLayout btnBack;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,10 +51,13 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
         filmViewModels = ViewModelProviders.of(this).get(AllFilmViewModels.class);
         initView();
         getData();
+        onBackPress();
     }
 
     private void initView() {
         rcvAllFilm = findViewById(R.id.all_film);
+        txtTitle = findViewById(R.id.txtTitle);
+        btnBack = findViewById(R.id.btn_back);
         popularMoviesList = new ArrayList<>();
         topRateMovieList = new ArrayList<>();
         upComingMovieList = new ArrayList<>();
@@ -61,21 +68,26 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
         if (bundle != null) {
             fromScreen = bundle.getString(DetailFilmActivity.KEY_FROM, "");
 
-            if (fromScreen.equals(DetailFilmActivity.FROM_POPULAR))
+            if (fromScreen.equals(DetailFilmActivity.FROM_POPULAR)) {
                 observerPopularFilm();
-            else if (fromScreen.equals(DetailFilmActivity.FROM_TOP_RATE))
+                title = "Popular Movies";
+            } else if (fromScreen.equals(DetailFilmActivity.FROM_TOP_RATE)) {
                 observerTopRateFilm();
-            else if (fromScreen.equals(DetailFilmActivity.FROM_UP_COMING))
+                title = "Top Rated Movies";
+            } else if (fromScreen.equals(DetailFilmActivity.FROM_UP_COMING)) {
                 observerUpComingFilm();
-            else if (fromScreen.equals(DetailFilmActivity.FROM_SIMILAR)){
-                id=bundle.getString(DetailFilmActivity.ID,"");
+                title = "Up Coming Movies";
+            } else if (fromScreen.equals(DetailFilmActivity.FROM_SIMILAR)) {
+                id = bundle.getString(DetailFilmActivity.ID, "");
                 observerSimilarFilm();
-            }
-            else if (fromScreen.equals(DetailFilmActivity.FROM_RECOMMEND)) {
-                id=bundle.getString(DetailFilmActivity.ID,"");
+                title = "Similar Movies";
+            } else if (fromScreen.equals(DetailFilmActivity.FROM_RECOMMEND)) {
+                id = bundle.getString(DetailFilmActivity.ID, "");
                 observerRecommendFilm();
+                title = "Recommend Movies";
             }
         }
+        txtTitle.setText(title);
     }
 
     private void observerPopularFilm() {
@@ -186,11 +198,16 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
 
     @Override
     public void onClickNowDetailFilm(Results resultFilm, int position) {
+        finish();
         Intent intent = new Intent(this, DetailFilmActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(DetailFilmActivity.ID, resultFilm.getId() + "");
         bundle.putString(DetailFilmActivity.KEY_FROM, DetailFilmActivity.FROM_POPULAR);
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    private void onBackPress() {
+        btnBack.setOnClickListener(view -> finish());
     }
 }

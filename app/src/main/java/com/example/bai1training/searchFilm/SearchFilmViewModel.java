@@ -22,7 +22,8 @@ public class SearchFilmViewModel extends AndroidViewModel {
             return resultResponeLiveData=searchFilmRepo.getSearchFilmMutableLiveData();
         return resultResponeLiveData;
     }
-    public void fetchSearchResponse(String apiKey,String query){
+
+    public void fetchSearchResponse(String apiKey, String query){
         searchFilmRepo.fetchFilmRepo(apiKey,query);
     }
 

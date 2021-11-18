@@ -218,7 +218,12 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         txtDetail.setText(detailFilms.getOverview());
         Glide.with(this).load(MainActivity.HEADER_URL_IMAGE + detailFilms.getPosterPath()).into(imgFilm);
         txtRated.setRating(Float.parseFloat(detailFilms.getVoteAverage() / 2 + ""));
-        txtGenres.setText("•    " + detailFilms.getGenres().get(0).getName() + ", " + detailFilms.getGenres().get(1).getName() + "    •");
+        if(detailFilms.getGenres().size()==0 || detailFilms.getGenres().isEmpty())
+            txtGenres.setText("•    No Data    •");
+        else if(detailFilms.getGenres().size()==1)
+            txtGenres.setText("•    " + detailFilms.getGenres().get(0).getName() +"    •");
+        else
+            txtGenres.setText("•    " + detailFilms.getGenres().get(0).getName() + ", " + detailFilms.getGenres().get(1).getName() + "    •");
         txtTimeFilm.setText(detailFilms.getRuntime() + " mins");
         if (detailFilms.getAdult())
             txtAdult.setVisibility(View.VISIBLE);
@@ -267,6 +272,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
 
     @Override
     public void onClickNowDetailFilm(Results resultFilm, int position) {
+        finish();
         Intent intent = new Intent(this, DetailFilmActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(DetailFilmActivity.ID, resultFilm.getId() + "");

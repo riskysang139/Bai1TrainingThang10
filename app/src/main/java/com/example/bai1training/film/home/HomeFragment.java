@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +31,7 @@ import com.example.bai1training.allfilm.AllFilmActivity;
 import com.example.bai1training.base.HorizontalItemDecoration;
 import com.example.bai1training.base.OnClickListener;
 import com.example.bai1training.base.OnClickListener2;
+import com.example.bai1training.base.SearchActionBarView;
 import com.example.bai1training.databinding.FragmentHomeBinding;
 import com.example.bai1training.detailFilm.DetailFilmActivity;
 import com.example.bai1training.film.MainActivity;
@@ -38,6 +41,7 @@ import com.example.bai1training.film.adapter.MovieAdverAdapter;
 import com.example.bai1training.film.models.MovieAdver;
 import com.example.bai1training.film.models.Results;
 import com.example.bai1training.film.viewmodels.FilmViewModels;
+import com.example.bai1training.searchFilm.SearchFilmActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +58,9 @@ public class HomeFragment extends Fragment implements OnClickListener, OnClickLi
     private FilmAdapter2 filmAdapter2;
     private ViewPager2 viewPager2;
     private Handler handler = new Handler();
-    private Button btnPopular, btnTopRated, btnUpComing;
+    private Button btnPopular, btnTopRated, btnUpComing ;
     private static final String TAG = "Tag";
+    private SearchActionBarView searchActionBarView;
 
     public static HomeFragment getInstance() {
         Bundle args = new Bundle();
@@ -84,6 +89,7 @@ public class HomeFragment extends Fragment implements OnClickListener, OnClickLi
         obserVerMovieAdver();
         onRefresh();
         onClickAllFilm();
+        initCallBackForSearchBar();
     }
 
 
@@ -102,6 +108,7 @@ public class HomeFragment extends Fragment implements OnClickListener, OnClickLi
         btnPopular = view.findViewById(R.id.btn_more_popular);
         btnTopRated = view.findViewById(R.id.btn_top_rated);
         btnUpComing = view.findViewById(R.id.btn_up_coming);
+        searchActionBarView = view.findViewById(R.id.sb_search_all);
     }
 
     private void observerPopularFilm() {
@@ -306,6 +313,37 @@ public class HomeFragment extends Fragment implements OnClickListener, OnClickLi
             intent.putExtras(bundle);
             getActivity().startActivity(intent);
         });
+    }
 
+    /**
+     * callback của searchBar
+     */
+    private void initCallBackForSearchBar() {
+        searchActionBarView.setSearchViewCallBack(new SearchActionBarView.SearchViewCallback() {
+            @Override
+            public void onTextChange(String s) {
+//                if ("".equals(s)) {
+//                    mViewModel.getObsStateSearch().postValue(StateSearch.FOCUS_SEARCH);
+//                } else {
+//                    mViewModel.getObsStateSearch().postValue(StateSearch.SEARCHING);
+//                }
+            }
+
+            @Override
+            public void onSubmitSearch(String s) {
+                if ("".equals(s.trim())) {
+                    Toast.makeText(getContext(),"Not Input Data",Toast.LENGTH_LONG).show();
+                } else {
+                    String keySearch = s.toLowerCase();
+                    keySearch = keySearch.trim();
+                    Intent intent = new Intent(getActivity(), SearchFilmActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(SearchFilmActivity.KEY, keySearch);
+                    intent.putExtras(bundle);
+                    getActivity().startActivity(intent);
+                }
+
+            }
+        });
     }
 }

@@ -19,35 +19,20 @@
                 android:layout_height="match_parent"
                 android:background="@color/maincolor">
 
-                <TextView
-                    android:id="@+id/txt_trang_chu"
-                    android:layout_width="@dimen/_250sdp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_15sdp"
-                    android:background="@color/maincolor"
-                    android:fontFamily="@font/beausanspro_bold"
-                    android:gravity="center|left"
-                    android:paddingStart="@dimen/_15sdp"
-                    android:paddingLeft="@dimen/_15sdp"
-                    android:text="Home"
-                    android:textColor="#ffffff"
-                    android:textSize="@dimen/_22sdp" />
-
-                <ImageButton
-                    android:id="@+id/btn_search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_15sdp"
-                    android:layout_alignParentRight="true"
-                    android:paddingRight="@dimen/_5sdp"
-                    android:background="@color/maincolor"
-                    android:src="@drawable/ic_baseline_search_24" />
+                <com.example.bai1training.base.SearchActionBarView
+                    android:id="@+id/sb_search_all"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginHorizontal="@dimen/_15sdp"/>
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/view_adver"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_210sdp"
-                    android:layout_below="@id/btn_search"
+                    android:layout_below="@id/sb_search_all"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:background="@color/maincolor"
