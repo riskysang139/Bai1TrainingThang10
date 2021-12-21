@@ -5,8 +5,7 @@
     android:layout_width="280dp"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/_15sdp"
-    android:layout_marginTop="@dimen/_5sdp"
-    android:background="@color/maincolor">
+    android:layout_marginTop="@dimen/_5sdp">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/img_film"

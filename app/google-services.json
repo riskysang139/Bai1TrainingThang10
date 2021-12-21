@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "805793554455",
+    "project_id": "movietheater-456",
+    "storage_bucket": "movietheater-456.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:805793554455:android:23e5bdc852fdb68920fc52",
+        "android_client_info": {
+          "package_name": "com.example.bai1training"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "805793554455-v1ra567gbtp17stco1jqvk3ijsc3jpqt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bai1training",
+            "certificate_hash": "a918ee9cfd253ba3905b25622f389e99c8ae4909"
+          }
+        },
+        {
+          "client_id": "805793554455-8nh89pp13mkcm2gg1fk95vogpijj86ob.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4U19xcuTfNoQ1Frun_NYfeaSe1cYMI_c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "805793554455-8nh89pp13mkcm2gg1fk95vogpijj86ob.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/image_login">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="@dimen/_5sdp"
+            android:src="@drawable/ic_baseline_arrow_back_24" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/logoApp"
+            android:layout_width="@dimen/_160sdp"
+            android:layout_height="@dimen/_160sdp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_45sdp"
+            android:src="@drawable/logomovieapp"/>
+
+        <TextView
+            android:id="@+id/theRuleVertical"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/theRule"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_centerVertical="true"
+            android:visibility="invisible" />
+
+        <EditText
+            android:id="@+id/txt_email"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_above="@id/theRule"
+            android:layout_centerVertical="true"
+            android:layout_marginHorizontal="@dimen/_20sdp"
+            android:layout_marginBottom="7dp"
+            android:background="@drawable/shape_txt_title"
+            android:drawableStart="@drawable/ic_baseline_email_24"
+            android:drawableLeft="@drawable/ic_baseline_email_24"
+            android:drawablePadding="@dimen/_10sdp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:hint="Nhập email của bạn"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/_10sdp"
+            android:paddingEnd="20dp"
+            android:paddingRight="20dp"
+            android:textColor="@color/white"
+            android:textColorHint="#BAFFFFFF" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutTxtPass"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_below="@id/theRule"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_marginRight="@dimen/_20sdp"
+            app:hintEnabled="false"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/white">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtPassword"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:background="@drawable/shape_txt_title"
+                android:drawableStart="@drawable/ic_baseline_lock_24"
+                android:drawableLeft="@drawable/ic_baseline_lock_24"
+                android:drawablePadding="@dimen/_10sdp"
+                android:gravity="center_vertical"
+                android:hint="Nhập mật khẩu của bạn"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingRight="@dimen/_5sdp"
+                android:textColor="@color/white"
+                android:textColorHint="#BAFFFFFF" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/btndangNhap"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_below="@id/layoutTxtPass"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/shapebtnlogin"
+            android:text="Đăng Nhập"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14sdp" />
+
+        <TextView
+            android:id="@+id/txtQuenMatKhau"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btndangNhap"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/_20sdp"
+            android:text="Quên Mật Khẩu ?"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12sdp" />
+
+        <TextView
+            android:id="@+id/txtSelect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtQuenMatKhau"
+            android:layout_marginTop="@dimen/_35sdp"
+            android:gravity="center"
+            android:text="Hoặc Đăng Nhập Bằng "
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12sdp" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/btn_login_google"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_below="@id/txtSelect"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginRight="@dimen/_5sdp"
+            android:layout_toLeftOf="@id/theRuleVertical"
+            android:src="@drawable/google" />
+
+        <LinearLayout
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_below="@id/txtSelect"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_toRightOf="@id/theRuleVertical"
+            android:orientation="horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/view_btn_login_face"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="12dp"
+                android:gravity="center"
+                android:src="@drawable/facebook" />
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/btn_login_face"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="12dp"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txt_not_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/_70sdp"
+            android:layout_marginBottom="@dimen/_20sdp"
+            android:layout_toLeftOf="@id/theRuleVertical"
+            android:text="Chưa có tài khoản ?"
+            android:textColor="#BAFFFFFF"
+            android:textSize="@dimen/_12sdp" />
+
+        <TextView
+            android:id="@+id/btnSignUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginBottom="@dimen/_20sdp"
+            android:layout_toRightOf="@id/txt_not_account"
+            android:text="Đăng ký"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12sdp">
+
+        </TextView>
+    </RelativeLayout>
+</layout>

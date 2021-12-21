@@ -52,7 +52,6 @@ public class HomeFragment extends Fragment implements OnClickListener, OnClickLi
     private List<Results> popularMoviesList, topRateMovieList, nowPlayingMovieList, upComingMovieList;
     private List<MovieAdver> movieAdverList;
     private RecyclerView rcvPopular, rcvTopRate, rcvNowPlaying, rcvUpComing;
-    private SwipeRefreshLayout swipeRefreshLayout;
     private FilmAdapter filmAdapter;
     private MovieAdverAdapter movieAdverAdapter;
     private FilmAdapter2 filmAdapter2;
@@ -99,7 +98,6 @@ public class HomeFragment extends Fragment implements OnClickListener, OnClickLi
         rcvTopRate = view.findViewById(R.id.rcv_top_rate);
         rcvNowPlaying = view.findViewById(R.id.rcv_now_playing);
         rcvUpComing = view.findViewById(R.id.rcv_up_coming);
-        swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
         popularMoviesList = new ArrayList<>();
         topRateMovieList = new ArrayList<>();
         upComingMovieList = new ArrayList<>();
@@ -251,23 +249,23 @@ public class HomeFragment extends Fragment implements OnClickListener, OnClickLi
 
     public void onRefresh() {
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        filmViewModels.fetchPopularMovies(MainActivity.API_KEY, 1);
-                        filmViewModels.fetchTopRateMovies(MainActivity.API_KEY, 1);
-                        filmViewModels.fetchNowPlayingMovies(MainActivity.API_KEY, 1);
-                        filmViewModels.fetchUpcomingMovies(MainActivity.API_KEY, 1);
-                        filmViewModels.fetchMovieAdver();
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 1000);
-            }
-        });
+//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                Handler handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        filmViewModels.fetchPopularMovies(MainActivity.API_KEY, 1);
+//                        filmViewModels.fetchTopRateMovies(MainActivity.API_KEY, 1);
+//                        filmViewModels.fetchNowPlayingMovies(MainActivity.API_KEY, 1);
+//                        filmViewModels.fetchUpcomingMovies(MainActivity.API_KEY, 1);
+//                        filmViewModels.fetchMovieAdver();
+//                        swipeRefreshLayout.setRefreshing(false);
+//                    }
+//                }, 1000);
+//            }
+//        });
 
     }
 

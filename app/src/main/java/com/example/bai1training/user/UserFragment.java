@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.example.bai1training.R;
 import com.example.bai1training.databinding.FragmentUserBinding;
 import com.example.bai1training.film.home.HomeFragment;
+import com.example.bai1training.loginandregist.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 //import com.google.firebase.auth.FirebaseAuth;
 //import com.google.firebase.auth.FirebaseUser;
@@ -53,6 +54,13 @@ public class UserFragment extends Fragment {
         login();
         onRefresh();
         register();
+        binding.btndangKi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+            }
+        });
+
     }
 
     private void checkUser() {

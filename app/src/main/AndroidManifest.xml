@@ -14,18 +14,20 @@
         android:theme="@style/Theme.Bai1Training"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".detailFilm.DetailFilmActivity"/>
+        <activity android:name=".detailFilm.DetailFilmActivity" />
         <activity
             android:name=".film.MainActivity"
-            android:label="@string/title_activity_main">
+            android:label="@string/title_activity_main"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".searchFilm.SearchFilmActivity"/>
-        <activity android:name=".allfilm.AllFilmActivity"/>
+        <activity android:name=".searchFilm.SearchFilmActivity" />
+        <activity android:name=".allfilm.AllFilmActivity" />
+        <activity android:name=".loginandregist.LoginActivity" />
     </application>
 
 </manifest>

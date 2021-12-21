@@ -12,8 +12,8 @@
         android:title="Upcoming" />
     <item
         android:id="@+id/navigation_top_rate"
-        android:icon="@drawable/ic_baseline_star_rate_24"
-        android:title="Top Rated">
+        android:icon="@drawable/img_cart"
+        android:title="Cart">
 
     </item>
 
