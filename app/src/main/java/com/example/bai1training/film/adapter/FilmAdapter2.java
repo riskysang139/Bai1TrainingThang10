@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.bai1training.R;
+import com.example.bai1training.base.Converter;
 import com.example.bai1training.base.OnClickListener;
 import com.example.bai1training.base.OnClickListener2;
 import com.example.bai1training.film.MainActivity;
@@ -49,7 +50,7 @@ public class FilmAdapter2 extends RecyclerView.Adapter<FilmAdapter2.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Results results = resultsList.get(position);
         holder.txtTitle.setText(results.getTitle());
-        holder.txtDate.setText(convertStringToDate(results.getReleaseDate()));
+        holder.txtDate.setText(Converter.convertStringToDate(results.getReleaseDate()));
         holder.txtStar.setRating(Float.parseFloat(results.getVoteAverage()/2+""));
         Picasso.get().load(MainActivity.HEADER_URL_IMAGE + results.getPosterPath()).into(holder.imageView);
     }
@@ -80,22 +81,5 @@ public class FilmAdapter2 extends RecyclerView.Adapter<FilmAdapter2.ViewHolder> 
                 }
             });
         }
-    }
-
-    private String convertStringToDate(String date) {
-        String displayDate = "";
-        try {
-            SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd");
-            Date newDate = null;
-            newDate = spf.parse(date);
-            spf = new SimpleDateFormat("dd/MM/yyyy");
-            date = spf.format(newDate);
-            displayDate = date;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } finally {
-            displayDate = date;
-        }
-        return displayDate;
     }
 }

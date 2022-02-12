@@ -1,4 +1,4 @@
-package com.viettel.vtecommerce.utils;
+package com.example.bai1training.base;
 
 import android.content.Context;
 import android.util.TypedValue;
@@ -6,6 +6,9 @@ import android.util.TypedValue;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -129,5 +132,22 @@ public class Converter {
         else if (y.contains(tmp)) return 'Y';
         else if (d.contains(tmp)) return 'D';
         else return Character.toUpperCase(ch);
+    }
+
+    public static  String convertStringToDate(String date) {
+        String displayDate = "";
+        try {
+            SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd");
+            Date newDate = null;
+            newDate = spf.parse(date);
+            spf = new SimpleDateFormat("dd/MM/yyyy");
+            date = spf.format(newDate);
+            displayDate = date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } finally {
+            displayDate = date;
+        }
+        return displayDate;
     }
 }
