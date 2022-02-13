@@ -25,6 +25,7 @@ import android.widget.VideoView;
 import com.bumptech.glide.Glide;
 import com.example.bai1training.R;
 import com.example.bai1training.allfilm.AllFilmActivity;
+import com.example.bai1training.base.Converter;
 import com.example.bai1training.base.HorizontalItemDecoration;
 import com.example.bai1training.base.LoadingDialog;
 import com.example.bai1training.base.OnClickListener;
@@ -244,7 +245,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         filmAdapter = new FilmAdapter(listRecommendFilm, this, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        rcvRecommendFilm.addItemDecoration(new HorizontalItemDecoration(com.viettel.vtecommerce.utils.Converter.dpToPx(this, 15)));
+        rcvRecommendFilm.addItemDecoration(new HorizontalItemDecoration(Converter.dpToPx(this, 15)));
         rcvRecommendFilm.setItemAnimator(new DefaultItemAnimator());
         rcvRecommendFilm.setLayoutManager(layoutManager);
         rcvRecommendFilm.setAdapter(filmAdapter);
@@ -254,7 +255,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         filmAdapter = new FilmAdapter(listSimilarFilm, this, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        rcvSimilarFilm.addItemDecoration(new HorizontalItemDecoration(com.viettel.vtecommerce.utils.Converter.dpToPx(this, 15)));
+        rcvSimilarFilm.addItemDecoration(new HorizontalItemDecoration(Converter.dpToPx(this, 15)));
         rcvSimilarFilm.setItemAnimator(new DefaultItemAnimator());
         rcvSimilarFilm.setLayoutManager(layoutManager);
         rcvSimilarFilm.setAdapter(filmAdapter);

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bai1training.R;
 import com.example.bai1training.allfilm.viewmodel.AllFilmViewModels;
+import com.example.bai1training.base.Converter;
 import com.example.bai1training.base.GridItemDecoration;
 import com.example.bai1training.base.OnClickListener;
 import com.example.bai1training.databinding.ActivityAllFilmBinding;
@@ -158,7 +159,7 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
     private void initRecyclerPopular() {
         filmAdapter = new FilmAdapter(popularMoviesList, this, this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, RecyclerView.VERTICAL, false);
-        rcvAllFilm.addItemDecoration(new GridItemDecoration(com.viettel.vtecommerce.utils.Converter.dpToPx(this, 30), 2));
+        rcvAllFilm.addItemDecoration(new GridItemDecoration(Converter.dpToPx(this, 30), 2));
         rcvAllFilm.setLayoutManager(gridLayoutManager);
         rcvAllFilm.setAdapter(filmAdapter);
     }
@@ -166,7 +167,7 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
     private void initRecyclerTopRate() {
         filmAdapter = new FilmAdapter(topRateMovieList, this, this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, RecyclerView.VERTICAL, false);
-        rcvAllFilm.addItemDecoration(new GridItemDecoration(com.viettel.vtecommerce.utils.Converter.dpToPx(this, 30), 2));
+        rcvAllFilm.addItemDecoration(new GridItemDecoration(Converter.dpToPx(this, 30), 2));
         rcvAllFilm.setLayoutManager(gridLayoutManager);
         rcvAllFilm.setAdapter(filmAdapter);
     }
@@ -175,7 +176,7 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
     private void initRecyclerUpComing() {
         filmAdapter = new FilmAdapter(upComingMovieList, this, this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, RecyclerView.VERTICAL, false);
-        rcvAllFilm.addItemDecoration(new GridItemDecoration(com.viettel.vtecommerce.utils.Converter.dpToPx(this, 30), 2));
+        rcvAllFilm.addItemDecoration(new GridItemDecoration(Converter.dpToPx(this, 30), 2));
         rcvAllFilm.setLayoutManager(gridLayoutManager);
         rcvAllFilm.setAdapter(filmAdapter);
     }
@@ -183,7 +184,7 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
     private void initRecyclerSimilar() {
         filmAdapter = new FilmAdapter(similarMovieList, this, this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, RecyclerView.VERTICAL, false);
-        rcvAllFilm.addItemDecoration(new GridItemDecoration(com.viettel.vtecommerce.utils.Converter.dpToPx(this, 30), 2));
+        rcvAllFilm.addItemDecoration(new GridItemDecoration(Converter.dpToPx(this, 30), 2));
         rcvAllFilm.setLayoutManager(gridLayoutManager);
         rcvAllFilm.setAdapter(filmAdapter);
     }
@@ -191,7 +192,7 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
     private void initRecyclerRecommend() {
         filmAdapter = new FilmAdapter(recommendMovieList, this, this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, RecyclerView.VERTICAL, false);
-        rcvAllFilm.addItemDecoration(new GridItemDecoration(com.viettel.vtecommerce.utils.Converter.dpToPx(this, 30), 2));
+        rcvAllFilm.addItemDecoration(new GridItemDecoration(Converter.dpToPx(this, 30), 2));
         rcvAllFilm.setLayoutManager(gridLayoutManager);
         rcvAllFilm.setAdapter(filmAdapter);
     }

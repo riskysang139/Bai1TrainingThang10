@@ -58,15 +58,16 @@ public class LoginActivity extends AppCompatActivity {
 
         //Google SignInButton : Click to begin Google SignIn
 
-        binding.btnLoginGoogle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //begin google sign in
-                Log.d(GOOGLE_SIGN_IN_TAG, "on click : begin Google Sign in");
-                Intent intent = googleSignInClient.getSignInIntent();
-                checkLogOut();
-                startActivityForResult(intent, RC_SIGN_IN); // handler this result
-            }
+        binding.btnLoginGoogle.setOnClickListener(v -> {
+            //begin google sign in
+            Log.d(GOOGLE_SIGN_IN_TAG, "on click : begin Google Sign in");
+            Intent intent = googleSignInClient.getSignInIntent();
+            checkLogOut();
+            startActivityForResult(intent, RC_SIGN_IN); // handler this result
+        });
+
+        binding.btnBack.setOnClickListener(v -> {
+            finish();
         });
     }
 

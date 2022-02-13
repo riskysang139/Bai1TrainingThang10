@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,24 +20,23 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.bai1training.R;
 import com.example.bai1training.allfilm.AllFilmActivity;
+import com.example.bai1training.base.Converter;
 import com.example.bai1training.base.HorizontalItemDecoration;
 import com.example.bai1training.base.OnClickListener;
-import com.example.bai1training.base.OnClickListener2;
 import com.example.bai1training.base.SearchActionBarView;
 import com.example.bai1training.databinding.FragmentHomeBinding;
 import com.example.bai1training.detailFilm.DetailFilmActivity;
 import com.example.bai1training.film.MainActivity;
 import com.example.bai1training.film.adapter.FilmAdapter;
-import com.example.bai1training.film.adapter.FilmAdapter2;
 import com.example.bai1training.film.adapter.MovieAdverAdapter;
 import com.example.bai1training.film.models.MovieAdver;
+import com.example.bai1training.film.models.ResultRespone;
 import com.example.bai1training.film.models.Results;
 import com.example.bai1training.film.viewmodels.FilmViewModels;
 import com.example.bai1training.searchFilm.SearchFilmActivity;
@@ -46,7 +44,7 @@ import com.example.bai1training.searchFilm.SearchFilmActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment implements OnClickListener, OnClickListener2 {
+public class HomeFragment extends Fragment implements OnClickListener{
     private FragmentHomeBinding binding;
     private FilmViewModels filmViewModels;
     private List<Results> popularMoviesList, topRateMovieList, nowPlayingMovieList, upComingMovieList;
@@ -54,7 +52,6 @@ public class HomeFragment extends Fragment implements OnClickListener, OnClickLi
     private RecyclerView rcvPopular, rcvTopRate, rcvNowPlaying, rcvUpComing;
     private FilmAdapter filmAdapter;
     private MovieAdverAdapter movieAdverAdapter;
-    private FilmAdapter2 filmAdapter2;
     private ViewPager2 viewPager2;
     private Handler handler = new Handler();
     private Button btnPopular, btnTopRated, btnUpComing ;
@@ -127,6 +124,8 @@ public class HomeFragment extends Fragment implements OnClickListener, OnClickLi
         filmViewModels.getmTopRateMutableLiveData().observe(getActivity(), resultRespone -> {
                     if (resultRespone != null) {
                         topRateMovieList = resultRespone.getResults();
+                        for (Results results : topRateMovieList)
+                            results.setType(1);
                         initRecyclerTopRate();
                         Log.e(TAG, "result respone : " + topRateMovieList.toString());
                     } else
@@ -149,7 +148,7 @@ public class HomeFragment extends Fragment implements OnClickListener, OnClickLi
     }
 
     private void observerUpComingFilm() {
-        filmViewModels.fetchUpcomingMovies(MainActivity.API_KEY, 3);
+        filmViewModels.fetchUpcomingMovies(MainActivity.API_KEY, 1);
         filmViewModels.getmUpcomingMutableLiveData().observe(getActivity(), resultRespone -> {
                     if (resultRespone != null) {
                         upComingMovieList = resultRespone.getResults();
@@ -178,17 +177,17 @@ public class HomeFragment extends Fragment implements OnClickListener, OnClickLi
         filmAdapter = new FilmAdapter(popularMoviesList, getActivity(), this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        rcvPopular.addItemDecoration(new HorizontalItemDecoration(com.viettel.vtecommerce.utils.Converter.dpToPx(requireContext(), 15)));
+        rcvPopular.addItemDecoration(new HorizontalItemDecoration(Converter.dpToPx(requireContext(), 15)));
         rcvPopular.setItemAnimator(new DefaultItemAnimator());
         rcvPopular.setLayoutManager(layoutManager);
         rcvPopular.setAdapter(filmAdapter);
     }
 
     private void initRecyclerTopRate() {
-        filmAdapter2 = new FilmAdapter2(topRateMovieList, getActivity(), this);
+        filmAdapter = new FilmAdapter(topRateMovieList, getActivity(), this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2, RecyclerView.HORIZONTAL, false);
         rcvTopRate.setLayoutManager(gridLayoutManager);
-        rcvTopRate.setAdapter(filmAdapter2);
+        rcvTopRate.setAdapter(filmAdapter);
     }
 
     private void initRecyclerNowPlaying() {
@@ -204,13 +203,13 @@ public class HomeFragment extends Fragment implements OnClickListener, OnClickLi
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rcvUpComing.setLayoutManager(layoutManager);
-        rcvUpComing.addItemDecoration(new HorizontalItemDecoration(com.viettel.vtecommerce.utils.Converter.dpToPx(requireContext(), 15)));
+        rcvUpComing.addItemDecoration(new HorizontalItemDecoration(Converter.dpToPx(requireContext(), 15)));
         rcvUpComing.setItemAnimator(new DefaultItemAnimator());
         rcvUpComing.setAdapter(filmAdapter);
     }
 
     private void initViewAdver() {
-        movieAdverAdapter = new MovieAdverAdapter(movieAdverList, viewPager2);
+        movieAdverAdapter = new MovieAdverAdapter(movieAdverList, viewPager2, getContext());
         viewPager2.setAdapter(movieAdverAdapter);
         onAutoScrollAD();
     }
@@ -271,16 +270,6 @@ public class HomeFragment extends Fragment implements OnClickListener, OnClickLi
 
     @Override
     public void onClickNowDetailFilm(Results resultFilm, int position) {
-        Intent intent = new Intent(getActivity(), DetailFilmActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString(DetailFilmActivity.ID, resultFilm.getId() + "");
-        bundle.putString(DetailFilmActivity.KEY_FROM, DetailFilmActivity.FROM_POPULAR);
-        intent.putExtras(bundle);
-        getActivity().startActivity(intent);
-    }
-
-    @Override
-    public void onClickNowDetailFilm2(Results resultFilm, int position) {
         Intent intent = new Intent(getActivity(), DetailFilmActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(DetailFilmActivity.ID, resultFilm.getId() + "");

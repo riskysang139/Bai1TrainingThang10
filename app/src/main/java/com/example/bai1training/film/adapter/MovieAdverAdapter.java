@@ -1,5 +1,6 @@
 package com.example.bai1training.film.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
 import com.example.bai1training.R;
+import com.example.bai1training.base.Converter;
 import com.example.bai1training.film.models.MovieAdver;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
@@ -18,9 +21,11 @@ import java.util.List;
 public class MovieAdverAdapter extends RecyclerView.Adapter<MovieAdverAdapter.ViewHoder> {
     private List<MovieAdver> movieAdverList;
     private ViewPager2 viewPager2;
-    public MovieAdverAdapter(List<MovieAdver> movieAdverList, ViewPager2 viewPager2) {
+    private Context context;
+    public MovieAdverAdapter(List<MovieAdver> movieAdverList, ViewPager2 viewPager2, Context context) {
         this.movieAdverList = movieAdverList;
         this.viewPager2 = viewPager2;
+        this.context = context;
     }
 
     @NonNull
@@ -32,9 +37,7 @@ public class MovieAdverAdapter extends RecyclerView.Adapter<MovieAdverAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHoder holder, int position) {
         MovieAdver movieAdver = movieAdverList.get(position);
-        Picasso.get()
-                .load(movieAdver.getImage())
-                .into(holder.roundedImageView);
+        Glide.with(context).load(movieAdver.getImage()).into(holder.roundedImageView);
         if (position == movieAdverList.size() - 2) {
             viewPager2.post(runnable);
         }
