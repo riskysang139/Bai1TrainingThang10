@@ -1,6 +1,7 @@
 package com.example.bai1training.base;
 
 
+import com.example.bai1training.detailFilm.models.CastResponse;
 import com.example.bai1training.detailFilm.models.DetailFilm;
 import com.example.bai1training.detailFilm.models.VideoResponse;
 import com.example.bai1training.film.models.MovieAdver;
@@ -52,7 +53,8 @@ public interface FilmApi {
     @GET("Advertisement")
     Observable<List<MovieAdver>> getAdver();
 
-
-
+    @GET("movie/{movie_id}/credits")
+    Observable<CastResponse> getCastFilm(@Path("movie_id") String id,
+                                         @Query("api_key") String apiKey);
 }
 

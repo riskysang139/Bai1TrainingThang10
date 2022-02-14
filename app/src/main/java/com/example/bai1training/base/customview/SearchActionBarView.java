@@ -1,4 +1,4 @@
-package com.example.bai1training.base;
+package com.example.bai1training.base.customview;
 
 import android.content.Context;
 import android.content.res.TypedArray;

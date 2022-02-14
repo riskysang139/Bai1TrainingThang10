@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.bai1training.detailFilm.models.CastResponse;
 import com.example.bai1training.detailFilm.models.DetailFilm;
 import com.example.bai1training.detailFilm.models.VideoResponse;
 import com.example.bai1training.detailFilm.repo.DetailFilmRepo;
@@ -16,6 +17,7 @@ public class DetailFilmViewModels extends AndroidViewModel {
     private MutableLiveData<VideoResponse> videoFilmLiveData;
     private MutableLiveData<ResultRespone> similarFilmLiveData;
     private MutableLiveData<ResultRespone> recommendFilmLiveData;
+    private MutableLiveData<CastResponse> castResponseMutableLiveData;
     private DetailFilmRepo detailFilmRepo;
 
     public DetailFilmViewModels(@NonNull Application application) {
@@ -47,6 +49,12 @@ public class DetailFilmViewModels extends AndroidViewModel {
         return recommendFilmLiveData;
     }
 
+    public MutableLiveData<CastResponse> getCastResponseMutableLiveData() {
+        if (castResponseMutableLiveData == null)
+            return castResponseMutableLiveData = detailFilmRepo.getCastResponseMutableLiveData();
+        return castResponseMutableLiveData;
+    }
+
     public void fetchDetailFilm(String id , String apiKey) {
         detailFilmRepo.fetchDetailFilm(id,apiKey);
     }
@@ -59,5 +67,8 @@ public class DetailFilmViewModels extends AndroidViewModel {
     }
     public void fetchRecommendFilm(String id , String apiKey) {
         detailFilmRepo.fetchRecommendFilm(id,apiKey);
+    }
+    public void fetchCastFilm(String id , String apiKey) {
+        detailFilmRepo.fetchCastFilm(id,apiKey);
     }
 }

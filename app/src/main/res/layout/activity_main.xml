@@ -27,7 +27,7 @@
         <!--                    android:layout_marginLeft="16dp"-->
         <!--                    android:src="@drawable/vtecom_ic_menu_white" />-->
 
-        <!--                <com.example.bai1training.base.SearchActionBarView-->
+        <!--                <com.example.bai1training.base.customview.SearchActionBarView-->
         <!--                    android:id="@+id/sb_search_all"-->
         <!--                    android:layout_width="match_parent"-->
         <!--                    android:layout_height="40dp"-->

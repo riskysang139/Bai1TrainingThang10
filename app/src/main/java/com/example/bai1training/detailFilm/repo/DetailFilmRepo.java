@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.bai1training.base.FilmApi;
 import com.example.bai1training.base.RetroClass;
+import com.example.bai1training.detailFilm.models.CastResponse;
 import com.example.bai1training.detailFilm.models.DetailFilm;
 import com.example.bai1training.detailFilm.models.VideoResponse;
 import com.example.bai1training.film.models.ResultRespone;
@@ -35,6 +36,7 @@ public class DetailFilmRepo {
     private MutableLiveData<VideoResponse> videoTrailerMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<ResultRespone> similarFilmMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<ResultRespone> recommendMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<CastResponse> castResponseMutableLiveData = new MutableLiveData<>();
 
 
     public DetailFilmRepo(Application application) {
@@ -54,6 +56,10 @@ public class DetailFilmRepo {
 
     public MutableLiveData<ResultRespone> getRecommendMutableLiveData() {
         return recommendMutableLiveData;
+    }
+
+    public MutableLiveData<CastResponse> getCastResponseMutableLiveData() {
+        return castResponseMutableLiveData;
     }
 
     public void fetchDetailFilm(String id, String apiKey) {
@@ -148,6 +154,31 @@ public class DetailFilmRepo {
             @Override
             public void onError(@NonNull Throwable e) {
                 Log.e("Sang", e.toString());
+            }
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+
+    public void fetchCastFilm(String id, String apiKey) {
+        FilmApi filmApi = RetroClass.getFilmApi();
+        Observable<CastResponse> resultsObservable = filmApi.getCastFilm(id, apiKey).subscribeOn(Schedulers.io());
+        resultsObservable.subscribe(new Observer<CastResponse>() {
+            @Override
+            public void onSubscribe(@NonNull io.reactivex.disposables.Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull CastResponse resultRespone) {
+                castResponseMutableLiveData.postValue(resultRespone);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                Log.e("cast response", e.toString());
             }
             @Override
             public void onComplete() {

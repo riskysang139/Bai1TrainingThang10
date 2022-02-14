@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.bai1training.R;
-import com.example.bai1training.base.SearchActionBarView;
+import com.example.bai1training.base.customview.SearchActionBarView;
 import com.example.bai1training.databinding.ActivityMainBinding;
 import com.example.bai1training.searchFilm.SearchFilmActivity;
 import com.example.bai1training.searchFilm.SearchFilmViewModel;

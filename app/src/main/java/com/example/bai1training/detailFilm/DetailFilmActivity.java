@@ -31,7 +31,10 @@ import com.example.bai1training.base.LoadingDialog;
 import com.example.bai1training.base.OnClickListener;
 import com.example.bai1training.base.OnClickVideoListener;
 import com.example.bai1training.databinding.ActivityDetailFilmBinding;
+import com.example.bai1training.detailFilm.adapter.CastAdapter;
 import com.example.bai1training.detailFilm.adapter.VideoTrailerAdapter;
+import com.example.bai1training.detailFilm.models.Cast;
+import com.example.bai1training.detailFilm.models.CastResponse;
 import com.example.bai1training.detailFilm.models.DetailFilm;
 import com.example.bai1training.detailFilm.models.Video;
 import com.example.bai1training.detailFilm.models.VideoResponse;
@@ -80,11 +83,13 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
     private DetailFilm detailFilms;
     private List<Video> videoList;
     private VideoTrailerAdapter videoTrailerAdapter;
-    private RecyclerView rcvTrailer, rcvSimilarFilm, rcvRecommendFilm;
+    private RecyclerView rcvTrailer, rcvSimilarFilm, rcvRecommendFilm, rcvCast;
     private List<Results> listSimilarFilm, listRecommendFilm;
     private FilmAdapter filmAdapter;
     private LoadingDialog loadingDialog;
-    private Button btnSimilar,btnRecommend;
+    private Button btnSimilar, btnRecommend;
+    private List<Cast> castList;
+    private CastAdapter castAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +102,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         observerVideoTrailerFilm();
         observerRecommendFilm();
         observeSimilarFilm();
+        observerCastFilm();
         onComeback();
         delayLoading();
         actionMoreFilm();
@@ -118,8 +124,9 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         rcvRecommendFilm = findViewById(R.id.rcv_reconmmend);
         rcvSimilarFilm = findViewById(R.id.rcv_similar_films);
         loadingDialog = findViewById(R.id.progress_loading);
-        btnRecommend=findViewById(R.id.btn_more_recommend);
-        btnSimilar=findViewById(R.id.btn_more_similar);
+        btnRecommend = findViewById(R.id.btn_more_recommend);
+        btnSimilar = findViewById(R.id.btn_more_similar);
+        rcvCast = findViewById(R.id.rcv_cast);
         videoList = new ArrayList<>();
         listRecommendFilm = new ArrayList<>();
         listSimilarFilm = new ArrayList<>();
@@ -214,15 +221,29 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
 
     }
 
+    public void observerCastFilm() {
+        detailFilmViewModels.fetchCastFilm(id, MainActivity.API_KEY);
+        detailFilmViewModels.getCastResponseMutableLiveData().observe(this, new Observer<CastResponse>() {
+            @Override
+            public void onChanged(CastResponse resultRespone) {
+                if (resultRespone != null) {
+                    castList = resultRespone.getCast();
+                    setUpCastAdapter();
+                }
+            }
+        });
+
+    }
+
     private void setUpViewDetail() {
         txtTitle.setText(detailFilms.getTitle());
         txtDetail.setText(detailFilms.getOverview());
         Glide.with(this).load(MainActivity.HEADER_URL_IMAGE + detailFilms.getPosterPath()).into(imgFilm);
         txtRated.setRating(Float.parseFloat(detailFilms.getVoteAverage() / 2 + ""));
-        if(detailFilms.getGenres().size()==0 || detailFilms.getGenres().isEmpty())
+        if (detailFilms.getGenres().size() == 0 || detailFilms.getGenres().isEmpty())
             txtGenres.setText("•    No Data    •");
-        else if(detailFilms.getGenres().size()==1)
-            txtGenres.setText("•    " + detailFilms.getGenres().get(0).getName() +"    •");
+        else if (detailFilms.getGenres().size() == 1)
+            txtGenres.setText("•    " + detailFilms.getGenres().get(0).getName() + "    •");
         else
             txtGenres.setText("•    " + detailFilms.getGenres().get(0).getName() + ", " + detailFilms.getGenres().get(1).getName() + "    •");
         txtTimeFilm.setText(detailFilms.getRuntime() + " mins");
@@ -261,6 +282,15 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         rcvSimilarFilm.setAdapter(filmAdapter);
     }
 
+    private void setUpCastAdapter() {
+        castAdapter = new CastAdapter(castList, this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rcvCast.addItemDecoration(new HorizontalItemDecoration(Converter.dpToPx(this, 15)));
+        rcvCast.setLayoutManager(layoutManager);
+        rcvCast.setAdapter(castAdapter);
+    }
+
     @Override
     public void OnClickVideo(Video video, int position) {
         setUpVideoView(DetailFilmActivity.LINK_HEADER_YOUTUBE + video.getKey());
@@ -286,17 +316,19 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         String year = date.substring(0, 4);
         return year;
     }
+
     private void delayLoading() {
-        Handler handler =new Handler();
+        Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 loadingDialog.setVisibility(View.GONE);
             }
-        },3000);
+        }, 3000);
         loadingDialog.setVisibility(View.GONE);
     }
-    private void actionMoreFilm(){
+
+    private void actionMoreFilm() {
         btnSimilar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -12,7 +12,7 @@
             android:layout_height="wrap_content"
             android:background="@color/maincolor">
 
-            <com.example.bai1training.base.SearchActionBarView
+            <com.example.bai1training.base.customview.SearchActionBarView
                 android:id="@+id/sb_search_all"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
