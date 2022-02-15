@@ -74,6 +74,8 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
 
     private static final DecimalFormat df = new DecimalFormat("0.0");
 
+    public static final String VIDEO_ID = "VIDEO_ID";
+
     private ImageView btnPlay;
     private RelativeLayout btnBack;
     private TextView txtTitle, txtDetail, txtAdult, txtGenres, txtTimeFilm, txtRelease;
@@ -90,6 +92,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
     private Button btnSimilar, btnRecommend;
     private List<Cast> castList;
     private CastAdapter castAdapter;
+    private String videoId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,9 +188,10 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
             public void onChanged(VideoResponse videoResponse) {
                 if (videoResponse != null) {
                     videoList = videoResponse.getResults();
+
+                    watchFilm(videoResponse.getResults().get(0).getKey());
                     setUpVideoAdapter();
                 }
-
             }
         });
 
@@ -351,6 +355,14 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
                 startActivity(intent);
             }
         });
-
+    }
+    private void watchFilm(String videoId) {
+        binding.sectionFilm.setOnClickListener(view -> {
+            Intent intent = new Intent(DetailFilmActivity.this, WatchFilmActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(VIDEO_ID,videoId);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        });
     }
 }

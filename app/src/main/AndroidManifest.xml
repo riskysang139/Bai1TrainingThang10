@@ -14,9 +14,11 @@
         android:theme="@style/Theme.Bai1Training"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".detailFilm.DetailFilmActivity" />
+        <activity android:name=".detailFilm.WatchFilmActivity" />
+        <activity android:name=".detailFilm.DetailFilmActivity"/>
         <activity
             android:name=".film.MainActivity"
+            android:exported="true"
             android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
