@@ -28,7 +28,7 @@
                     android:src="@drawable/vtecom_ic_back" />
             </RelativeLayout>
 
-            <com.example.bai1training.base.customview.SearchActionBarView
+            <com.example.moviefilm.base.customview.SearchActionBarView
                 android:id="@+id/sb_search_all"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.bai1training">
+    package="com.example.moviefilm">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -14,10 +14,10 @@
         android:theme="@style/Theme.Bai1Training"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".detailFilm.WatchFilmActivity" />
-        <activity android:name=".detailFilm.DetailFilmActivity" />
+        <activity android:name="com.example.moviefilm.detailFilm.WatchFilmActivity" />
+        <activity android:name="com.example.moviefilm.detailFilm.DetailFilmActivity" />
         <activity
-            android:name=".film.MainActivity"
+            android:name="com.example.moviefilm.film.MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustNothing">
             <intent-filter>
@@ -26,9 +26,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".searchFilm.SearchFilmActivity" />
-        <activity android:name=".allfilm.AllFilmActivity" />
-        <activity android:name=".loginandregist.LoginActivity" />
+        <activity android:name="com.example.moviefilm.searchFilm.SearchFilmActivity" />
+        <activity android:name="com.example.moviefilm.allfilm.AllFilmActivity" />
+        <activity android:name="com.example.moviefilm.loginandregist.LoginActivity" />
     </application>
 
 </manifest>
