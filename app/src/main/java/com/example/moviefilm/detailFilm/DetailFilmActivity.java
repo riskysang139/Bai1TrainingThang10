@@ -1,5 +1,6 @@
 package com.example.moviefilm.detailFilm;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,7 +34,6 @@ import com.example.moviefilm.base.OnClickListener;
 import com.example.moviefilm.base.OnClickVideoListener;
 import com.example.moviefilm.databinding.ActivityDetailFilmBinding;
 import com.example.moviefilm.detailFilm.adapter.CastAdapter;
-import com.example.moviefilm.detailFilm.adapter.VideoTrailerAdapter;
 import com.example.moviefilm.detailFilm.models.Cast;
 import com.example.moviefilm.detailFilm.models.CastResponse;
 import com.example.moviefilm.detailFilm.models.DetailFilm;
@@ -43,12 +44,20 @@ import com.example.moviefilm.film.MainActivity;
 import com.example.moviefilm.film.adapter.FilmAdapter;
 import com.example.moviefilm.film.models.ResultRespone;
 import com.example.moviefilm.film.models.Results;
+import com.example.moviefilm.roomdatabase.Film;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+
 public class DetailFilmActivity extends AppCompatActivity implements OnClickVideoListener, OnClickListener {
+    private static final String TAG = "TAG";
     ActivityDetailFilmBinding binding;
     private VideoView videoView;
 
@@ -80,8 +89,6 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
     private ImageView imgFilm;
     private DetailFilmViewModels detailFilmViewModels;
     private DetailFilm detailFilms;
-    private List<Video> videoList;
-    private VideoTrailerAdapter videoTrailerAdapter;
     private RecyclerView rcvTrailer, rcvSimilarFilm, rcvRecommendFilm, rcvCast;
     private List<Results> listSimilarFilm, listRecommendFilm;
     private FilmAdapter filmAdapter;
@@ -89,7 +96,10 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
     private Button btnSimilar, btnRecommend;
     private List<Cast> castList;
     private CastAdapter castAdapter;
-    private String videoId = "";
+    private List<Film> filmListDB;
+    private Film filmDB;
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +108,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         detailFilmViewModels = ViewModelProviders.of(this).get(DetailFilmViewModels.class);
         initView();
         getData();
+        observerFilm();
         observerDetailFilm();
         observerVideoTrailerFilm();
         observerRecommendFilm();
@@ -106,10 +117,10 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         onComeback();
         delayLoading();
         actionMoreFilm();
+        setIcon();
     }
 
     private void initView() {
-//        videoView = findViewById(R.id.video_view);
         btnPlay = findViewById(R.id.btn_start);
         btnBack = findViewById(R.id.btn_back);
         txtDetail = findViewById(R.id.detail_film);
@@ -127,7 +138,6 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         btnRecommend = findViewById(R.id.btn_more_recommend);
         btnSimilar = findViewById(R.id.btn_more_similar);
         rcvCast = findViewById(R.id.rcv_cast);
-        videoList = new ArrayList<>();
         listRecommendFilm = new ArrayList<>();
         listSimilarFilm = new ArrayList<>();
     }
@@ -162,32 +172,23 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
     }
 
     private void onComeback() {
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        btnBack.setOnClickListener(v -> finish());
     }
 
     private void observerDetailFilm() {
         detailFilmViewModels.fetchDetailFilm(id, MainActivity.API_KEY);
         detailFilmViewModels.getDetailFilmLiveData().observe(this, detailFilm -> {
             detailFilms = detailFilm;
+            insertMovieLove(detailFilm);
             setUpViewDetail();
         });
     }
 
     public void observerVideoTrailerFilm() {
         detailFilmViewModels.fetchVideoTrailerFilm(id, MainActivity.API_KEY);
-        detailFilmViewModels.getVideoFilmLiveData().observe(DetailFilmActivity.this, new Observer<VideoResponse>() {
-            @Override
-            public void onChanged(VideoResponse videoResponse) {
-                if (videoResponse != null) {
-                    videoList = videoResponse.getResults();
-                    watchFilm(videoResponse.getResults().get(0).getKey());
-                    setUpVideoAdapter();
-                }
+        detailFilmViewModels.getVideoFilmLiveData().observe(DetailFilmActivity.this, videoResponse -> {
+            if (videoResponse != null) {
+                watchFilm(videoResponse.getResults().get(0).getKey());
             }
         });
 
@@ -195,13 +196,10 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
 
     public void observeSimilarFilm() {
         detailFilmViewModels.fetchSimilarFilm(id, MainActivity.API_KEY);
-        detailFilmViewModels.getSimilarFilmLiveData().observe(this, new Observer<ResultRespone>() {
-            @Override
-            public void onChanged(ResultRespone resultRespone) {
-                if (resultRespone != null) {
-                    listSimilarFilm = resultRespone.getResults();
-                    setUpSimilarFilmAdapter();
-                }
+        detailFilmViewModels.getSimilarFilmLiveData().observe(this, resultRespone -> {
+            if (resultRespone != null) {
+                listSimilarFilm = resultRespone.getResults();
+                setUpSimilarFilmAdapter();
             }
         });
 
@@ -209,13 +207,10 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
 
     public void observerRecommendFilm() {
         detailFilmViewModels.fetchRecommendFilm(id, MainActivity.API_KEY);
-        detailFilmViewModels.getRecommendFilmLiveData().observe(this, new Observer<ResultRespone>() {
-            @Override
-            public void onChanged(ResultRespone resultRespone) {
-                if (resultRespone != null) {
-                    listRecommendFilm = resultRespone.getResults();
-                    setUpRecommendFilmAdapter();
-                }
+        detailFilmViewModels.getRecommendFilmLiveData().observe(this, resultRespone -> {
+            if (resultRespone != null) {
+                listRecommendFilm = resultRespone.getResults();
+                setUpRecommendFilmAdapter();
             }
         });
 
@@ -223,18 +218,16 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
 
     public void observerCastFilm() {
         detailFilmViewModels.fetchCastFilm(id, MainActivity.API_KEY);
-        detailFilmViewModels.getCastResponseMutableLiveData().observe(this, new Observer<CastResponse>() {
-            @Override
-            public void onChanged(CastResponse resultRespone) {
-                if (resultRespone != null) {
-                    castList = resultRespone.getCast();
-                    setUpCastAdapter();
-                }
+        detailFilmViewModels.getCastResponseMutableLiveData().observe(this, resultRespone -> {
+            if (resultRespone != null) {
+                castList = resultRespone.getCast();
+                setUpCastAdapter();
             }
         });
 
     }
 
+    @SuppressLint("SetTextI18n")
     private void setUpViewDetail() {
         txtTitle.setText(detailFilms.getTitle());
         txtDetail.setText(detailFilms.getOverview());
@@ -252,14 +245,6 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         else
             txtAdult.setVisibility(View.GONE);
         txtRelease.setText(convertDate(detailFilms.getReleaseDate()));
-    }
-
-    private void setUpVideoAdapter() {
-        videoTrailerAdapter = new VideoTrailerAdapter(videoList, this, this);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        rcvTrailer.setLayoutManager(layoutManager);
-        rcvTrailer.setAdapter(videoTrailerAdapter);
     }
 
     private void setUpRecommendFilmAdapter() {
@@ -319,46 +304,92 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
 
     private void delayLoading() {
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loadingDialog.setVisibility(View.GONE);
-            }
-        }, 3000);
+        handler.postDelayed(() -> loadingDialog.setVisibility(View.GONE), 3000);
         loadingDialog.setVisibility(View.GONE);
     }
 
     private void actionMoreFilm() {
-        btnSimilar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(DetailFilmActivity.this, AllFilmActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString(DetailFilmActivity.ID, id + "");
-                bundle.putString(DetailFilmActivity.KEY_FROM, DetailFilmActivity.FROM_SIMILAR);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
-        btnRecommend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(DetailFilmActivity.this, AllFilmActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString(DetailFilmActivity.ID, id + "");
-                bundle.putString(DetailFilmActivity.KEY_FROM, DetailFilmActivity.FROM_RECOMMEND);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
-    }
-    private void watchFilm(String videoId) {
-        binding.sectionFilm.setOnClickListener(view -> {
-            Intent intent = new Intent(DetailFilmActivity.this, WatchFilmActivity.class);
+        btnSimilar.setOnClickListener(view -> {
+            Intent intent = new Intent(DetailFilmActivity.this, AllFilmActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putString(VIDEO_ID,videoId);
+            bundle.putString(DetailFilmActivity.ID, id + "");
+            bundle.putString(DetailFilmActivity.KEY_FROM, DetailFilmActivity.FROM_SIMILAR);
             intent.putExtras(bundle);
             startActivity(intent);
         });
+        btnRecommend.setOnClickListener(view -> {
+            Intent intent = new Intent(DetailFilmActivity.this, AllFilmActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(DetailFilmActivity.ID, id + "");
+            bundle.putString(DetailFilmActivity.KEY_FROM, DetailFilmActivity.FROM_RECOMMEND);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        });
+    }
+
+    private void watchFilm(String videoId) {
+        binding.videoViewClick.setOnClickListener(view -> {
+            Intent intent = new Intent(DetailFilmActivity.this, WatchFilmActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(VIDEO_ID, videoId);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        });
+    }
+
+    private void setIcon() {
+
+    }
+
+    public void observerFilm() {
+        Disposable disposable = detailFilmViewModels.getMovies(id).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Film>() {
+                    @Override
+                    public void accept(Film films) throws Exception {
+                        Log.d(TAG, "accept: getMovie");
+                        filmDB = films;
+                        if (films != null)
+                            if (filmDB.getFilmLove() == 1) {
+                                binding.imgHeart.setImageResource(R.drawable.heart_red);
+                                binding.imgHeart.setOnClickListener(view -> {
+                                    Film film = films;
+                                    film.setFilmLove(0);
+                                    detailFilmViewModels.updateFilm(film);
+                                    binding.imgHeart.setImageResource(R.drawable.heart);
+                                });
+                            } else {
+                                binding.imgHeart.setImageResource(R.drawable.heart);
+                                binding.imgHeart.setOnClickListener(view -> {
+                                    Film film = films;
+                                    film.setFilmLove(1);
+                                    detailFilmViewModels.updateFilm(film);
+                                    binding.imgHeart.setImageResource(R.drawable.heart_red);
+                                });
+                            }
+                    }
+                });
+        compositeDisposable.add(disposable);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        compositeDisposable.dispose();
+    }
+
+    private void insertMovieLove(@NonNull DetailFilm detailFilm) {
+        if (filmDB == null) {
+            Film film = new Film(detailFilm.getId(), detailFilm.getTitle(),
+                    MainActivity.HEADER_URL_IMAGE + detailFilm.getPosterPath(),
+                    Float.parseFloat(detailFilm.getVoteAverage() / 2 + ""), Converter.convertStringToDate(detailFilms.getReleaseDate()), 0);
+            binding.imgHeart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    binding.imgHeart.setImageResource(R.drawable.heart_red);
+                    detailFilmViewModels.insertFilm(film);
+                }
+            });
+        }
     }
 }

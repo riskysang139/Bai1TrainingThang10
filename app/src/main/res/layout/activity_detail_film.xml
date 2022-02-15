@@ -63,10 +63,12 @@
                         android:background="@drawable/vtecom_circle_button_opacity_black">
 
                         <ImageView
+                            android:id="@+id/img_heart"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:padding="10dp"
-                            android:src="@drawable/heart" />
+                            android:src="@drawable/heart"
+                            />
                     </RelativeLayout>
                 </RelativeLayout>
 
