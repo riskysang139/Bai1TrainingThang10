@@ -115,7 +115,6 @@
                 android:layout_below="@id/img_profile"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_20sdp"
-                android:background="@color/maincolor"
                 android:orientation="vertical">
 
                 <Button
@@ -173,7 +172,6 @@
                 android:layout_below="@id/linear_first"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:background="@color/maincolor"
                 android:orientation="vertical">
 
                 <Button

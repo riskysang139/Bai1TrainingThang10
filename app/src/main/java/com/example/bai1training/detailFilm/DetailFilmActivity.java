@@ -188,7 +188,6 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
             public void onChanged(VideoResponse videoResponse) {
                 if (videoResponse != null) {
                     videoList = videoResponse.getResults();
-
                     watchFilm(videoResponse.getResults().get(0).getKey());
                     setUpVideoAdapter();
                 }
