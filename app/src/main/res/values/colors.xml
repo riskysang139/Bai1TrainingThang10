@@ -8,9 +8,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="main">#F96B2E</color>
-    <color name="maincolor">#FA252525</color>
+    <color name="maincolor">#0B0F2F</color>
     <color name="gray">#85575656</color>
     <color name="category">#888888</color>
     <color name="color_979797">#979797</color>
     <color name="color_CCCCCC">#B5B5B5</color>
+    <color name="color_D7201E1E">#D7201E1E</color>
 </resources>

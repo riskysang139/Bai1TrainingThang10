@@ -25,6 +25,7 @@ public class Converter {
     private static String u = "ÚÙỤúùụƯỨỪỰưứừựỦŨủũỬỮửữ";
     private static String y = "ÝỲỴýỳỵỶỸỷỹ";
     private static String d = "Đđ";
+    public static final DecimalFormat df = new DecimalFormat("0.0");
 
     /**
      * convert 1000 to 1.000đ

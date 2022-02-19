@@ -3,25 +3,14 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home"
-        android:title="Home">
-
-    </item>
+        android:title="Home" />
     <item
-        android:id="@+id/navigation_upcoming"
-        android:icon="@drawable/ic_baseline_trending_up_24"
-        android:title="Upcoming" />
-    <item
-        android:id="@+id/navigation_top_rate"
-        android:icon="@drawable/img_cart"
-        android:title="Cart">
-
-    </item>
-
+        android:id="@+id/navigation_cart"
+        android:icon="@drawable/img_cart_menu"
+        android:title="Cart" />
     <item
         android:id="@+id/navigation_user"
         android:icon="@drawable/ic_user"
-        android:title="Account">
-
-    </item>
+        android:title="Account" />
 
 </menu>

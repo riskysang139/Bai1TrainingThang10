@@ -1,6 +1,6 @@
 package com.example.moviefilm.base;
 
-import com.example.moviefilm.detailFilm.models.Video;
+import com.example.moviefilm.film.home.detailFilm.models.Video;
 
 public interface OnClickVideoListener {
     void OnClickVideo(Video video , int position);

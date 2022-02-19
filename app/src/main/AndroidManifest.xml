@@ -14,10 +14,10 @@
         android:theme="@style/Theme.Bai1Training"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name="com.example.moviefilm.detailFilm.WatchFilmActivity" />
-        <activity android:name="com.example.moviefilm.detailFilm.DetailFilmActivity" />
+        <activity android:name=".film.home.detailFilm.WatchFilmActivity" />
+        <activity android:name=".film.home.detailFilm.DetailFilmActivity" />
         <activity
-            android:name="com.example.moviefilm.film.MainActivity"
+            android:name="com.example.moviefilm.film.view.MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustNothing">
             <intent-filter>
@@ -26,9 +26,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.moviefilm.searchFilm.SearchFilmActivity" />
-        <activity android:name="com.example.moviefilm.allfilm.AllFilmActivity" />
-        <activity android:name="com.example.moviefilm.loginandregist.LoginActivity" />
+        <activity android:name=".film.home.searchFilm.SearchFilmActivity" />
+        <activity android:name=".film.home.allfilm.view.AllFilmActivity" />
+        <activity android:name=".film.user.login.LoginActivity" />
     </application>
 
 </manifest>

@@ -115,4 +115,8 @@ dependencies {
 
     // optional - Paging 3 Integration
     implementation "androidx.room:room-paging:2.4.1"
+
+    implementation("org.greenrobot:eventbus:3.3.1")
+
+    compile 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
 }

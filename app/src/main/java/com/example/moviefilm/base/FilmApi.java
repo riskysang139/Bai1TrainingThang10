@@ -1,9 +1,9 @@
 package com.example.moviefilm.base;
 
 
-import com.example.moviefilm.detailFilm.models.CastResponse;
-import com.example.moviefilm.detailFilm.models.DetailFilm;
-import com.example.moviefilm.detailFilm.models.VideoResponse;
+import com.example.moviefilm.film.home.detailFilm.models.CastResponse;
+import com.example.moviefilm.film.home.detailFilm.models.DetailFilm;
+import com.example.moviefilm.film.home.detailFilm.models.VideoResponse;
 import com.example.moviefilm.film.models.MovieAdver;
 import com.example.moviefilm.film.models.ResultRespone;
 
