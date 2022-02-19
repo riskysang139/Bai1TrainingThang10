@@ -16,10 +16,16 @@ public interface FilmDao {
     @Query("SELECT * from movie_database")
     Flowable<List<Film>> getAll();
 
-    @Query("SELECT * from movie_database WHERE filmId ==:id")
-    Flowable<Film> getFilm(String id);
+    @Query("SELECT * from movie_database WHERE film_buy ==:isWantBuy")
+    Flowable<List<Film>> getFilmCart(int isWantBuy);
 
-    @Insert (onConflict = OnConflictStrategy.REPLACE)
+    @Query("SELECT * from movie_database WHERE filmId ==:id AND film_buy ==:isWantBuy")
+    Flowable<Film> getFilm(String id, int isWantBuy);
+
+    @Query("SELECT * from movie_database WHERE filmId ==:id")
+    Flowable<Film> getFilmLove(String id);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Film... films);
 
     @Insert

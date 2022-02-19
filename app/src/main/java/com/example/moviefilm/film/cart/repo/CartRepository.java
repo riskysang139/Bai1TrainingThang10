@@ -32,6 +32,11 @@ public class CartRepository {
         return filmDao.getAll();
     }
 
+    //Get all film
+    public Flowable<List<Film>> getFilmCart(int isWantBuy){
+        return filmDao.getFilmCart(isWantBuy);
+    }
+
     //Update Movie
     public void updateCartMovie(final Film film){
         Completable.fromAction(new Action() {

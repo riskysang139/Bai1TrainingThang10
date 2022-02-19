@@ -50,8 +50,13 @@ public class DetailFilmRepo {
     }
 
     //Get film
-    public Flowable<Film> getFilm(String id){
-        return filmDao.getFilm(id);
+    public Flowable<Film> getFilm(String id, int isWantBuy){
+        return filmDao.getFilm(id, isWantBuy);
+    }
+
+    //Get film love
+    public Flowable<Film> getFilmLove(String id){
+        return filmDao.getFilmLove(id);
     }
     //insert film love
     public void insertFilm (final Film film) {

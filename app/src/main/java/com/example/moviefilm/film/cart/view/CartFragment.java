@@ -61,12 +61,12 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_cart, container, false);
+        totalPrice = 0;
         View view = binding.getRoot();
         cartViewModel = ViewModelProviders.of(this).get(CartViewModel.class);
         observerCartFilm();
         keyFrom = getArguments().getString(DetailFilmActivity.KEY_FROM, "");
         binding.totalPayment.setSelected(true);
-        refreshLayout();
         return view;
     }
 
@@ -77,13 +77,19 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
     }
 
     private void observerCartFilm() {
-        Disposable disposable = cartViewModel.getAllMovies().subscribeOn(Schedulers.io())
+        Disposable disposable = cartViewModel.getFilmCart(1).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Film>>() {
                     @Override
                     public void accept(List<Film> films) throws Exception {
                         filmList = films;
-                        initAdapter(films);
+                        if (films.size() > 0) {
+                            initAdapter(films);
+                            binding.txtNoData.setVisibility(View.GONE);
+                        } else {
+                            binding.txtNoData.setVisibility(View.VISIBLE);
+                        }
+
                     }
                 });
         compositeDisposable.add(disposable);
@@ -152,14 +158,5 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
     public void onDestroyView() {
         super.onDestroyView();
         compositeDisposable.dispose();
-    }
-
-    private void refreshLayout() {
-        binding.refreshLayout.setOnRefreshListener(() -> {
-            if (cartAdapter != null)
-                cartAdapter.notifyDataSetChanged();
-            new Handler().postDelayed(() -> binding.refreshLayout.setRefreshing(false), 1000);
-        });
-
     }
 }

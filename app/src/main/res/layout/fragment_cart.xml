@@ -2,93 +2,97 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/refresh_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/maincolor">
 
-        <RelativeLayout
+        <TextView
+            android:id="@+id/txt_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_45sdp"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:fontFamily="@font/beausanspro_bold"
+            android:gravity="left|center"
+            android:paddingStart="@dimen/_15sdp"
+            android:text="@string/title_cart_fragment"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/_22sdp"
+            android:textStyle="bold"
+            tools:ignore="RtlSymmetry,SpUsage" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcv_cart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/maincolor">
+            android:layout_above="@id/rl_payment"
+            android:layout_below="@id/txt_title" />
+
+        <TextView
+            android:id="@+id/txt_no_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="No data"
+            android:fontFamily="@font/beausanspro_bold"
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
+
+        <LinearLayout
+            android:id="@+id/rl_payment"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/cb_sl_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:button="@drawable/bg_checkbox_custom" />
 
             <TextView
-                android:id="@+id/txt_title"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_45sdp"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:fontFamily="@font/beausanspro_bold"
-                android:gravity="left|center"
-                android:paddingStart="@dimen/_15sdp"
-                android:text="@string/title_cart_fragment"
-                android:textColor="#ffffff"
-                android:textSize="@dimen/_22sdp"
-                android:textStyle="bold"
-                tools:ignore="RtlSymmetry,SpUsage" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:fontFamily="@font/pro_text_regular"
+                android:text="Select All"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rcv_cart"
+            <TextView
+                android:id="@+id/total_payment"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:fontFamily="@font/pro_text_regular"
+                android:gravity="end"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="Total Payment : 0,00 $"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/btn_payment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@id/rl_payment"
-                android:layout_below="@id/txt_title" />
-
-            <LinearLayout
-                android:id="@+id/rl_payment"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_alignParentBottom="true"
-                android:orientation="horizontal">
-
-                <CheckBox
-                    android:id="@+id/cb_sl_all"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="@dimen/_15sdp"
-                    android:button="@drawable/bg_checkbox_custom" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="5dp"
-                    android:fontFamily="@font/pro_text_regular"
-                    android:text="Select All"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/total_payment"
-                    android:layout_width="140dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:ellipsize="marquee"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:fontFamily="@font/pro_text_regular"
-                    android:gravity="end"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:scrollHorizontally="true"
-                    android:singleLine="true"
-                    android:text="Total Payment : 0,00 $"
-                    android:textColor="@color/white"
-                    android:textSize="13sp" />
-
-                <Button
-                    android:id="@+id/btn_payment"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_corner_payment"
-                    android:fontFamily="@font/beausanspro_bold"
-                    android:paddingHorizontal="3dp"
-                    android:text="Payment (0)"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
-            </LinearLayout>
-        </RelativeLayout>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                android:background="@drawable/bg_corner_payment"
+                android:fontFamily="@font/beausanspro_bold"
+                android:paddingHorizontal="3dp"
+                android:text="Payment (0)"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </RelativeLayout>
 </layout>

@@ -24,6 +24,11 @@ public class CartViewModel extends AndroidViewModel{
         return cartRepository.getAllFilm();
     }
 
+    //Get all Movie
+    public Flowable<List<Film>> getFilmCart(int isWantBuy){
+        return cartRepository.getFilmCart(isWantBuy);
+    }
+
     //Update Movie
     public void updateFilm(Film film){
         cartRepository.updateCartMovie(film);

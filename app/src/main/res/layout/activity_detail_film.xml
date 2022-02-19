@@ -78,7 +78,7 @@
                             android:layout_marginTop="30dp"
                             android:layout_marginEnd="5dp"
                             android:layout_marginRight="5dp"
-                            android:layout_toLeftOf="@id/rl_share"
+                            android:layout_toLeftOf="@id/rl_love"
                             android:background="@drawable/vtecom_circle_button_opacity_black">
 
                             <ImageView
@@ -92,7 +92,7 @@
                         </RelativeLayout>
 
                         <RelativeLayout
-                            android:id="@+id/rl_share"
+                            android:id="@+id/rl_love"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_alignParentEnd="true"

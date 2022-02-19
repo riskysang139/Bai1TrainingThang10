@@ -65,9 +65,14 @@ public class DetailFilmViewModels extends AndroidViewModel {
         return detailFilmRepo.getAllFilm();
     }
 
-    //Get Movie
-    public Flowable<Film> getMovies(String id){
-        return detailFilmRepo.getFilm(id);
+    //Get Movie with buy
+    public Flowable<Film> getMovies(String id, int isWantBuy){
+        return detailFilmRepo.getFilm(id, isWantBuy);
+    }
+
+    //Get Movie with love
+    public Flowable<Film> getMoviesLove(String id){
+        return detailFilmRepo.getFilmLove(id);
     }
 
     //Insert Movie

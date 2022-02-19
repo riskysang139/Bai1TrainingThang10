@@ -101,6 +101,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
     private Film filmDB;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private CompositeDisposable compositeDisposableNew = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +110,8 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         detailFilmViewModels = ViewModelProviders.of(this).get(DetailFilmViewModels.class);
         initView();
         getData();
-        observerFilm();
+        observerFilmBuy();
+        observerFilmLove();
         observerDetailFilm();
         observerVideoTrailerFilm();
         observerRecommendFilm();
@@ -119,7 +121,6 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         delayLoading();
         actionMoreFilm();
         openCartFilm();
-        onClickFilmToCart();
     }
 
     private void initView() {
@@ -181,8 +182,10 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         detailFilmViewModels.fetchDetailFilm(id, MainActivity.API_KEY);
         detailFilmViewModels.getDetailFilmLiveData().observe(this, detailFilm -> {
             detailFilms = detailFilm;
-            insertMovieLove(detailFilm);
+            insertMovieBuy(detailFilm);
+            onClickFilmToCart(detailFilm);
             setUpViewDetail();
+            insertMovieLove(detailFilm);
         });
     }
 
@@ -247,7 +250,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         else
             txtAdult.setVisibility(View.GONE);
         txtRelease.setText(convertDate(detailFilms.getReleaseDate()));
-        binding.txtPrice.setText("Add to cart : " +detailFilms.getVoteAverage() * 2 +" $");
+        binding.txtPrice.setText("Add to cart : " + detailFilms.getVoteAverage() * 2 + " $");
     }
 
     private void setUpRecommendFilmAdapter() {
@@ -340,8 +343,8 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         });
     }
 
-    public void observerFilm() {
-        Disposable disposable = detailFilmViewModels.getMovies(id).subscribeOn(Schedulers.io())
+    public void observerFilmBuy() {
+        Disposable disposable = detailFilmViewModels.getMovies(id, 1).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Film>() {
                     @Override
@@ -349,87 +352,117 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
                         Log.d(TAG, "accept: getMovie");
                         filmDB = films;
                         if (films != null)
-                            binding.payment.setVisibility(View.GONE);
-                            if (filmDB.getFilmLove() == 1) {
-                                binding.imgHeart.setImageResource(R.drawable.heart_red);
-                                binding.imgHeart.setOnClickListener(view -> {
-                                    Film film = films;
-                                    film.setFilmLove(0);
-                                    detailFilmViewModels.updateFilm(film);
-                                    binding.imgHeart.setImageResource(R.drawable.heart);
-                                });
-                            } else {
-                                binding.imgHeart.setOnClickListener(view -> {
-                                    Film film = films;
-                                    film.setFilmLove(1);
-                                    detailFilmViewModels.updateFilm(film);
-                                    binding.imgHeart.setImageResource(R.drawable.heart_red);
-                                });
-                            }
+                            updateFilmBuy(films);
+                    }
+                });
+        compositeDisposableNew.add(disposable);
+    }
+
+    private void observerFilmLove() {
+        Disposable disposable = detailFilmViewModels.getMoviesLove(id).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Film>() {
+                    @Override
+                    public void accept(Film films) throws Exception {
+                        Log.d(TAG, "accept: getMovie");
+                        filmDB = films;
+                        if (films != null) {
+                            updateFilmLove(films);
+                        }
                     }
                 });
         compositeDisposable.add(disposable);
+    }
+
+    private void updateFilmBuy(Film films) {
+        if (films.getIsWantBuy() == 0) {
+            binding.payment.setOnClickListener(view -> {
+                Film film = films;
+                film.setIsWantBuy(1);
+                detailFilmViewModels.updateFilm(film);
+            });
+        } else
+            binding.payment.setVisibility(View.GONE);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         compositeDisposable.dispose();
+        compositeDisposableNew.dispose();
+    }
+
+    private void updateFilmLove(Film films) {
+        if (films.getFilmLove() == 1) {
+            binding.imgHeart.setImageResource(R.drawable.heart_red);
+            binding.rlLove.setOnClickListener(view -> {
+                Film film = films;
+                film.setFilmLove(0);
+                detailFilmViewModels.updateFilm(film);
+                binding.imgHeart.setImageResource(R.drawable.heart);
+            });
+        } else {
+            binding.rlLove.setOnClickListener(view -> {
+                Film film = films;
+                film.setFilmLove(1);
+                detailFilmViewModels.updateFilm(film);
+                binding.imgHeart.setImageResource(R.drawable.heart_red);
+            });
+        }
     }
 
     private void insertMovieLove(@NonNull DetailFilm detailFilm) {
         if (filmDB == null) {
             Film film = new Film(detailFilm.getId(), detailFilm.getTitle(),
                     MainActivity.HEADER_URL_IMAGE + detailFilm.getPosterPath(),
-                    Float.parseFloat(detailFilm.getVoteAverage() / 2 + ""), Converter.convertStringToDate(detailFilms.getReleaseDate()), 0);
-            binding.imgHeart.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    binding.imgHeart.setImageResource(R.drawable.heart_red);
-                    detailFilmViewModels.insertFilm(film);
-                }
+                    Float.parseFloat(detailFilm.getVoteAverage() / 2 + ""), Converter.convertStringToDate(detailFilms.getReleaseDate()), 1);
+            binding.rlLove.setOnClickListener(view -> {
+                binding.imgHeart.setImageResource(R.drawable.heart_red);
+                detailFilmViewModels.insertFilm(film);
             });
         }
     }
 
+    private void insertMovieBuy(@NonNull DetailFilm detailFilm) {
+        if (filmDB == null) {
+            Film film = new Film(detailFilm.getId(), detailFilm.getTitle(),
+                    MainActivity.HEADER_URL_IMAGE + detailFilm.getPosterPath(),
+                    Float.parseFloat(detailFilm.getVoteAverage() / 2 + ""), Converter.convertStringToDate(detailFilms.getReleaseDate()), 0, 1);
+            detailFilmViewModels.insertFilm(film);
+        }
+    }
+
     private void openCartFilm() {
-        binding.rlCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                Intent intent = new Intent(DetailFilmActivity.this, MainActivity.class);
-                bundle.putString(KEY_FROM,FROM_DETAIL);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
+        binding.rlCart.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            Intent intent = new Intent(DetailFilmActivity.this, MainActivity.class);
+            bundle.putString(KEY_FROM, FROM_DETAIL);
+            intent.putExtras(bundle);
+            startActivity(intent);
         });
     }
-    private void onClickFilmToCart() {
-        binding.payment.setOnClickListener(new View.OnClickListener() {
+
+    private void onClickFilmToCart(@NonNull DetailFilm detailFilm) {
+        binding.payment.setOnClickListener(view -> new CircleAnimationUtil().attachActivity(DetailFilmActivity.this).setTargetView(binding.payment).setMoveDuration(1000).setDestView(binding.rlCart).setAnimationListener(new Animator.AnimatorListener() {
             @Override
-            public void onClick(View view) {
-                new CircleAnimationUtil().attachActivity(DetailFilmActivity.this).setTargetView(binding.payment).setMoveDuration(1000).setDestView(binding.rlCart).setAnimationListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animator) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animator) {
-
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animator) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animator) {
-
-                    }
-                }).startAnimation();
+            public void onAnimationStart(Animator animator) {
+                insertMovieBuy(detailFilm);
             }
-        });
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        }).startAnimation());
     }
 }
