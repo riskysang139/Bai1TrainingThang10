@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.moviefilm.R;
 import com.example.moviefilm.base.Converter;
@@ -63,6 +65,8 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
         cartViewModel = ViewModelProviders.of(this).get(CartViewModel.class);
         observerCartFilm();
         keyFrom = getArguments().getString(DetailFilmActivity.KEY_FROM, "");
+        binding.totalPayment.setSelected(true);
+        refreshLayout();
         return view;
     }
 
@@ -127,6 +131,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
                     cartAdapter.notifyDataSetChanged();
                     for (int i = 0; i < filmList.size(); i++)
                         totalPrice += (filmList.get(i).getFilmRate() * 4);
+                    CartAdapter.numberChoice = filmList.size();
                     binding.btnPayment.setText("Payment (" + filmList.size() + ")");
                 }
             } else {
@@ -149,4 +154,12 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
         compositeDisposable.dispose();
     }
 
+    private void refreshLayout() {
+        binding.refreshLayout.setOnRefreshListener(() -> {
+            if (cartAdapter != null)
+                cartAdapter.notifyDataSetChanged();
+            new Handler().postDelayed(() -> binding.refreshLayout.setRefreshing(false), 1000);
+        });
+
+    }
 }

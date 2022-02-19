@@ -247,7 +247,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         else
             txtAdult.setVisibility(View.GONE);
         txtRelease.setText(convertDate(detailFilms.getReleaseDate()));
-        binding.txtPrice.setText(detailFilms.getVoteAverage() * 2 +" $");
+        binding.txtPrice.setText("Add to cart : " +detailFilms.getVoteAverage() * 2 +" $");
     }
 
     private void setUpRecommendFilmAdapter() {
@@ -349,6 +349,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
                         Log.d(TAG, "accept: getMovie");
                         filmDB = films;
                         if (films != null)
+                            binding.payment.setVisibility(View.GONE);
                             if (filmDB.getFilmLove() == 1) {
                                 binding.imgHeart.setImageResource(R.drawable.heart_red);
                                 binding.imgHeart.setOnClickListener(view -> {
@@ -356,7 +357,6 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
                                     film.setFilmLove(0);
                                     detailFilmViewModels.updateFilm(film);
                                     binding.imgHeart.setImageResource(R.drawable.heart);
-                                    Toast.makeText(getBaseContext(),"Love Film Successfully",Toast.LENGTH_SHORT).show();
                                 });
                             } else {
                                 binding.imgHeart.setOnClickListener(view -> {
@@ -364,7 +364,6 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
                                     film.setFilmLove(1);
                                     detailFilmViewModels.updateFilm(film);
                                     binding.imgHeart.setImageResource(R.drawable.heart_red);
-                                    Toast.makeText(getBaseContext(),"Unfavorite Film Successfully",Toast.LENGTH_SHORT).show();
                                 });
                             }
                     }
@@ -388,7 +387,6 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
                 public void onClick(View view) {
                     binding.imgHeart.setImageResource(R.drawable.heart_red);
                     detailFilmViewModels.insertFilm(film);
-                    Toast.makeText(getBaseContext(),"Love Film Successfully",Toast.LENGTH_SHORT).show();
                 }
             });
         }
