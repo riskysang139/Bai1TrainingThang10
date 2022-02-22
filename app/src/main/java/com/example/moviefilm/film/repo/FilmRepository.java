@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.moviefilm.base.FilmApi;
 import com.example.moviefilm.base.RetroClass;
-import com.example.moviefilm.film.models.MovieAdver;
+import com.example.moviefilm.film.models.MovieAdverb;
 import com.example.moviefilm.film.models.ResultResponse;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class FilmRepository {
     private MutableLiveData<ResultResponse> mPopularLiveData = new MutableLiveData<>();
     private MutableLiveData<ResultResponse> mTopRateLiveData = new MutableLiveData<>();
     private MutableLiveData<ResultResponse> mUpcomingLiveData = new MutableLiveData<>();
-    private MutableLiveData<List<MovieAdver>> mMovieAdverLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<MovieAdverb>> mMovieAdverLiveData = new MutableLiveData<>();
 
     public FilmRepository(Application application) {
 
@@ -59,7 +59,7 @@ public class FilmRepository {
 
     public void fetchTopRateMovies(String apiKey, int page) {
         FilmApi filmApi = RetroClass.getFilmApi();
-        Observable<ResultResponse> observableFieldPopularMovies = filmApi.getTopRatedFilmRespone(apiKey, page)
+        Observable<ResultResponse> observableFieldPopularMovies = filmApi.getTopRatedFilmResponse(apiKey, page)
                 .subscribeOn(Schedulers.io());
         observableFieldPopularMovies.subscribe(new Observer<ResultResponse>() {
             @Override
@@ -86,7 +86,7 @@ public class FilmRepository {
 
     public void fetchUpcomingMovies(String apiKey, int page) {
         FilmApi filmApi = RetroClass.getFilmApi();
-        Observable<ResultResponse> observableFieldPopularMovies = filmApi.getUpcomingFilmRespone(apiKey, page)
+        Observable<ResultResponse> observableFieldPopularMovies = filmApi.getUpcomingFilmResponse(apiKey, page)
                 .subscribeOn(Schedulers.io());
         observableFieldPopularMovies.subscribe(new Observer<ResultResponse>() {
             @Override
@@ -111,46 +111,18 @@ public class FilmRepository {
         });
     }
 
-    public void fetchNowPalyingMovies(String apiKey, int page) {
-        FilmApi filmApi = RetroClass.getFilmApi();
-        Observable<ResultResponse> observableFieldPopularMovies = filmApi.getNowPlayingFilmRespone(apiKey, page)
-                .subscribeOn(Schedulers.io());
-        observableFieldPopularMovies.subscribe(new Observer<ResultResponse>() {
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(@NonNull ResultResponse resultResponse) {
-                mNowPlayingLiveData.postValue(resultResponse);
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-                Log.e("Sang", e.getMessage());
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
-
-    }
-
-    public void fetchMovieAdver() {
+    public void fetchMovieAdverb() {
         FilmApi filmApi = RetroClass.getAdver();
-        Observable<List<MovieAdver>> movieAdverObservable = filmApi.getAdver().subscribeOn(Schedulers.io());
-        movieAdverObservable.subscribe(new Observer<List<MovieAdver>>() {
+        Observable<List<MovieAdverb>> movieAdverbObservable = filmApi.getAdverb().subscribeOn(Schedulers.io());
+        movieAdverbObservable.subscribe(new Observer<List<MovieAdverb>>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
 
             }
 
             @Override
-            public void onNext(@NonNull List<MovieAdver> movieAdvers) {
-                mMovieAdverLiveData.postValue(movieAdvers);
+            public void onNext(@NonNull List<MovieAdverb> movieAdverbs) {
+                mMovieAdverLiveData.postValue(movieAdverbs);
             }
 
             @Override
@@ -165,23 +137,19 @@ public class FilmRepository {
         });
     }
 
-    public MutableLiveData<ResultResponse> getmNowPlayingLiveData() {
-        return mNowPlayingLiveData;
-    }
-
-    public MutableLiveData<ResultResponse> getmPopularLiveData() {
+    public MutableLiveData<ResultResponse> getPopularLiveData() {
         return mPopularLiveData;
     }
 
-    public MutableLiveData<ResultResponse> getmTopRateLiveData() {
+    public MutableLiveData<ResultResponse> getTopRateLiveData() {
         return mTopRateLiveData;
     }
 
-    public MutableLiveData<ResultResponse> getmUpcomingLiveData() {
+    public MutableLiveData<ResultResponse> getUpcomingLiveData() {
         return mUpcomingLiveData;
     }
 
-    public MutableLiveData<List<MovieAdver>> getmMovieAdverLiveData() {
+    public MutableLiveData<List<MovieAdverb>> gemMovieAdverbLiveData() {
         return mMovieAdverLiveData;
     }
 }

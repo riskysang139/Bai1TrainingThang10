@@ -26,41 +26,8 @@ public class CartRepository {
         FilmDatabase filmDatabase = FilmDatabase.getInstance(application);
         filmDao = filmDatabase.filmDao();
     }
-
-    //Get all film
-    public Flowable<List<Film>> getAllFilm(){
-        return filmDao.getAll();
-    }
-
-    //Get all film
+    //Get all film cart
     public Flowable<List<Film>> getFilmCart(int isWantBuy){
         return filmDao.getFilmCart(isWantBuy);
-    }
-
-    //Update Movie
-    public void updateCartMovie(final Film film){
-        Completable.fromAction(new Action() {
-            @Override
-            public void run() throws Exception {
-                filmDao.updateFilm(film);
-            }
-        }).observeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        Log.d(TAG, "onSubscribe: Called");
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Log.d(TAG, "onComplete: Called");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d(TAG, "onError: Called"+e.getMessage());
-                    }
-                });
     }
 }

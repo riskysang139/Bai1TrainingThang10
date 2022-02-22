@@ -6,7 +6,7 @@
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/maincolor">
+        android:background="@color/main_color">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -105,7 +105,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="@dimen/_30sdp"
                 android:layout_marginRight="@dimen/_15sdp"
-                android:background="@color/maincolor"
+                android:background="@color/main_color"
                 android:src="@drawable/pencil" />
 
             <LinearLayout

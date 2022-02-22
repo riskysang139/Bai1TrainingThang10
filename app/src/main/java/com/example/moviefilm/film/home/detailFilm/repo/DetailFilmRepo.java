@@ -58,6 +58,7 @@ public class DetailFilmRepo {
     public Flowable<Film> getFilmLove(String id){
         return filmDao.getFilmLove(id);
     }
+
     //insert film love
     public void insertFilm (final Film film) {
         Completable.fromAction(new Action() {
@@ -184,7 +185,7 @@ public class DetailFilmRepo {
 
     public void fetchSimilarFilm(String id, String apiKey) {
         FilmApi videoFilm = RetroClass.getFilmApi();
-        Observable<ResultResponse> resultsObservable = videoFilm.getSimilarVideoTrailer(id, apiKey, 1).subscribeOn(Schedulers.io());
+        Observable<ResultResponse> resultsObservable = videoFilm.getSimilarFilm(id, apiKey, 1).subscribeOn(Schedulers.io());
         resultsObservable.subscribe(new Observer<ResultResponse>() {
             @Override
             public void onSubscribe(@NonNull io.reactivex.disposables.Disposable d) {
@@ -209,7 +210,7 @@ public class DetailFilmRepo {
 
     public void fetchRecommendFilm(String id, String apiKey) {
         FilmApi videoFilm = RetroClass.getFilmApi();
-        Observable<ResultResponse> resultsObservable = videoFilm.getRecommendVideoTrailer(id, apiKey, 1).subscribeOn(Schedulers.io());
+        Observable<ResultResponse> resultsObservable = videoFilm.getRecommendFilm(id, apiKey, 1).subscribeOn(Schedulers.io());
         resultsObservable.subscribe(new Observer<ResultResponse>() {
             @Override
             public void onSubscribe(@NonNull io.reactivex.disposables.Disposable d) {

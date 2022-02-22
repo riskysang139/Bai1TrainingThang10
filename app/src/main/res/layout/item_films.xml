@@ -6,7 +6,7 @@
         android:id="@+id/rl_film"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/maincolor"
+        android:backgroundTint="@color/main_color"
         android:backgroundTintMode="add">
 
         <androidx.cardview.widget.CardView

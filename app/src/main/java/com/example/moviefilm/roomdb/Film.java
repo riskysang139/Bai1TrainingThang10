@@ -27,20 +27,14 @@ public class Film {
     @ColumnInfo(name = "film_buy")
     private int isWantBuy;
 
+    @ColumnInfo(name = "film_watch")
+    private int filmWatch;
+
     private boolean isChecked = false;
 
     private float totalPrice;
 
-    public Film(int filmId, String filmName, String filmImage, float filmRate, String filmReleaseDate, int filmLove) {
-        this.filmId = filmId;
-        this.filmName = filmName;
-        this.filmImage = filmImage;
-        this.filmRate = filmRate;
-        this.filmReleaseDate = filmReleaseDate;
-        this.filmLove = filmLove;
-    }
-
-    public Film(int filmId, String filmName, String filmImage, float filmRate, String filmReleaseDate, int filmLove, int isWantBuy) {
+    public Film(int filmId, String filmName, String filmImage, float filmRate, String filmReleaseDate, int filmLove, int isWantBuy, int filmWatch) {
         this.filmId = filmId;
         this.filmName = filmName;
         this.filmImage = filmImage;
@@ -48,6 +42,7 @@ public class Film {
         this.filmReleaseDate = filmReleaseDate;
         this.filmLove = filmLove;
         this.isWantBuy = isWantBuy;
+        this.filmWatch = filmWatch;
     }
 
     public Film() {
@@ -123,5 +118,13 @@ public class Film {
 
     public void setTotalPrice(float totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public int getFilmWatch() {
+        return filmWatch;
+    }
+
+    public void setFilmWatch(int filmWatch) {
+        this.filmWatch = filmWatch;
     }
 }

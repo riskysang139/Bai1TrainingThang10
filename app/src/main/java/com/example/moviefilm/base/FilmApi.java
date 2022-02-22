@@ -4,7 +4,7 @@ package com.example.moviefilm.base;
 import com.example.moviefilm.film.home.detailFilm.models.CastResponse;
 import com.example.moviefilm.film.home.detailFilm.models.DetailFilm;
 import com.example.moviefilm.film.home.detailFilm.models.VideoResponse;
-import com.example.moviefilm.film.models.MovieAdver;
+import com.example.moviefilm.film.models.MovieAdverb;
 import com.example.moviefilm.film.models.ResultResponse;
 
 import java.util.List;
@@ -20,14 +20,11 @@ public interface FilmApi {
                                                       @Query("page") int page);
 
     @GET("movie/top_rated")
-    Observable<ResultResponse> getTopRatedFilmRespone(@Query("api_key") String apiKey,
-                                                      @Query("page") int page);
+    Observable<ResultResponse> getTopRatedFilmResponse(@Query("api_key") String apiKey,
+                                                       @Query("page") int page);
     @GET("movie/upcoming")
-    Observable<ResultResponse> getUpcomingFilmRespone(@Query("api_key") String apiKey,
-                                                      @Query("page") int page);
-    @GET("movie/now_playing")
-    Observable<ResultResponse> getNowPlayingFilmRespone(@Query("api_key") String apiKey,
-                                                        @Query("page") int page);
+    Observable<ResultResponse> getUpcomingFilmResponse(@Query("api_key") String apiKey,
+                                                       @Query("page") int page);
 
     @GET("movie/{movie_id}")
     Observable<DetailFilm> getDetailMovies(@Path("movie_id") String id,
@@ -37,12 +34,12 @@ public interface FilmApi {
                                                     @Query("api_key") String apiKey);
 
     @GET("movie/{movie_id}/similar")
-    Observable<ResultResponse> getSimilarVideoTrailer(@Path("movie_id") String id,
+    Observable<ResultResponse> getSimilarFilm(@Path("movie_id") String id,
                                                       @Query("api_key") String apiKey,
                                                       @Query("page") int page);
 
     @GET("movie/{movie_id}/recommendations")
-    Observable<ResultResponse> getRecommendVideoTrailer(@Path("movie_id") String id,
+    Observable<ResultResponse> getRecommendFilm(@Path("movie_id") String id,
                                                         @Query("api_key") String apiKey,
                                                         @Query("page") int page);
 
@@ -51,7 +48,7 @@ public interface FilmApi {
                                                @Query("query") String query);
 
     @GET("Advertisement")
-    Observable<List<MovieAdver>> getAdver();
+    Observable<List<MovieAdverb>> getAdverb();
 
     @GET("movie/{movie_id}/credits")
     Observable<CastResponse> getCastFilm(@Path("movie_id") String id,

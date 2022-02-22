@@ -6,7 +6,7 @@
         android:width="@dimen/_1sdp">
     </stroke>
     <solid
-        android:color="@color/maincolor">
+        android:color="@color/main_color">
     </solid>
     <size
         android:width="@dimen/_130sdp"

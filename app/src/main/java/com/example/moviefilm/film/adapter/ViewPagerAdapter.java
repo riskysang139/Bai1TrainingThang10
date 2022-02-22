@@ -18,12 +18,11 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch (position) {
-            case 0:
-                return HomeFragment.getInstance();
             case 1:
                 return CartFragment.getInstance();
             case 2:
                 return UserFragment.getInstance();
+            case 0:
             default:
                 return HomeFragment.getInstance();
         }

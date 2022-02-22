@@ -7,7 +7,6 @@ import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -78,25 +77,25 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
             fromScreen = bundle.getString(DetailFilmActivity.KEY_FROM, "");
             switch (fromScreen) {
                 case DetailFilmActivity.FROM_POPULAR:
-                    observerPopularFilm(1, false);
+                    observerPopularFilm(1);
                     title = "Popular Movies";
                     break;
                 case DetailFilmActivity.FROM_TOP_RATE:
-                    observerTopRateFilm(1, false);
+                    observerTopRateFilm(1);
                     title = "Top Rated Movies";
                     break;
                 case DetailFilmActivity.FROM_UP_COMING:
-                    observerUpComingFilm(1, false);
+                    observerUpComingFilm(1);
                     title = "Up Coming Movies";
                     break;
                 case DetailFilmActivity.FROM_SIMILAR:
                     id = bundle.getString(DetailFilmActivity.ID, "");
-                    observerSimilarFilm(1, false);
+                    observerSimilarFilm(1);
                     title = "Similar Movies";
                     break;
                 case DetailFilmActivity.FROM_RECOMMEND:
                     id = bundle.getString(DetailFilmActivity.ID, "");
-                    observerRecommendFilm(1, false);
+                    observerRecommendFilm(1);
                     title = "Recommend Movies";
                     break;
             }
@@ -104,9 +103,9 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
         txtTitle.setText(title);
     }
 
-    private void observerPopularFilm(int page, boolean isLoadMore) {
+    private void observerPopularFilm(int page) {
         filmViewModels.fetchPopularMovies(MainActivity.API_KEY, page);
-        filmViewModels.getmPopularMutableLiveData().observe(this, resultRespone -> {
+        filmViewModels.getPopularMutableLiveData().observe(this, resultRespone -> {
                     if (resultRespone != null) {
                         if (filmAdapter != null)
                             filmAdapter.setResultsList(resultRespone.getResults());
@@ -117,9 +116,9 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
         );
     }
 
-    private void observerTopRateFilm(int page, boolean isLoadMore) {
+    private void observerTopRateFilm(int page) {
         filmViewModels.fetchTopRateMovies(MainActivity.API_KEY, page);
-        filmViewModels.getmTopRateMutableLiveData().observe(this, resultRespone -> {
+        filmViewModels.getTopRateMutableLiveData().observe(this, resultRespone -> {
                     if (resultRespone != null) {
                         if (filmAdapter != null)
                             filmAdapter.setResultsList(resultRespone.getResults());
@@ -130,9 +129,9 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
         );
     }
 
-    private void observerUpComingFilm(int page, boolean isLoadMore) {
+    private void observerUpComingFilm(int page) {
         filmViewModels.fetchUpcomingMovies(MainActivity.API_KEY, page);
-        filmViewModels.getmUpcomingMutableLiveData().observe(this, resultRespone -> {
+        filmViewModels.getUpcomingMutableLiveData().observe(this, resultRespone -> {
                     if (resultRespone != null) {
                         if (filmAdapter != null)
                             filmAdapter.setResultsList(resultRespone.getResults());
@@ -143,7 +142,7 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
         );
     }
 
-    private void observerSimilarFilm(int page, boolean isLoadMore) {
+    private void observerSimilarFilm(int page) {
         filmViewModels.fetchSimilarFilm(id, MainActivity.API_KEY, page);
         filmViewModels.getSimilarFilmLiveData().observe(this, resultResponse -> {
             if (resultResponse != null) {
@@ -155,7 +154,7 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
         });
     }
 
-    private void observerRecommendFilm(int page, boolean isLoadMore) {
+    private void observerRecommendFilm(int page) {
         filmViewModels.fetchRecommendFilm(id, MainActivity.API_KEY, page);
         filmViewModels.getRecommendFilmLiveData().observe(this, resultResponse -> {
             if (resultResponse != null) {
@@ -182,19 +181,19 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
                 page_++;
                 switch (fromScreen) {
                     case DetailFilmActivity.FROM_POPULAR:
-                        observerPopularFilm(page_, true);
+                        observerPopularFilm(page_);
                         break;
                     case DetailFilmActivity.FROM_TOP_RATE:
-                        observerTopRateFilm(page_, true);
+                        observerTopRateFilm(page_);
                         break;
                     case DetailFilmActivity.FROM_UP_COMING:
-                        observerUpComingFilm(page_, true);
+                        observerUpComingFilm(page_);
                         break;
                     case DetailFilmActivity.FROM_SIMILAR:
-                        observerSimilarFilm(page_, true);
+                        observerSimilarFilm(page_);
                         break;
                     case DetailFilmActivity.FROM_RECOMMEND:
-                        observerRecommendFilm(page_, true);
+                        observerRecommendFilm(page_);
                         break;
                 }
             }
@@ -208,13 +207,13 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
 
     @Override
     public void onClickNowDetailFilm(Results resultFilm, int position) {
-        finish();
         Intent intent = new Intent(this, DetailFilmActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(DetailFilmActivity.ID, resultFilm.getId() + "");
         bundle.putString(DetailFilmActivity.KEY_FROM, DetailFilmActivity.FROM_POPULAR);
         intent.putExtras(bundle);
         startActivity(intent);
+        finish();
     }
 
     private void onBackPress() {

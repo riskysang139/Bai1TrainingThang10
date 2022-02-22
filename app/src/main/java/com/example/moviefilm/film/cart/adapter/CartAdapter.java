@@ -23,9 +23,9 @@ import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     private List<Film> filmListDB;
-    private Context context;
+    private final Context context;
     public OnCartClickListener onCartClickListener;
-    private ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
+    private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
     public static int numberChoice = 0;
 
     public CartAdapter(List<Film> filmListDB, Context context, OnCartClickListener onCartClickListener) {
@@ -36,10 +36,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     public void setFilmListDB(List<Film> filmListDB) {
         this.filmListDB = filmListDB;
-    }
-
-    public List<Film> getFilmListDB() {
-        return filmListDB;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -56,7 +53,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return filmListDB.size();
+        if (filmListDB == null)
+            return 0;
+        else
+            return filmListDB.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -84,34 +84,25 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             txtPrice.setText(film.getFilmRate() * 4 + " $");
             txtNameFilm.setText(film.getFilmName());
             txtReleaseDate.setText(film.getFilmReleaseDate());
-            cbCart.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (cbCart.isChecked()) {
-                        numberChoice++;
-                        onCartClickListener.onClickCart(position, true, numberChoice);
-                    } else {
-                        numberChoice--;
-                        onCartClickListener.onClickCart(position, false, numberChoice);
-                    }
+            cbCart.setOnClickListener(view -> {
+                if (cbCart.isChecked()) {
+                    numberChoice++;
+                    onCartClickListener.onClickCart(position, true, numberChoice);
+                } else {
+                    numberChoice--;
+                    onCartClickListener.onClickCart(position, false, numberChoice);
                 }
             });
             if (film.isChecked()) {
                 cbCart.setChecked(true);
-            } else
+            } else {
                 cbCart.setChecked(false);
+            }
             viewBinderHelper.bind(swipeRevealLayout, String.valueOf(film.getFilmId()));
-
             swipeRevealLayout.setOnClickListener(view -> {
 
             });
-            rlInfo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onCartClickListener.onClickDetail(film.getFilmId()+"");
-                }
-            });
-
+            rlInfo.setOnClickListener(view -> onCartClickListener.onClickDetail(film.getFilmId() + ""));
         }
     }
 

@@ -151,4 +151,10 @@ public class Converter {
         }
         return displayDate;
     }
+
+
+    public static String convertDate(String date) {
+        String year = date.substring(0, 4);
+        return year;
+    }
 }

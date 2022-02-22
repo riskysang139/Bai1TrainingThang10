@@ -57,7 +57,7 @@ public class AllFilmRepo {
 
     public void fetchTopRateMovies(String apiKey, int page) {
         FilmApi filmApi = RetroClass.getFilmApi();
-        Observable<ResultResponse> observableFieldPopularMovies = filmApi.getTopRatedFilmRespone(apiKey, page)
+        Observable<ResultResponse> observableFieldPopularMovies = filmApi.getTopRatedFilmResponse(apiKey, page)
                 .subscribeOn(Schedulers.io());
         observableFieldPopularMovies.subscribe(new Observer<ResultResponse>() {
             @Override
@@ -84,7 +84,7 @@ public class AllFilmRepo {
 
     public void fetchUpcomingMovies(String apiKey, int page) {
         FilmApi filmApi = RetroClass.getFilmApi();
-        Observable<ResultResponse> observableFieldPopularMovies = filmApi.getUpcomingFilmRespone(apiKey, page)
+        Observable<ResultResponse> observableFieldPopularMovies = filmApi.getUpcomingFilmResponse(apiKey, page)
                 .subscribeOn(Schedulers.io());
         observableFieldPopularMovies.subscribe(new Observer<ResultResponse>() {
             @Override
@@ -109,36 +109,9 @@ public class AllFilmRepo {
         });
     }
 
-    public void fetchNowPalyingMovies(String apiKey, int page) {
-        FilmApi filmApi = RetroClass.getFilmApi();
-        Observable<ResultResponse> observableFieldPopularMovies = filmApi.getNowPlayingFilmRespone(apiKey, page)
-                .subscribeOn(Schedulers.io());
-        observableFieldPopularMovies.subscribe(new Observer<ResultResponse>() {
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(@NonNull ResultResponse resultResponse) {
-                mNowPlayingLiveData.postValue(resultResponse);
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-                Log.e("Sang", e.getMessage());
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
-    }
-
     public void fetchSimilarFilm(String id, String apiKey, int page) {
         FilmApi videoFilm = RetroClass.getFilmApi();
-        Observable<ResultResponse> resultsObservable = videoFilm.getSimilarVideoTrailer(id, apiKey, page).subscribeOn(Schedulers.io());
+        Observable<ResultResponse> resultsObservable = videoFilm.getSimilarFilm(id, apiKey, page).subscribeOn(Schedulers.io());
         resultsObservable.subscribe(new Observer<ResultResponse>() {
             @Override
             public void onSubscribe(@NonNull io.reactivex.disposables.Disposable d) {
@@ -154,6 +127,7 @@ public class AllFilmRepo {
             public void onError(@NonNull Throwable e) {
                 Log.e("Sang", e.toString());
             }
+
             @Override
             public void onComplete() {
 
@@ -163,7 +137,7 @@ public class AllFilmRepo {
 
     public void fetchRecommendFilm(String id, String apiKey, int page) {
         FilmApi videoFilm = RetroClass.getFilmApi();
-        Observable<ResultResponse> resultsObservable = videoFilm.getRecommendVideoTrailer(id, apiKey, page).subscribeOn(Schedulers.io());
+        Observable<ResultResponse> resultsObservable = videoFilm.getRecommendFilm(id, apiKey, page).subscribeOn(Schedulers.io());
         resultsObservable.subscribe(new Observer<ResultResponse>() {
             @Override
             public void onSubscribe(@NonNull io.reactivex.disposables.Disposable d) {
@@ -179,6 +153,7 @@ public class AllFilmRepo {
             public void onError(@NonNull Throwable e) {
                 Log.e("Sang", e.toString());
             }
+
             @Override
             public void onComplete() {
 
@@ -186,37 +161,22 @@ public class AllFilmRepo {
         });
     }
 
-    public MutableLiveData<ResultResponse> getmNowPlayingLiveData() {
+    public MutableLiveData<ResultResponse> getNowPlayingLiveData() {
         return mNowPlayingLiveData;
     }
 
-    public void setmNowPlayingLiveData(MutableLiveData<ResultResponse> mNowPlayingLiveData) {
-        this.mNowPlayingLiveData = mNowPlayingLiveData;
-    }
-
-    public MutableLiveData<ResultResponse> getmPopularLiveData() {
+    public MutableLiveData<ResultResponse> getPopularLiveData() {
         return mPopularLiveData;
     }
 
-    public void setmPopularLiveData(MutableLiveData<ResultResponse> mPopularLiveData) {
-        this.mPopularLiveData = mPopularLiveData;
-    }
-
-    public MutableLiveData<ResultResponse> getmTopRateLiveData() {
+    public MutableLiveData<ResultResponse> getTopRateLiveData() {
         return mTopRateLiveData;
     }
 
-    public void setmTopRateLiveData(MutableLiveData<ResultResponse> mTopRateLiveData) {
-        this.mTopRateLiveData = mTopRateLiveData;
-    }
-
-    public MutableLiveData<ResultResponse> getmUpcomingLiveData() {
+    public MutableLiveData<ResultResponse> getUpcomingLiveData() {
         return mUpcomingLiveData;
     }
 
-    public void setmUpcomingLiveData(MutableLiveData<ResultResponse> mUpcomingLiveData) {
-        this.mUpcomingLiveData = mUpcomingLiveData;
-    }
     public MutableLiveData<ResultResponse> getSimilarFilmMutableLiveData() {
         return similarFilmMutableLiveData;
     }

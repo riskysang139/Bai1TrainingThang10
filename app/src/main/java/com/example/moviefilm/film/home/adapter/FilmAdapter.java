@@ -57,15 +57,15 @@ public class FilmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             Results results = resultsList.get(position);
             viewHolder.txtTitle.setText(results.getTitle());
             viewHolder.txtDate.setText(Converter.convertStringToDate(results.getReleaseDate()));
-            viewHolder.txtStar.setRating(Float.parseFloat(results.getVoteAverage()/2+""));
-            Glide.with(context).load(MainActivity.HEADER_URL_IMAGE+results.getPosterPath()).into(viewHolder.imageView);
-        }  else {
+            viewHolder.txtStar.setRating(Float.parseFloat(results.getVoteAverage() / 2 + ""));
+            Glide.with(context).load(MainActivity.HEADER_URL_IMAGE + results.getPosterPath()).into(viewHolder.imageView);
+        } else {
             ViewHolder viewHolder = (ViewHolder) holder;
             Results results = resultsList.get(position);
             viewHolder.txtTitle.setText(results.getTitle());
             viewHolder.txtDate.setText(Converter.convertStringToDate(results.getReleaseDate()));
-            viewHolder.txtStar.setText(df.format(results.getVoteAverage()/2));
-            Glide.with(context).load(MainActivity.HEADER_URL_IMAGE+results.getPosterPath()).into(viewHolder.imageView);
+            viewHolder.txtStar.setText(df.format(results.getVoteAverage() / 2));
+            Glide.with(context).load(MainActivity.HEADER_URL_IMAGE + results.getPosterPath()).into(viewHolder.imageView);
         }
     }
 
@@ -77,12 +77,15 @@ public class FilmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return resultsList.size();
+        if (resultsList == null)
+            return 0;
+        else
+            return resultsList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView txtTitle,txtStar;
+        TextView txtTitle, txtStar;
         TextView txtDate;
         RelativeLayout relativeLayout;
 

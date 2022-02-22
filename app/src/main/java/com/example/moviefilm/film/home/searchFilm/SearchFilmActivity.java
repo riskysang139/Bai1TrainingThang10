@@ -52,6 +52,15 @@ public class SearchFilmActivity extends AppCompatActivity implements OnClickList
         initCallBackForSearchBar();
     }
 
+    private void getData() {
+        Intent intent = getIntent();
+        if (intent.getStringExtra(KEY) != null) {
+            key = intent.getStringExtra(KEY);
+            rlSearch.setTextSearch(key);
+            mViewModel.fetchSearchResponse(MainActivity.API_KEY, key);
+        }
+    }
+
     private void initView() {
         resultSearchResultsList = new ArrayList<>();
         rcvSearchFilm = findViewById(R.id.rcv_search_film);
@@ -61,18 +70,14 @@ public class SearchFilmActivity extends AppCompatActivity implements OnClickList
     }
 
     private void obServerData() {
-        mViewModel.getResultResponeLiveData().observe(this, new Observer<ResultResponse>() {
-            @Override
-            public void onChanged(ResultResponse resultResponse) {
-                resultSearchResultsList = resultResponse.getResults();
-                if(resultSearchResultsList.size()==0)
-                    txtNoData.setVisibility(View.VISIBLE);
-                else
-                    txtNoData.setVisibility(View.GONE);
-                setUpAdapter();
-            }
+        mViewModel.getResultResponeLiveData().observe(this, resultResponse -> {
+            resultSearchResultsList = resultResponse.getResults();
+            if(resultSearchResultsList.size()==0)
+                txtNoData.setVisibility(View.VISIBLE);
+            else
+                txtNoData.setVisibility(View.GONE);
+            setUpAdapter();
         });
-
     }
 
     private void setUpAdapter() {
@@ -91,15 +96,6 @@ public class SearchFilmActivity extends AppCompatActivity implements OnClickList
         bundle.putString(DetailFilmActivity.KEY_FROM, DetailFilmActivity.FROM_SEARCH);
         intent.putExtras(bundle);
         startActivity(intent);
-    }
-
-    private void getData() {
-        Intent intent = getIntent();
-        if (intent.getStringExtra(KEY) != null) {
-            key = intent.getStringExtra(KEY);
-            rlSearch.setTextSearch(key);
-            mViewModel.fetchSearchResponse(MainActivity.API_KEY, key);
-        }
     }
 
     private void onComeBack() {

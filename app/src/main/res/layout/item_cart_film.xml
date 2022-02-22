@@ -38,7 +38,7 @@
         android:id="@+id/rl_info"
         android:layout_width="match_parent"
         android:layout_height="135dp"
-        android:background="@color/maincolor">
+        android:background="@color/main_color">
 
         <CheckBox
             android:id="@+id/cb_film"

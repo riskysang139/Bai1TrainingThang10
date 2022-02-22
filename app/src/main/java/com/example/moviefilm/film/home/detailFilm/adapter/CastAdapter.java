@@ -17,7 +17,7 @@ import com.example.moviefilm.film.view.MainActivity;
 
 import java.util.List;
 
-public class CastAdapter extends RecyclerView.Adapter<CastAdapter.ViewHoder> {
+public class CastAdapter extends RecyclerView.Adapter<CastAdapter.ViewHolder> {
     private List<Cast> castList;
     private Context context;
 
@@ -26,15 +26,20 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.ViewHoder> {
         this.context = context;
     }
 
+    public void setCastList(List<Cast> castList) {
+        this.castList = castList;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
-    public ViewHoder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        return new ViewHoder(layoutInflater.inflate(R.layout.item_cast_film, parent, false));
+        return new ViewHolder(layoutInflater.inflate(R.layout.item_cast_film, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHoder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Cast cast = castList.get(position);
         holder.txtNameCast.setText(cast.getOriginalName());
         Glide.with(context).load(MainActivity.HEADER_URL_IMAGE + cast.getProfilePath()).into(holder.imgCast);
@@ -45,12 +50,12 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.ViewHoder> {
         return Math.min(castList.size(), 20);
     }
 
-    public class ViewHoder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imgCast;
         private TextView txtNameCast;
 
-        public ViewHoder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imgCast = itemView.findViewById(R.id.img_cast);
             txtNameCast = itemView.findViewById(R.id.txt_name_cast);

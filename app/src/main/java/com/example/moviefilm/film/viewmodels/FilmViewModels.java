@@ -5,7 +5,7 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.moviefilm.film.models.MovieAdver;
+import com.example.moviefilm.film.models.MovieAdverb;
 import com.example.moviefilm.film.models.ResultResponse;
 import com.example.moviefilm.film.repo.FilmRepository;
 
@@ -17,7 +17,7 @@ public class FilmViewModels extends AndroidViewModel {
     private MutableLiveData<ResultResponse> mPopularMutableLiveData;
     private MutableLiveData<ResultResponse> mTopRateMutableLiveData;
     private MutableLiveData<ResultResponse> mUpcomingMutableLiveData;
-    private MutableLiveData<List<MovieAdver>> movieAdverMutableLiveData;
+    private MutableLiveData<List<MovieAdverb>> movieAdverMutableLiveData;
 
     private FilmRepository filmRepository;
 
@@ -26,33 +26,27 @@ public class FilmViewModels extends AndroidViewModel {
         filmRepository = new FilmRepository(application);
     }
 
-    public MutableLiveData<ResultResponse> getmNowPlayingMutableLiveData() {
-        if (mNowPlayingMutableLiveData == null)
-            return mNowPlayingMutableLiveData = filmRepository.getmNowPlayingLiveData();
-        return mNowPlayingMutableLiveData;
-    }
-
-    public MutableLiveData<ResultResponse> getmPopularMutableLiveData() {
+    public MutableLiveData<ResultResponse> getPopularMutableLiveData() {
         if (mPopularMutableLiveData == null)
-            return mPopularMutableLiveData = filmRepository.getmPopularLiveData();
+            return mPopularMutableLiveData = filmRepository.getPopularLiveData();
         return mPopularMutableLiveData;
     }
 
-    public MutableLiveData<ResultResponse> getmTopRateMutableLiveData() {
+    public MutableLiveData<ResultResponse> getTopRateMutableLiveData() {
         if (mTopRateMutableLiveData == null)
-            return mTopRateMutableLiveData = filmRepository.getmTopRateLiveData();
+            return mTopRateMutableLiveData = filmRepository.getTopRateLiveData();
         return mTopRateMutableLiveData;
     }
 
-    public MutableLiveData<ResultResponse> getmUpcomingMutableLiveData() {
+    public MutableLiveData<ResultResponse> getUpcomingMutableLiveData() {
         if (mUpcomingMutableLiveData == null)
-            return mUpcomingMutableLiveData = filmRepository.getmUpcomingLiveData();
+            return mUpcomingMutableLiveData = filmRepository.getUpcomingLiveData();
         return mUpcomingMutableLiveData;
     }
 
-    public MutableLiveData<List<MovieAdver>> getMovieAdverMutableLiveData() {
+    public MutableLiveData<List<MovieAdverb>> getMovieAdverbMutableLiveData() {
         if(movieAdverMutableLiveData==null)
-            return movieAdverMutableLiveData = filmRepository.getmMovieAdverLiveData();
+            return movieAdverMutableLiveData = filmRepository.gemMovieAdverbLiveData();
         return movieAdverMutableLiveData;
     }
 
@@ -64,11 +58,7 @@ public class FilmViewModels extends AndroidViewModel {
         filmRepository.fetchTopRateMovies(apiKey,page);
     }
 
-    public void fetchNowPlayingMovies(String apiKey ,int page) {
-        filmRepository.fetchNowPalyingMovies(apiKey,page);
-    }
-
     public void fetchUpcomingMovies(String apiKey ,int page) { filmRepository.fetchUpcomingMovies(apiKey,page); }
 
-    public void fetchMovieAdver() { filmRepository.fetchMovieAdver(); }
+    public void fetchMovieAdverb() { filmRepository.fetchMovieAdverb(); }
 }

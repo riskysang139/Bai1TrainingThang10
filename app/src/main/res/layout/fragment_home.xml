@@ -3,140 +3,116 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <ScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/maincolor">
+            android:layout_height="match_parent">
 
-            <com.example.moviefilm.base.customview.SearchActionBarView
-                android:id="@+id/sb_search_all"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="10dp" />
-
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/view_adver"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_210sdp"
-                android:layout_below="@id/sb_search_all"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:paddingLeft="@dimen/_15sdp"
-                android:paddingRight="@dimen/_15sdp" />
-
-            <Button
-                android:id="@+id/btn_more_popular"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_below="@id/view_adver"
-                android:layout_marginTop="@dimen/_20sdp"
-                android:background="@color/maincolor"
-                android:backgroundTint="@color/maincolor"
-                android:drawableRight="@drawable/ic_baseline_more_horiz_24"
-                android:fontFamily="@font/beausanspro_bold"
-                android:gravity="center|left"
-                android:paddingLeft="@dimen/_15sdp"
-                android:paddingRight="@dimen/_5sdp"
-                android:text="Poplular Movies"
-                android:textAllCaps="false"
-                android:textColor="#ffffff"
-                android:textSize="16sp" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rcv_popular"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/btn_more_popular"
-                android:layout_marginTop="@dimen/_7sdp" />
+                android:background="@color/main_color">
 
-            <Button
-                android:id="@+id/btn_top_rated"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_below="@id/rcv_popular"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:background="@color/maincolor"
-                android:drawableRight="@drawable/ic_baseline_more_horiz_24"
-                android:fontFamily="@font/beausanspro_bold"
-                android:gravity="center|left"
-                android:paddingLeft="@dimen/_15sdp"
-                android:paddingRight="@dimen/_5sdp"
-                android:text="Top Rated Movies"
-                android:textAllCaps="false"
-                android:textColor="#ffffff"
-                android:textSize="16sp" />
+                <com.example.moviefilm.base.customview.SearchActionBarView
+                    android:id="@+id/sb_search_all"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rcv_top_rate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/btn_top_rated"/>
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/view_adver"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_210sdp"
+                    android:layout_below="@id/sb_search_all"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:paddingLeft="@dimen/_15sdp"
+                    android:paddingRight="@dimen/_15sdp" />
 
-            <Button
-                android:id="@+id/btn_up_coming"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_below="@id/rcv_top_rate"
-                android:layout_marginTop="@dimen/_20sdp"
-                android:background="@color/maincolor"
-                android:backgroundTint="@color/maincolor"
-                android:drawableRight="@drawable/ic_baseline_more_horiz_24"
-                android:fontFamily="@font/beausanspro_bold"
-                android:gravity="center|left"
-                android:paddingLeft="@dimen/_15sdp"
-                android:paddingRight="@dimen/_5sdp"
-                android:text="Up coming"
-                android:textAllCaps="false"
-                android:textColor="#ffffff"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                <Button
+                    android:id="@+id/btn_more_popular"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_below="@id/view_adver"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:background="@color/main_color"
+                    android:drawableEnd="@drawable/ic_baseline_more_horiz_24"
+                    android:fontFamily="@font/beausanspro_bold"
+                    android:gravity="center|left"
+                    android:paddingStart="@dimen/_15sdp"
+                    android:paddingEnd="@dimen/_5sdp"
+                    android:text="Poplular Movies"
+                    android:textAllCaps="false"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp"
+                    tools:ignore="RtlHardcoded" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rcv_up_coming"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/btn_up_coming"
-                android:layout_marginTop="@dimen/_5sdp" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcv_popular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/btn_more_popular"
+                    android:layout_marginTop="@dimen/_7sdp" />
 
-            <Button
-                android:id="@+id/btn_now_playing"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_below="@id/rcv_up_coming"
-                android:layout_marginTop="@dimen/_20sdp"
-                android:background="@color/maincolor"
-                android:backgroundTint="@color/maincolor"
-                android:drawableRight="@drawable/ic_baseline_more_horiz_24"
-                android:fontFamily="@font/roboto_regular"
-                android:gravity="center|left"
-                android:paddingStart="15dp"
-                android:paddingLeft="@dimen/_15sdp"
-                android:paddingEnd="@dimen/_5sdp"
-                android:paddingRight="@dimen/_5sdp"
-                android:text="Up Coming Movies"
-                android:textAllCaps="false"
-                android:textColor="#ffffff"
-                android:textSize="@dimen/_12sdp"
-                android:textStyle="bold"
-                android:visibility="gone" />
+                <Button
+                    android:id="@+id/btn_top_rated"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_below="@id/rcv_popular"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:background="@color/main_color"
+                    android:drawableEnd="@drawable/ic_baseline_more_horiz_24"
+                    android:fontFamily="@font/beausanspro_bold"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/_15sdp"
+                    android:paddingRight="@dimen/_5sdp"
+                    android:text="Top Rated Movies"
+                    android:textAllCaps="false"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp"
+                    tools:ignore="RtlHardcoded" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rcv_now_playing"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/btn_now_playing"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginBottom="20dp"
-                android:visibility="gone" />
-        </RelativeLayout>
-    </ScrollView>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcv_top_rate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/btn_top_rated" />
+
+                <Button
+                    android:id="@+id/btn_up_coming"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_below="@id/rcv_top_rate"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:background="@color/main_color"
+                    android:drawableEnd="@drawable/ic_baseline_more_horiz_24"
+                    android:fontFamily="@font/beausanspro_bold"
+                    android:gravity="center|left"
+                    android:paddingStart="@dimen/_15sdp"
+                    android:paddingEnd="@dimen/_5sdp"
+                    android:text="Up coming"
+                    android:textAllCaps="false"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:ignore="RtlHardcoded" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcv_up_coming"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/btn_up_coming"
+                    android:layout_marginTop="@dimen/_5sdp" />
+            </RelativeLayout>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>

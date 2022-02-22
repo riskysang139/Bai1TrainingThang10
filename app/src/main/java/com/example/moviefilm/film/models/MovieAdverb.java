@@ -1,6 +1,6 @@
 package com.example.moviefilm.film.models;
 
-public class MovieAdver {
+public class MovieAdverb {
     private String image;
 
     public String getImage() {
@@ -11,7 +11,7 @@ public class MovieAdver {
         this.image = image;
     }
 
-    public MovieAdver(String image) {
+    public MovieAdverb(String image) {
         this.image = image;
     }
 }
