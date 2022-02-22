@@ -15,4 +15,5 @@
     <string name="about_our">About us</string>
     <string name="log_out" translatable="false">Log Out</string>
     <string name="title_cart_fragment" translatable="false">Cart</string>
+    <string name="read_more"><u><font fgcolor="#4CD1EE">red</font></u></string>
 </resources>

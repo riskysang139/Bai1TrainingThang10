@@ -92,4 +92,9 @@
         <attr name="vtecom_sb_text_color" format="color" />
         <attr name="vtecom_sb_hint_text_color" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="ExpandableTextView">
+        <attr name="trimLength" format="integer" />
+    </declare-styleable>
+
 </resources>

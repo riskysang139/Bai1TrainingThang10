@@ -1,30 +1,31 @@
 package com.example.moviefilm.film.home.allfilm.view;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moviefilm.R;
-import com.example.moviefilm.film.home.allfilm.viewmodel.AllFilmViewModels;
 import com.example.moviefilm.base.Converter;
 import com.example.moviefilm.base.GridItemDecoration;
 import com.example.moviefilm.base.OnClickListener;
 import com.example.moviefilm.databinding.ActivityAllFilmBinding;
-import com.example.moviefilm.film.home.detailFilm.DetailFilmActivity;
-import com.example.moviefilm.film.view.MainActivity;
+import com.example.moviefilm.film.home.adapter.EndlessRecyclerViewScrollListener;
 import com.example.moviefilm.film.home.adapter.FilmAdapter;
-import com.example.moviefilm.film.models.ResultRespone;
+import com.example.moviefilm.film.home.allfilm.viewmodel.AllFilmViewModels;
+import com.example.moviefilm.film.home.detailFilm.DetailFilmActivity;
 import com.example.moviefilm.film.models.Results;
+import com.example.moviefilm.film.view.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,14 +35,25 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
     private ActivityAllFilmBinding binding;
     private AllFilmViewModels filmViewModels;
     private RecyclerView rcvAllFilm;
-    private List<Results> popularMoviesList, topRateMovieList, upComingMovieList, similarMovieList, recommendMovieList;
+    private List<Results> listFilm;
     private FilmAdapter filmAdapter;
     private static final String TAG = "Tag";
-    private String fromScreen = "";
     private String id = "";
     private String title = "";
     private TextView txtTitle;
     private RelativeLayout btnBack;
+    private EndlessRecyclerViewScrollListener mLoadMoreListener;
+    String fromScreen = "";
+
+    /**
+     * Operator
+     * param to loadmore.
+     */
+    private int offset = 0;
+    private int limit = 40;
+    private boolean isCanLoadMore;
+
+    private static int page_ = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,6 +61,7 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
         binding = DataBindingUtil.setContentView(this, R.layout.activity_all_film);
         filmViewModels = ViewModelProviders.of(this).get(AllFilmViewModels.class);
         initView();
+        initAdapter();
         getData();
         onBackPress();
     }
@@ -57,142 +70,140 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
         rcvAllFilm = findViewById(R.id.all_film);
         txtTitle = findViewById(R.id.txtTitle);
         btnBack = findViewById(R.id.btn_back);
-        popularMoviesList = new ArrayList<>();
-        topRateMovieList = new ArrayList<>();
-        upComingMovieList = new ArrayList<>();
     }
 
     private void getData() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             fromScreen = bundle.getString(DetailFilmActivity.KEY_FROM, "");
-
-            if (fromScreen.equals(DetailFilmActivity.FROM_POPULAR)) {
-                observerPopularFilm();
-                title = "Popular Movies";
-            } else if (fromScreen.equals(DetailFilmActivity.FROM_TOP_RATE)) {
-                observerTopRateFilm();
-                title = "Top Rated Movies";
-            } else if (fromScreen.equals(DetailFilmActivity.FROM_UP_COMING)) {
-                observerUpComingFilm();
-                title = "Up Coming Movies";
-            } else if (fromScreen.equals(DetailFilmActivity.FROM_SIMILAR)) {
-                id = bundle.getString(DetailFilmActivity.ID, "");
-                observerSimilarFilm();
-                title = "Similar Movies";
-            } else if (fromScreen.equals(DetailFilmActivity.FROM_RECOMMEND)) {
-                id = bundle.getString(DetailFilmActivity.ID, "");
-                observerRecommendFilm();
-                title = "Recommend Movies";
+            switch (fromScreen) {
+                case DetailFilmActivity.FROM_POPULAR:
+                    observerPopularFilm(1, false);
+                    title = "Popular Movies";
+                    break;
+                case DetailFilmActivity.FROM_TOP_RATE:
+                    observerTopRateFilm(1, false);
+                    title = "Top Rated Movies";
+                    break;
+                case DetailFilmActivity.FROM_UP_COMING:
+                    observerUpComingFilm(1, false);
+                    title = "Up Coming Movies";
+                    break;
+                case DetailFilmActivity.FROM_SIMILAR:
+                    id = bundle.getString(DetailFilmActivity.ID, "");
+                    observerSimilarFilm(1, false);
+                    title = "Similar Movies";
+                    break;
+                case DetailFilmActivity.FROM_RECOMMEND:
+                    id = bundle.getString(DetailFilmActivity.ID, "");
+                    observerRecommendFilm(1, false);
+                    title = "Recommend Movies";
+                    break;
             }
         }
         txtTitle.setText(title);
     }
 
-    private void observerPopularFilm() {
-        filmViewModels.fetchPopularMovies(MainActivity.API_KEY, 1);
+    private void observerPopularFilm(int page, boolean isLoadMore) {
+        filmViewModels.fetchPopularMovies(MainActivity.API_KEY, page);
         filmViewModels.getmPopularMutableLiveData().observe(this, resultRespone -> {
                     if (resultRespone != null) {
-                        popularMoviesList = resultRespone.getResults();
-                        initRecyclerPopular();
-                        Log.e(TAG, "result respone : " + popularMoviesList.toString());
+                        if (filmAdapter != null)
+                            filmAdapter.setResultsList(resultRespone.getResults());
+                        Log.e(TAG, "result response popular : " + listFilm.toString());
                     } else
-                        Log.e(TAG, "call api failure");
+                        Log.e(TAG, "call api popular failure");
                 }
         );
     }
 
-    private void observerTopRateFilm() {
-        filmViewModels.fetchTopRateMovies(MainActivity.API_KEY, 1);
+    private void observerTopRateFilm(int page, boolean isLoadMore) {
+        filmViewModels.fetchTopRateMovies(MainActivity.API_KEY, page);
         filmViewModels.getmTopRateMutableLiveData().observe(this, resultRespone -> {
                     if (resultRespone != null) {
-                        topRateMovieList = resultRespone.getResults();
-                        initRecyclerTopRate();
-                        Log.e(TAG, "result respone : " + topRateMovieList.toString());
+                        if (filmAdapter != null)
+                            filmAdapter.setResultsList(resultRespone.getResults());
+                        Log.e(TAG, "result response top rated : " + listFilm.toString());
                     } else
-                        Log.e(TAG, "call api failure");
+                        Log.e(TAG, "call api top rated failure");
                 }
         );
     }
 
-    private void observerUpComingFilm() {
-        filmViewModels.fetchUpcomingMovies(MainActivity.API_KEY, 1);
+    private void observerUpComingFilm(int page, boolean isLoadMore) {
+        filmViewModels.fetchUpcomingMovies(MainActivity.API_KEY, page);
         filmViewModels.getmUpcomingMutableLiveData().observe(this, resultRespone -> {
                     if (resultRespone != null) {
-                        upComingMovieList = resultRespone.getResults();
-                        initRecyclerUpComing();
-                        Log.e(TAG, "result respone : " + upComingMovieList.toString());
+                        if (filmAdapter != null)
+                            filmAdapter.setResultsList(resultRespone.getResults());
+                        Log.e(TAG, "result response upcoming : " + listFilm.toString());
                     } else
-                        Log.e(TAG, "call api failure");
+                        Log.e(TAG, "call api upcoming failure");
                 }
         );
     }
 
-    private void observerSimilarFilm() {
-        filmViewModels.fetchSimilarFilm(id, MainActivity.API_KEY);
-        filmViewModels.getSimilarFilmLiveData().observe(this, new Observer<ResultRespone>() {
-            @Override
-            public void onChanged(ResultRespone resultRespone) {
-                if (resultRespone != null) {
-                    similarMovieList = resultRespone.getResults();
-                    initRecyclerSimilar();
-                }
-            }
+    private void observerSimilarFilm(int page, boolean isLoadMore) {
+        filmViewModels.fetchSimilarFilm(id, MainActivity.API_KEY, page);
+        filmViewModels.getSimilarFilmLiveData().observe(this, resultResponse -> {
+            if (resultResponse != null) {
+                if (filmAdapter != null)
+                    filmAdapter.setResultsList(resultResponse.getResults());
+                Log.e(TAG, "result response upcoming : " + listFilm.toString());
+            } else
+                Log.e(TAG, "call api similar failure");
         });
     }
 
-    private void observerRecommendFilm() {
-        filmViewModels.fetchRecommendFilm(id, MainActivity.API_KEY);
-        filmViewModels.getRecommendFilmLiveData().observe(this, new Observer<ResultRespone>() {
-            @Override
-            public void onChanged(ResultRespone resultRespone) {
-                if (resultRespone != null) {
-                    recommendMovieList = resultRespone.getResults();
-                    initRecyclerRecommend();
-                }
-            }
+    private void observerRecommendFilm(int page, boolean isLoadMore) {
+        filmViewModels.fetchRecommendFilm(id, MainActivity.API_KEY, page);
+        filmViewModels.getRecommendFilmLiveData().observe(this, resultResponse -> {
+            if (resultResponse != null) {
+                if (filmAdapter != null)
+                    filmAdapter.setResultsList(resultResponse.getResults());
+                Log.e(TAG, "result response recommend : " + listFilm.toString());
+            } else
+                Log.e(TAG, "call api recommend failure");
         });
     }
 
-    private void initRecyclerPopular() {
-        filmAdapter = new FilmAdapter(popularMoviesList, this, this);
+    @SuppressLint("NotifyDataSetChanged")
+    private void initAdapter() {
+        if (listFilm == null)
+            listFilm = new ArrayList<>();
+        filmAdapter = new FilmAdapter(listFilm, this, this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, RecyclerView.VERTICAL, false);
         rcvAllFilm.addItemDecoration(new GridItemDecoration(Converter.dpToPx(this, 30), 2));
         rcvAllFilm.setLayoutManager(gridLayoutManager);
         rcvAllFilm.setAdapter(filmAdapter);
-    }
+        mLoadMoreListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                page_++;
+                switch (fromScreen) {
+                    case DetailFilmActivity.FROM_POPULAR:
+                        observerPopularFilm(page_, true);
+                        break;
+                    case DetailFilmActivity.FROM_TOP_RATE:
+                        observerTopRateFilm(page_, true);
+                        break;
+                    case DetailFilmActivity.FROM_UP_COMING:
+                        observerUpComingFilm(page_, true);
+                        break;
+                    case DetailFilmActivity.FROM_SIMILAR:
+                        observerSimilarFilm(page_, true);
+                        break;
+                    case DetailFilmActivity.FROM_RECOMMEND:
+                        observerRecommendFilm(page_, true);
+                        break;
+                }
+            }
+            @Override
+            public void onPastVisiblePosition(int pastVisibleItems, int totalItemCount) {
 
-    private void initRecyclerTopRate() {
-        filmAdapter = new FilmAdapter(topRateMovieList, this, this);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, RecyclerView.VERTICAL, false);
-        rcvAllFilm.addItemDecoration(new GridItemDecoration(Converter.dpToPx(this, 30), 2));
-        rcvAllFilm.setLayoutManager(gridLayoutManager);
-        rcvAllFilm.setAdapter(filmAdapter);
-    }
-
-
-    private void initRecyclerUpComing() {
-        filmAdapter = new FilmAdapter(upComingMovieList, this, this);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, RecyclerView.VERTICAL, false);
-        rcvAllFilm.addItemDecoration(new GridItemDecoration(Converter.dpToPx(this, 30), 2));
-        rcvAllFilm.setLayoutManager(gridLayoutManager);
-        rcvAllFilm.setAdapter(filmAdapter);
-    }
-
-    private void initRecyclerSimilar() {
-        filmAdapter = new FilmAdapter(similarMovieList, this, this);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, RecyclerView.VERTICAL, false);
-        rcvAllFilm.addItemDecoration(new GridItemDecoration(Converter.dpToPx(this, 30), 2));
-        rcvAllFilm.setLayoutManager(gridLayoutManager);
-        rcvAllFilm.setAdapter(filmAdapter);
-    }
-
-    private void initRecyclerRecommend() {
-        filmAdapter = new FilmAdapter(recommendMovieList, this, this);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, RecyclerView.VERTICAL, false);
-        rcvAllFilm.addItemDecoration(new GridItemDecoration(Converter.dpToPx(this, 30), 2));
-        rcvAllFilm.setLayoutManager(gridLayoutManager);
-        rcvAllFilm.setAdapter(filmAdapter);
+            }
+        };
+        rcvAllFilm.addOnScrollListener(mLoadMoreListener);
     }
 
     @Override

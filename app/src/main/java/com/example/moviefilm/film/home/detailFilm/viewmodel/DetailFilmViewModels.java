@@ -10,7 +10,7 @@ import com.example.moviefilm.film.home.detailFilm.models.CastResponse;
 import com.example.moviefilm.film.home.detailFilm.models.DetailFilm;
 import com.example.moviefilm.film.home.detailFilm.models.VideoResponse;
 import com.example.moviefilm.film.home.detailFilm.repo.DetailFilmRepo;
-import com.example.moviefilm.film.models.ResultRespone;
+import com.example.moviefilm.film.models.ResultResponse;
 import com.example.moviefilm.roomdb.Film;
 
 import java.util.List;
@@ -20,8 +20,8 @@ import io.reactivex.Flowable;
 public class DetailFilmViewModels extends AndroidViewModel {
     private MutableLiveData<DetailFilm> detailFilmLiveData;
     private MutableLiveData<VideoResponse> videoFilmLiveData;
-    private MutableLiveData<ResultRespone> similarFilmLiveData;
-    private MutableLiveData<ResultRespone> recommendFilmLiveData;
+    private MutableLiveData<ResultResponse> similarFilmLiveData;
+    private MutableLiveData<ResultResponse> recommendFilmLiveData;
     private MutableLiveData<CastResponse> castResponseMutableLiveData;
     private DetailFilmRepo detailFilmRepo;
 
@@ -42,13 +42,13 @@ public class DetailFilmViewModels extends AndroidViewModel {
         return videoFilmLiveData;
     }
 
-    public MutableLiveData<ResultRespone> getSimilarFilmLiveData() {
+    public MutableLiveData<ResultResponse> getSimilarFilmLiveData() {
         if (similarFilmLiveData == null)
             return similarFilmLiveData = detailFilmRepo.getSimilarFilmMutableLiveData();
         return similarFilmLiveData;
     }
 
-    public MutableLiveData<ResultRespone> getRecommendFilmLiveData() {
+    public MutableLiveData<ResultResponse> getRecommendFilmLiveData() {
         if (recommendFilmLiveData == null)
             return recommendFilmLiveData = detailFilmRepo.getRecommendMutableLiveData();
         return recommendFilmLiveData;

@@ -5,7 +5,7 @@ import com.example.moviefilm.film.home.detailFilm.models.CastResponse;
 import com.example.moviefilm.film.home.detailFilm.models.DetailFilm;
 import com.example.moviefilm.film.home.detailFilm.models.VideoResponse;
 import com.example.moviefilm.film.models.MovieAdver;
-import com.example.moviefilm.film.models.ResultRespone;
+import com.example.moviefilm.film.models.ResultResponse;
 
 import java.util.List;
 
@@ -16,18 +16,18 @@ import retrofit2.http.Query;
 
 public interface FilmApi {
     @GET("movie/popular")
-    Observable<ResultRespone> getPopularFilmResponse(@Query("api_key") String apiKey,
-                                                     @Query("page") int page);
+    Observable<ResultResponse> getPopularFilmResponse(@Query("api_key") String apiKey,
+                                                      @Query("page") int page);
 
     @GET("movie/top_rated")
-    Observable<ResultRespone> getTopRatedFilmRespone(@Query("api_key") String apiKey,
-                                                          @Query("page") int page);
+    Observable<ResultResponse> getTopRatedFilmRespone(@Query("api_key") String apiKey,
+                                                      @Query("page") int page);
     @GET("movie/upcoming")
-    Observable<ResultRespone> getUpcomingFilmRespone(@Query("api_key") String apiKey,
-                                                     @Query("page") int page);
+    Observable<ResultResponse> getUpcomingFilmRespone(@Query("api_key") String apiKey,
+                                                      @Query("page") int page);
     @GET("movie/now_playing")
-    Observable<ResultRespone> getNowPlayingFilmRespone(@Query("api_key") String apiKey,
-                                                     @Query("page") int page);
+    Observable<ResultResponse> getNowPlayingFilmRespone(@Query("api_key") String apiKey,
+                                                        @Query("page") int page);
 
     @GET("movie/{movie_id}")
     Observable<DetailFilm> getDetailMovies(@Path("movie_id") String id,
@@ -37,16 +37,18 @@ public interface FilmApi {
                                                     @Query("api_key") String apiKey);
 
     @GET("movie/{movie_id}/similar")
-    Observable<ResultRespone> getSimilarVideoTrailer(@Path("movie_id") String id,
-                                                    @Query("api_key") String apiKey);
+    Observable<ResultResponse> getSimilarVideoTrailer(@Path("movie_id") String id,
+                                                      @Query("api_key") String apiKey,
+                                                      @Query("page") int page);
 
     @GET("movie/{movie_id}/recommendations")
-    Observable<ResultRespone> getRecommendVideoTrailer(@Path("movie_id") String id,
-                                                 @Query("api_key") String apiKey);
+    Observable<ResultResponse> getRecommendVideoTrailer(@Path("movie_id") String id,
+                                                        @Query("api_key") String apiKey,
+                                                        @Query("page") int page);
 
     @GET("search/movie")
-    Observable<ResultRespone> getSearchMovies(@Query("api_key") String apiKey,
-                                        @Query("query") String query);
+    Observable<ResultResponse> getSearchMovies(@Query("api_key") String apiKey,
+                                               @Query("query") String query);
 
     @GET("Advertisement")
     Observable<List<MovieAdver>> getAdver();

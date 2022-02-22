@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:expandableTextView="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -217,17 +219,15 @@
                     android:textColor="@color/white"
                     android:textSize="20sp" />
 
-                <TextView
+                <com.example.moviefilm.base.customview.ExpandableTextView
                     android:id="@+id/detail_film"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/title_film"
                     android:layout_marginHorizontal="12dp"
                     android:layout_marginTop="12dp"
                     android:ellipsize="end"
                     android:fontFamily="@font/roboto_regular"
-                    android:gravity="left|top"
-                    android:lines="3"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 

@@ -1,13 +1,5 @@
 package com.example.moviefilm.film.home.detailFilm;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -22,28 +14,35 @@ import android.widget.MediaController;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.moviefilm.R;
-import com.example.moviefilm.base.customview.CircleAnimationUtil;
-import com.example.moviefilm.base.customview.CircleImageView;
-import com.example.moviefilm.film.home.allfilm.view.AllFilmActivity;
 import com.example.moviefilm.base.Converter;
 import com.example.moviefilm.base.HorizontalItemDecoration;
 import com.example.moviefilm.base.LoadingDialog;
 import com.example.moviefilm.base.OnClickListener;
 import com.example.moviefilm.base.OnClickVideoListener;
+import com.example.moviefilm.base.customview.CircleAnimationUtil;
+import com.example.moviefilm.base.customview.ExpandableTextView;
 import com.example.moviefilm.databinding.ActivityDetailFilmBinding;
+import com.example.moviefilm.film.home.adapter.FilmAdapter;
+import com.example.moviefilm.film.home.allfilm.view.AllFilmActivity;
 import com.example.moviefilm.film.home.detailFilm.adapter.CastAdapter;
 import com.example.moviefilm.film.home.detailFilm.models.Cast;
 import com.example.moviefilm.film.home.detailFilm.models.DetailFilm;
 import com.example.moviefilm.film.home.detailFilm.models.Video;
 import com.example.moviefilm.film.home.detailFilm.viewmodel.DetailFilmViewModels;
-import com.example.moviefilm.film.view.MainActivity;
-import com.example.moviefilm.film.home.adapter.FilmAdapter;
 import com.example.moviefilm.film.models.Results;
+import com.example.moviefilm.film.view.MainActivity;
 import com.example.moviefilm.roomdb.Film;
 
 import java.text.DecimalFormat;
@@ -85,7 +84,8 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
 
     private ImageView btnPlay;
     private RelativeLayout btnBack;
-    private TextView txtTitle, txtDetail, txtAdult, txtGenres, txtTimeFilm, txtRelease;
+    private TextView txtTitle, txtAdult, txtGenres, txtTimeFilm, txtRelease;
+    private ExpandableTextView txtDetail;
     private RatingBar txtRated;
     private ImageView imgFilm;
     private DetailFilmViewModels detailFilmViewModels;
@@ -182,7 +182,6 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
         detailFilmViewModels.fetchDetailFilm(id, MainActivity.API_KEY);
         detailFilmViewModels.getDetailFilmLiveData().observe(this, detailFilm -> {
             detailFilms = detailFilm;
-            insertMovieBuy(detailFilm);
             onClickFilmToCart(detailFilm);
             setUpViewDetail();
             insertMovieLove(detailFilm);
@@ -235,7 +234,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickVide
     @SuppressLint("SetTextI18n")
     private void setUpViewDetail() {
         txtTitle.setText(detailFilms.getTitle());
-        txtDetail.setText(detailFilms.getOverview());
+        txtDetail.setText(detailFilms.getOverview() + getString(R.string.read_more));
         Glide.with(this).load(MainActivity.HEADER_URL_IMAGE + detailFilms.getPosterPath()).into(imgFilm);
         txtRated.setRating(Float.parseFloat(detailFilms.getVoteAverage() / 2 + ""));
         if (detailFilms.getGenres().size() == 0 || detailFilms.getGenres().isEmpty())

@@ -6,17 +6,17 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.moviefilm.film.models.MovieAdver;
-import com.example.moviefilm.film.models.ResultRespone;
+import com.example.moviefilm.film.models.ResultResponse;
 import com.example.moviefilm.film.repo.FilmRepository;
 
 import java.util.List;
 
 public class FilmViewModels extends AndroidViewModel {
-    private MutableLiveData<ResultRespone> mNowPlayingMutableLiveData;
+    private MutableLiveData<ResultResponse> mNowPlayingMutableLiveData;
 
-    private MutableLiveData<ResultRespone> mPopularMutableLiveData;
-    private MutableLiveData<ResultRespone> mTopRateMutableLiveData;
-    private MutableLiveData<ResultRespone> mUpcomingMutableLiveData;
+    private MutableLiveData<ResultResponse> mPopularMutableLiveData;
+    private MutableLiveData<ResultResponse> mTopRateMutableLiveData;
+    private MutableLiveData<ResultResponse> mUpcomingMutableLiveData;
     private MutableLiveData<List<MovieAdver>> movieAdverMutableLiveData;
 
     private FilmRepository filmRepository;
@@ -26,25 +26,25 @@ public class FilmViewModels extends AndroidViewModel {
         filmRepository = new FilmRepository(application);
     }
 
-    public MutableLiveData<ResultRespone> getmNowPlayingMutableLiveData() {
+    public MutableLiveData<ResultResponse> getmNowPlayingMutableLiveData() {
         if (mNowPlayingMutableLiveData == null)
             return mNowPlayingMutableLiveData = filmRepository.getmNowPlayingLiveData();
         return mNowPlayingMutableLiveData;
     }
 
-    public MutableLiveData<ResultRespone> getmPopularMutableLiveData() {
+    public MutableLiveData<ResultResponse> getmPopularMutableLiveData() {
         if (mPopularMutableLiveData == null)
             return mPopularMutableLiveData = filmRepository.getmPopularLiveData();
         return mPopularMutableLiveData;
     }
 
-    public MutableLiveData<ResultRespone> getmTopRateMutableLiveData() {
+    public MutableLiveData<ResultResponse> getmTopRateMutableLiveData() {
         if (mTopRateMutableLiveData == null)
             return mTopRateMutableLiveData = filmRepository.getmTopRateLiveData();
         return mTopRateMutableLiveData;
     }
 
-    public MutableLiveData<ResultRespone> getmUpcomingMutableLiveData() {
+    public MutableLiveData<ResultResponse> getmUpcomingMutableLiveData() {
         if (mUpcomingMutableLiveData == null)
             return mUpcomingMutableLiveData = filmRepository.getmUpcomingLiveData();
         return mUpcomingMutableLiveData;

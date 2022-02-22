@@ -6,10 +6,10 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.moviefilm.film.models.ResultRespone;
+import com.example.moviefilm.film.models.ResultResponse;
 
 public class SearchFilmViewModel extends AndroidViewModel {
-    private MutableLiveData<ResultRespone> resultResponeLiveData ;
+    private MutableLiveData<ResultResponse> resultResponeLiveData ;
     private SearchFilmRepo searchFilmRepo;
 
     public SearchFilmViewModel(@NonNull Application application) {
@@ -17,7 +17,7 @@ public class SearchFilmViewModel extends AndroidViewModel {
         searchFilmRepo=new SearchFilmRepo(application);
     }
 
-    public MutableLiveData<ResultRespone> getResultResponeLiveData() {
+    public MutableLiveData<ResultResponse> getResultResponeLiveData() {
         if(resultResponeLiveData ==null)
             return resultResponeLiveData=searchFilmRepo.getSearchFilmMutableLiveData();
         return resultResponeLiveData;

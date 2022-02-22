@@ -1,5 +1,6 @@
 package com.example.moviefilm.film.home.detailFilm.models;
 
+import com.example.moviefilm.film.view.MainActivity;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -179,7 +180,7 @@ public class DetailFilm {
     }
 
     public String getPosterPath() {
-        return posterPath;
+        return posterPath == null ? "" : MainActivity.HEADER_URL_IMAGE + posterPath;
     }
 
     public void setPosterPath(String posterPath) {

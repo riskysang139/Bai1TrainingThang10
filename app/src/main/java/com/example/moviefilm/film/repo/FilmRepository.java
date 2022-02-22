@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.moviefilm.base.FilmApi;
 import com.example.moviefilm.base.RetroClass;
 import com.example.moviefilm.film.models.MovieAdver;
-import com.example.moviefilm.film.models.ResultRespone;
+import com.example.moviefilm.film.models.ResultResponse;
 
 import java.util.List;
 
@@ -19,10 +19,10 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class FilmRepository {
-    private MutableLiveData<ResultRespone> mNowPlayingLiveData = new MutableLiveData<>();
-    private MutableLiveData<ResultRespone> mPopularLiveData = new MutableLiveData<>();
-    private MutableLiveData<ResultRespone> mTopRateLiveData = new MutableLiveData<>();
-    private MutableLiveData<ResultRespone> mUpcomingLiveData = new MutableLiveData<>();
+    private MutableLiveData<ResultResponse> mNowPlayingLiveData = new MutableLiveData<>();
+    private MutableLiveData<ResultResponse> mPopularLiveData = new MutableLiveData<>();
+    private MutableLiveData<ResultResponse> mTopRateLiveData = new MutableLiveData<>();
+    private MutableLiveData<ResultResponse> mUpcomingLiveData = new MutableLiveData<>();
     private MutableLiveData<List<MovieAdver>> mMovieAdverLiveData = new MutableLiveData<>();
 
     public FilmRepository(Application application) {
@@ -31,17 +31,17 @@ public class FilmRepository {
 
     public void fetchPopularMovies(String apiKey, int page) {
         FilmApi filmApi = RetroClass.getFilmApi();
-        Observable<ResultRespone> observableFieldPopularMovies = filmApi.getPopularFilmResponse(apiKey, page)
+        Observable<ResultResponse> observableFieldPopularMovies = filmApi.getPopularFilmResponse(apiKey, page)
                 .subscribeOn(Schedulers.io());
-        observableFieldPopularMovies.subscribe(new Observer<ResultRespone>() {
+        observableFieldPopularMovies.subscribe(new Observer<ResultResponse>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
 
             }
 
             @Override
-            public void onNext(@NonNull ResultRespone resultRespone) {
-                mPopularLiveData.postValue(resultRespone);
+            public void onNext(@NonNull ResultResponse resultResponse) {
+                mPopularLiveData.postValue(resultResponse);
             }
 
             @Override
@@ -59,17 +59,17 @@ public class FilmRepository {
 
     public void fetchTopRateMovies(String apiKey, int page) {
         FilmApi filmApi = RetroClass.getFilmApi();
-        Observable<ResultRespone> observableFieldPopularMovies = filmApi.getTopRatedFilmRespone(apiKey, page)
+        Observable<ResultResponse> observableFieldPopularMovies = filmApi.getTopRatedFilmRespone(apiKey, page)
                 .subscribeOn(Schedulers.io());
-        observableFieldPopularMovies.subscribe(new Observer<ResultRespone>() {
+        observableFieldPopularMovies.subscribe(new Observer<ResultResponse>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
 
             }
 
             @Override
-            public void onNext(@NonNull ResultRespone resultRespone) {
-                mTopRateLiveData.postValue(resultRespone);
+            public void onNext(@NonNull ResultResponse resultResponse) {
+                mTopRateLiveData.postValue(resultResponse);
             }
 
             @Override
@@ -86,17 +86,17 @@ public class FilmRepository {
 
     public void fetchUpcomingMovies(String apiKey, int page) {
         FilmApi filmApi = RetroClass.getFilmApi();
-        Observable<ResultRespone> observableFieldPopularMovies = filmApi.getUpcomingFilmRespone(apiKey, page)
+        Observable<ResultResponse> observableFieldPopularMovies = filmApi.getUpcomingFilmRespone(apiKey, page)
                 .subscribeOn(Schedulers.io());
-        observableFieldPopularMovies.subscribe(new Observer<ResultRespone>() {
+        observableFieldPopularMovies.subscribe(new Observer<ResultResponse>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
 
             }
 
             @Override
-            public void onNext(@NonNull ResultRespone resultRespone) {
-                mUpcomingLiveData.postValue(resultRespone);
+            public void onNext(@NonNull ResultResponse resultResponse) {
+                mUpcomingLiveData.postValue(resultResponse);
             }
 
             @Override
@@ -113,17 +113,17 @@ public class FilmRepository {
 
     public void fetchNowPalyingMovies(String apiKey, int page) {
         FilmApi filmApi = RetroClass.getFilmApi();
-        Observable<ResultRespone> observableFieldPopularMovies = filmApi.getNowPlayingFilmRespone(apiKey, page)
+        Observable<ResultResponse> observableFieldPopularMovies = filmApi.getNowPlayingFilmRespone(apiKey, page)
                 .subscribeOn(Schedulers.io());
-        observableFieldPopularMovies.subscribe(new Observer<ResultRespone>() {
+        observableFieldPopularMovies.subscribe(new Observer<ResultResponse>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
 
             }
 
             @Override
-            public void onNext(@NonNull ResultRespone resultRespone) {
-                mNowPlayingLiveData.postValue(resultRespone);
+            public void onNext(@NonNull ResultResponse resultResponse) {
+                mNowPlayingLiveData.postValue(resultResponse);
             }
 
             @Override
@@ -165,19 +165,19 @@ public class FilmRepository {
         });
     }
 
-    public MutableLiveData<ResultRespone> getmNowPlayingLiveData() {
+    public MutableLiveData<ResultResponse> getmNowPlayingLiveData() {
         return mNowPlayingLiveData;
     }
 
-    public MutableLiveData<ResultRespone> getmPopularLiveData() {
+    public MutableLiveData<ResultResponse> getmPopularLiveData() {
         return mPopularLiveData;
     }
 
-    public MutableLiveData<ResultRespone> getmTopRateLiveData() {
+    public MutableLiveData<ResultResponse> getmTopRateLiveData() {
         return mTopRateLiveData;
     }
 
-    public MutableLiveData<ResultRespone> getmUpcomingLiveData() {
+    public MutableLiveData<ResultResponse> getmUpcomingLiveData() {
         return mUpcomingLiveData;
     }
 

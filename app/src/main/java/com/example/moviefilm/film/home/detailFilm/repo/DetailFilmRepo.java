@@ -10,7 +10,7 @@ import com.example.moviefilm.base.RetroClass;
 import com.example.moviefilm.film.home.detailFilm.models.CastResponse;
 import com.example.moviefilm.film.home.detailFilm.models.DetailFilm;
 import com.example.moviefilm.film.home.detailFilm.models.VideoResponse;
-import com.example.moviefilm.film.models.ResultRespone;
+import com.example.moviefilm.film.models.ResultResponse;
 import com.example.moviefilm.roomdb.Film;
 import com.example.moviefilm.roomdb.FilmDao;
 import com.example.moviefilm.roomdb.FilmDatabase;
@@ -33,8 +33,8 @@ public class DetailFilmRepo {
     private static final String TAG = "TAG";
     private MutableLiveData<DetailFilm> detailFilmMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<VideoResponse> videoTrailerMutableLiveData = new MutableLiveData<>();
-    private MutableLiveData<ResultRespone> similarFilmMutableLiveData = new MutableLiveData<>();
-    private MutableLiveData<ResultRespone> recommendMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<ResultResponse> similarFilmMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<ResultResponse> recommendMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<CastResponse> castResponseMutableLiveData = new MutableLiveData<>();
     private FilmDao filmDao;
     private Flowable<List<Film>> allFilm;
@@ -120,11 +120,11 @@ public class DetailFilmRepo {
         return videoTrailerMutableLiveData;
     }
 
-    public MutableLiveData<ResultRespone> getSimilarFilmMutableLiveData() {
+    public MutableLiveData<ResultResponse> getSimilarFilmMutableLiveData() {
         return similarFilmMutableLiveData;
     }
 
-    public MutableLiveData<ResultRespone> getRecommendMutableLiveData() {
+    public MutableLiveData<ResultResponse> getRecommendMutableLiveData() {
         return recommendMutableLiveData;
     }
 
@@ -184,16 +184,16 @@ public class DetailFilmRepo {
 
     public void fetchSimilarFilm(String id, String apiKey) {
         FilmApi videoFilm = RetroClass.getFilmApi();
-        Observable<ResultRespone> resultsObservable = videoFilm.getSimilarVideoTrailer(id, apiKey).subscribeOn(Schedulers.io());
-        resultsObservable.subscribe(new Observer<ResultRespone>() {
+        Observable<ResultResponse> resultsObservable = videoFilm.getSimilarVideoTrailer(id, apiKey, 1).subscribeOn(Schedulers.io());
+        resultsObservable.subscribe(new Observer<ResultResponse>() {
             @Override
             public void onSubscribe(@NonNull io.reactivex.disposables.Disposable d) {
 
             }
 
             @Override
-            public void onNext(@NonNull ResultRespone resultRespone) {
-                similarFilmMutableLiveData.postValue(resultRespone);
+            public void onNext(@NonNull ResultResponse resultResponse) {
+                similarFilmMutableLiveData.postValue(resultResponse);
             }
 
             @Override
@@ -209,16 +209,16 @@ public class DetailFilmRepo {
 
     public void fetchRecommendFilm(String id, String apiKey) {
         FilmApi videoFilm = RetroClass.getFilmApi();
-        Observable<ResultRespone> resultsObservable = videoFilm.getRecommendVideoTrailer(id, apiKey).subscribeOn(Schedulers.io());
-        resultsObservable.subscribe(new Observer<ResultRespone>() {
+        Observable<ResultResponse> resultsObservable = videoFilm.getRecommendVideoTrailer(id, apiKey, 1).subscribeOn(Schedulers.io());
+        resultsObservable.subscribe(new Observer<ResultResponse>() {
             @Override
             public void onSubscribe(@NonNull io.reactivex.disposables.Disposable d) {
 
             }
 
             @Override
-            public void onNext(@NonNull ResultRespone resultRespone) {
-                recommendMutableLiveData.postValue(resultRespone);
+            public void onNext(@NonNull ResultResponse resultResponse) {
+                recommendMutableLiveData.postValue(resultResponse);
             }
 
             @Override

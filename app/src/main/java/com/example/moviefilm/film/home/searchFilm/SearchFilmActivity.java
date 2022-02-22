@@ -22,7 +22,7 @@ import com.example.moviefilm.databinding.ActivitySearchFilmBinding;
 import com.example.moviefilm.film.home.detailFilm.DetailFilmActivity;
 import com.example.moviefilm.film.view.MainActivity;
 import com.example.moviefilm.film.home.adapter.FilmAdapter;
-import com.example.moviefilm.film.models.ResultRespone;
+import com.example.moviefilm.film.models.ResultResponse;
 import com.example.moviefilm.film.models.Results;
 
 import java.util.ArrayList;
@@ -61,10 +61,10 @@ public class SearchFilmActivity extends AppCompatActivity implements OnClickList
     }
 
     private void obServerData() {
-        mViewModel.getResultResponeLiveData().observe(this, new Observer<ResultRespone>() {
+        mViewModel.getResultResponeLiveData().observe(this, new Observer<ResultResponse>() {
             @Override
-            public void onChanged(ResultRespone resultRespone) {
-                resultSearchResultsList = resultRespone.getResults();
+            public void onChanged(ResultResponse resultResponse) {
+                resultSearchResultsList = resultResponse.getResults();
                 if(resultSearchResultsList.size()==0)
                     txtNoData.setVisibility(View.VISIBLE);
                 else

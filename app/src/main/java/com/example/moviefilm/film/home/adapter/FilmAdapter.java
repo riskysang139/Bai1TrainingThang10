@@ -35,6 +35,11 @@ public class FilmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.onClickListener = onClickListener;
     }
 
+    public void setResultsList(List<Results> resultsList) {
+        this.resultsList = resultsList;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

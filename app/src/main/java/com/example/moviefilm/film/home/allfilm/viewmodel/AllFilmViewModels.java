@@ -7,19 +7,19 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.moviefilm.film.home.allfilm.repo.AllFilmRepo;
 import com.example.moviefilm.film.models.MovieAdver;
-import com.example.moviefilm.film.models.ResultRespone;
+import com.example.moviefilm.film.models.ResultResponse;
 
 import java.util.List;
 
 public class AllFilmViewModels extends AndroidViewModel {
-    private MutableLiveData<ResultRespone> mNowPlayingMutableLiveData;
+    private MutableLiveData<ResultResponse> mNowPlayingMutableLiveData;
 
-    private MutableLiveData<ResultRespone> mPopularMutableLiveData;
-    private MutableLiveData<ResultRespone> mTopRateMutableLiveData;
-    private MutableLiveData<ResultRespone> mUpcomingMutableLiveData;
+    private MutableLiveData<ResultResponse> mPopularMutableLiveData;
+    private MutableLiveData<ResultResponse> mTopRateMutableLiveData;
+    private MutableLiveData<ResultResponse> mUpcomingMutableLiveData;
     private MutableLiveData<List<MovieAdver>> movieAdverMutableLiveData;
-    private MutableLiveData<ResultRespone> similarFilmLiveData;
-    private MutableLiveData<ResultRespone> recommendFilmLiveData;
+    private MutableLiveData<ResultResponse> similarFilmLiveData;
+    private MutableLiveData<ResultResponse> recommendFilmLiveData;
 
     private AllFilmRepo filmRepository;
 
@@ -28,37 +28,37 @@ public class AllFilmViewModels extends AndroidViewModel {
         filmRepository = new AllFilmRepo(application);
     }
 
-    public MutableLiveData<ResultRespone> getmNowPlayingMutableLiveData() {
+    public MutableLiveData<ResultResponse> getmNowPlayingMutableLiveData() {
         if (mNowPlayingMutableLiveData == null)
             return mNowPlayingMutableLiveData = filmRepository.getmNowPlayingLiveData();
         return mNowPlayingMutableLiveData;
     }
 
-    public MutableLiveData<ResultRespone> getmPopularMutableLiveData() {
+    public MutableLiveData<ResultResponse> getmPopularMutableLiveData() {
         if (mPopularMutableLiveData == null)
             return mPopularMutableLiveData = filmRepository.getmPopularLiveData();
         return mPopularMutableLiveData;
     }
 
-    public MutableLiveData<ResultRespone> getmTopRateMutableLiveData() {
+    public MutableLiveData<ResultResponse> getmTopRateMutableLiveData() {
         if (mTopRateMutableLiveData == null)
             return mTopRateMutableLiveData = filmRepository.getmTopRateLiveData();
         return mTopRateMutableLiveData;
     }
 
-    public MutableLiveData<ResultRespone> getmUpcomingMutableLiveData() {
+    public MutableLiveData<ResultResponse> getmUpcomingMutableLiveData() {
         if (mUpcomingMutableLiveData == null)
             return mUpcomingMutableLiveData = filmRepository.getmUpcomingLiveData();
         return mUpcomingMutableLiveData;
     }
 
-    public MutableLiveData<ResultRespone> getSimilarFilmLiveData() {
+    public MutableLiveData<ResultResponse> getSimilarFilmLiveData() {
         if (similarFilmLiveData == null)
             return similarFilmLiveData = filmRepository.getSimilarFilmMutableLiveData();
         return similarFilmLiveData;
     }
 
-    public MutableLiveData<ResultRespone> getRecommendFilmLiveData() {
+    public MutableLiveData<ResultResponse> getRecommendFilmLiveData() {
         if (recommendFilmLiveData == null)
             return recommendFilmLiveData = filmRepository.getRecommendMutableLiveData();
         return recommendFilmLiveData;
@@ -76,11 +76,11 @@ public class AllFilmViewModels extends AndroidViewModel {
         filmRepository.fetchNowPalyingMovies(apiKey,page);
     }
 
-    public void fetchSimilarFilm(String id , String apiKey) {
-        filmRepository.fetchSimilarFilm(id,apiKey);
+    public void fetchSimilarFilm(String id , String apiKey, int page) {
+        filmRepository.fetchSimilarFilm(id,apiKey, page);
     }
-    public void fetchRecommendFilm(String id , String apiKey) {
-        filmRepository.fetchRecommendFilm(id,apiKey);
+    public void fetchRecommendFilm(String id , String apiKey, int page) {
+        filmRepository.fetchRecommendFilm(id,apiKey, page);
     }
 
     public void fetchUpcomingMovies(String apiKey ,int page) { filmRepository.fetchUpcomingMovies(apiKey,page); }
