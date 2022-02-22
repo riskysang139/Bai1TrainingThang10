@@ -23,7 +23,7 @@
             android:layout_height="@dimen/_160sdp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/_45sdp"
-            android:src="@drawable/logomovieapp" />
+            android:src="@drawable/logo_movie_app" />
 
         <TextView
             android:id="@+id/theRuleVertical"
@@ -95,7 +95,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/btndangNhap"
+            android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
             android:layout_below="@id/layoutTxtPass"
@@ -111,7 +111,7 @@
             android:id="@+id/txtQuenMatKhau"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/btndangNhap"
+            android:layout_below="@id/btn_login"
             android:layout_alignParentRight="true"
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_20sdp"

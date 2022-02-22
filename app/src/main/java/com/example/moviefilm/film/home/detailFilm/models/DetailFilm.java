@@ -1,9 +1,11 @@
 package com.example.moviefilm.film.home.detailFilm.models;
 
+import com.example.moviefilm.base.Converter;
 import com.example.moviefilm.film.view.MainActivity;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class DetailFilm {
@@ -132,7 +134,7 @@ public class DetailFilm {
     }
 
     public Integer getId() {
-        return id;
+        return id == null ? 0 : id;
     }
 
     public void setId(Integer id) {
@@ -204,7 +206,7 @@ public class DetailFilm {
     }
 
     public String getReleaseDate() {
-        return releaseDate;
+        return releaseDate.equals("") ? "" : Converter.convertDate(releaseDate);
     }
 
     public void setReleaseDate(String releaseDate) {

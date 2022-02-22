@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -64,7 +65,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         private ImageView imgFilm;
         private CheckBox cbCart;
         private SwipeRevealLayout swipeRevealLayout;
-        private RelativeLayout rlInfo;
+        private LinearLayout llInfo;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -74,7 +75,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             imgFilm = itemView.findViewById(R.id.img_cart_film);
             cbCart = itemView.findViewById(R.id.cb_film);
             swipeRevealLayout = itemView.findViewById(R.id.dl_layout);
-            rlInfo = itemView.findViewById(R.id.rl_info);
+            llInfo = itemView.findViewById(R.id.ll_info);
         }
 
         @SuppressLint("SetTextI18n")
@@ -102,7 +103,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             swipeRevealLayout.setOnClickListener(view -> {
 
             });
-            rlInfo.setOnClickListener(view -> onCartClickListener.onClickDetail(film.getFilmId() + ""));
+            llInfo.setOnClickListener(view -> onCartClickListener.onClickDetail(film.getFilmId() + ""));
+
+            if (film.isChecked2())
+                cbCart.setVisibility(View.GONE);
+            else
+                cbCart.setVisibility(View.VISIBLE);
         }
     }
 

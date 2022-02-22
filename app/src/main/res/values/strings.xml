@@ -8,8 +8,8 @@
     <string name="login" translatable="false">Login</string>
     <string name="title_top_trending" translatable="false">Comming soon</string>
     <string name="title_user_fragment" translatable="false">Account</string>
-    <string name="history_deal" translatable="false">Transaction History</string>
-    <string name="no_adv" translatable="false">Ad Blocking</string>
+    <string name="history_deal" translatable="false">Video Watched</string>
+    <string name="no_adv" translatable="false">Loved History</string>
     <string name="free_data" translatable="false">Free Data</string>
     <string name="feed_back" translatable="false">Feedback</string>
     <string name="about_our">About us</string>

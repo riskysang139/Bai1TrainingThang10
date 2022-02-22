@@ -1,9 +1,7 @@
 package com.example.moviefilm.film.view;
 
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,8 +13,7 @@ import com.example.moviefilm.R;
 import com.example.moviefilm.base.customview.SearchActionBarView;
 import com.example.moviefilm.databinding.ActivityMainBinding;
 import com.example.moviefilm.film.adapter.ViewPagerAdapter;
-import com.example.moviefilm.film.cart.view.CartFragment;
-import com.example.moviefilm.film.home.detailFilm.DetailFilmActivity;
+import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.film.home.searchFilm.SearchFilmViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 

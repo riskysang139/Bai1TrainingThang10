@@ -19,11 +19,15 @@ public interface FilmDao {
     @Query("SELECT * from movie_database WHERE film_buy ==:isWantBuy")
     Flowable<List<Film>> getFilmCart(int isWantBuy);
 
-    @Query("SELECT * from movie_database WHERE filmId ==:id AND film_buy ==:isWantBuy")
-    Flowable<Film> getFilm(String id, int isWantBuy);
-
     @Query("SELECT * from movie_database WHERE filmId ==:id")
-    Flowable<Film> getFilmLove(String id);
+    Flowable<Film> getFilmWithId(String id);
+
+    @Query("SELECT * from movie_database WHERE film_watch ==:isWatched")
+    Flowable<List<Film>> getFilmWatched(int isWatched);
+
+    @Query("SELECT * from movie_database WHERE film_love ==:isLoved")
+    Flowable<List<Film>> getFilmLoved(int isLoved);
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Film... films);

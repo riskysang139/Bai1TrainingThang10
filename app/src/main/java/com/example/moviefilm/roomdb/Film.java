@@ -32,6 +32,8 @@ public class Film {
 
     private boolean isChecked = false;
 
+    private boolean isChecked2 = false;
+
     private float totalPrice;
 
     public Film(int filmId, String filmName, String filmImage, float filmRate, String filmReleaseDate, int filmLove, int isWantBuy, int filmWatch) {
@@ -126,5 +128,13 @@ public class Film {
 
     public void setFilmWatch(int filmWatch) {
         this.filmWatch = filmWatch;
+    }
+
+    public boolean isChecked2() {
+        return isChecked2;
+    }
+
+    public void setChecked2(boolean checked2) {
+        isChecked2 = checked2;
     }
 }

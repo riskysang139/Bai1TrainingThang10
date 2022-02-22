@@ -1,15 +1,11 @@
 package com.example.moviefilm.film.cart.view;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,21 +13,15 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.moviefilm.R;
 import com.example.moviefilm.base.Converter;
 import com.example.moviefilm.databinding.FragmentCartBinding;
 import com.example.moviefilm.film.cart.adapter.CartAdapter;
 import com.example.moviefilm.film.cart.viewmodels.CartViewModel;
-import com.example.moviefilm.film.home.adapter.FilmAdapter;
-import com.example.moviefilm.film.home.allfilm.view.AllFilmActivity;
-import com.example.moviefilm.film.home.detailFilm.DetailFilmActivity;
+import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.roomdb.Film;
 
-import org.greenrobot.eventbus.EventBus;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -62,18 +52,18 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_cart, container, false);
         totalPrice = 0;
-        View view = binding.getRoot();
         cartViewModel = ViewModelProviders.of(this).get(CartViewModel.class);
         observerCartFilm();
         keyFrom = getArguments().getString(DetailFilmActivity.KEY_FROM, "");
-        binding.totalPayment.setSelected(true);
-        return view;
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        binding.totalPayment.setSelected(true);
+        binding.btnBack.setVisibility(View.GONE);
+        binding.rlPayment.setVisibility(View.VISIBLE);
     }
 
     private void observerCartFilm() {

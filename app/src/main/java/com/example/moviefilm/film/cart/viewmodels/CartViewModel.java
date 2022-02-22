@@ -19,8 +19,18 @@ public class CartViewModel extends AndroidViewModel{
         super(application);
         cartRepository = new CartRepository(application);
     }
-    //Get all Movie
+    //Get Movie with cart
     public Flowable<List<Film>> getFilmCart(int isWantBuy){
         return cartRepository.getFilmCart(isWantBuy);
+    }
+
+    //Get Movie with watch
+    public Flowable<List<Film>> getFilmWatched(int isWatched){
+        return cartRepository.getFilmWithWatched(isWatched);
+    }
+
+    //Get Movie with love
+    public Flowable<List<Film>> getFilmWLoved(int isWatched){
+        return cartRepository.getFilmWithLoved(isWatched);
     }
 }

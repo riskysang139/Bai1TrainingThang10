@@ -37,29 +37,18 @@ public class DetailFilmRepo {
     private MutableLiveData<ResultResponse> recommendMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<CastResponse> castResponseMutableLiveData = new MutableLiveData<>();
     private FilmDao filmDao;
-    private Flowable<List<Film>> allFilm;
 
     public DetailFilmRepo(Application application) {
         FilmDatabase filmDatabase = FilmDatabase.getInstance(application);
         filmDao = filmDatabase.filmDao();
     }
 
-    //Get all film
-    public Flowable<List<Film>> getAllFilm(){
-        return filmDao.getAll();
+    //Get film with id
+    public Flowable<Film> getFilmWithId(String id){
+        return filmDao.getFilmWithId(id);
     }
 
-    //Get film
-    public Flowable<Film> getFilm(String id, int isWantBuy){
-        return filmDao.getFilm(id, isWantBuy);
-    }
-
-    //Get film love
-    public Flowable<Film> getFilmLove(String id){
-        return filmDao.getFilmLove(id);
-    }
-
-    //insert film love
+    //Insert film
     public void insertFilm (final Film film) {
         Completable.fromAction(new Action() {
             @Override

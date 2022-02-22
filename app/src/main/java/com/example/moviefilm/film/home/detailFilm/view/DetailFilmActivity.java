@@ -1,4 +1,4 @@
-package com.example.moviefilm.film.home.detailFilm;
+package com.example.moviefilm.film.home.detailFilm.view;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,11 +36,11 @@ import com.example.moviefilm.film.home.detailFilm.adapter.CastAdapter;
 import com.example.moviefilm.film.home.detailFilm.models.Cast;
 import com.example.moviefilm.film.home.detailFilm.models.DetailFilm;
 import com.example.moviefilm.film.home.detailFilm.viewmodel.DetailFilmViewModels;
+import com.example.moviefilm.film.home.detailFilm.watchfilm.view.WatchFilmActivity;
 import com.example.moviefilm.film.models.Results;
 import com.example.moviefilm.film.view.MainActivity;
 import com.example.moviefilm.roomdb.Film;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,10 +52,7 @@ import io.reactivex.schedulers.Schedulers;
 public class DetailFilmActivity extends AppCompatActivity implements OnClickListener {
     private static final String TAG = "TAG";
     ActivityDetailFilmBinding binding;
-    private VideoView videoView;
-
     public static final String KEY_FROM = "_from_screen";
-    public static final String FROM_NOW_PLAYING = "FROM_NOW_PLAYING";
     public static final String FROM_UP_COMING = "FROM_UP_COMING";
     public static final String FROM_TOP_RATE = "FROM_TOP_RATE";
     public static final String FROM_POPULAR = "FROM_POPULAR";
@@ -64,20 +60,16 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
     public static final String FROM_DETAIL = "FROM_DETAIL";
     public static final String FROM_SIMILAR = "FROM_SIMILAR";
     public static final String FROM_RECOMMEND = "FROM_RECOMMEND";
+    public static final String FROM_VIDEO_HISTORY = "FROM_VIDEO_HISTORY";
+    public static final String FROM_LOVED = "FROM_LOVED";
     public static final String FROM_CART = "FROM_CART";
-
-
-    public static final String LINK_HEADER_YOUTUBE = "https://www.youtube.com/watch?v=";
 
     public static final String ID = "ID_VIDEO";
 
     private static String id = "";
 
-    private static final DecimalFormat df = new DecimalFormat("0.0");
-
     public static final String VIDEO_ID = "VIDEO_ID";
 
-    private ImageView btnPlay;
     private RelativeLayout btnBack;
     private TextView txtTitle, txtAdult, txtGenres, txtTimeFilm, txtRelease;
     private ExpandableTextView txtDetail;
@@ -125,7 +117,6 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
     }
 
     private void initView() {
-        btnPlay = findViewById(R.id.btn_start);
         btnBack = findViewById(R.id.btn_back);
         txtDetail = findViewById(R.id.detail_film);
         txtTitle = findViewById(R.id.title_film);
@@ -149,9 +140,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
         detailFilmViewModels.getDetailFilmLiveData().observe(this, detailFilm -> {
             detailFilms = detailFilm;
             setUpViewDetail();
-            insertMovieLove(detailFilm);
-            insertMovieWatch(detailFilm);
-            insertMovieCart(detailFilm);
+            insertFilm(detailFilm);
         });
     }
 
@@ -186,15 +175,14 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
 
 
     public void observerFilm() {
-        Disposable disposable = detailFilmViewModels.getMovies(id, 1).subscribeOn(Schedulers.io())
+        Disposable disposable = detailFilmViewModels.getMovieWithId(id).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(films -> {
                     Log.d(TAG, "accept: getMovie");
                     filmDB = films;
                     if (films != null) {
-                        updateFilmBuy(films);
                         updateFilmLove(films);
-                        updateFilmWatch(films);
+                        updateFilmBuy(films);
                     }
                 });
         compositeDisposableNew.add(disposable);
@@ -228,7 +216,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
             txtAdult.setVisibility(View.VISIBLE);
         else
             txtAdult.setVisibility(View.GONE);
-        txtRelease.setText(Converter.convertDate(detailFilms.getReleaseDate()));
+        txtRelease.setText(detailFilms.getReleaseDate());
         binding.txtPrice.setText("Add to cart : " + detailFilms.getVoteAverage() * 2 + " $");
     }
 
@@ -292,77 +280,65 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
     }
 
     private void watchFilm(String videoId) {
-        binding.videoViewClick.setOnClickListener(view -> {
-            Intent intent = new Intent(DetailFilmActivity.this, WatchFilmActivity.class);
+        if (detailFilms != null) {
+            binding.videoViewClick.setOnClickListener(view -> {
+                Intent intent = new Intent(DetailFilmActivity.this, WatchFilmActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString(VIDEO_ID, videoId);
+                bundle.putString(ID, detailFilms.getId() + "");
+                intent.putExtras(bundle);
+                startActivity(intent);
+            });
+        }
+    }
+
+    private void openCartFilm() {
+        binding.rlCart.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putString(VIDEO_ID, videoId);
+            Intent intent = new Intent(DetailFilmActivity.this, MainActivity.class);
+            bundle.putString(KEY_FROM, FROM_DETAIL);
             intent.putExtras(bundle);
             startActivity(intent);
         });
     }
 
-
-    private void insertMovieCart(@NonNull DetailFilm detailFilm) {
-        binding.payment.setOnClickListener(view -> new CircleAnimationUtil().attachActivity(DetailFilmActivity.this).setTargetView(binding.payment).setMoveDuration(1000).setDestView(binding.rlCart).setAnimationListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-                if (filmDB == null) {
-                    Film film = new Film(detailFilm.getId(), detailFilm.getTitle(),
-                            MainActivity.HEADER_URL_IMAGE + detailFilm.getPosterPath(),
-                            Float.parseFloat(detailFilm.getVoteAverage() / 2 + ""), Converter.convertStringToDate(detailFilms.getReleaseDate()), 0, 1, 0);
-                    detailFilmViewModels.insertFilm(film);
-                }
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-
-            }
-        }).startAnimation());
-    }
-
-    private void insertMovieWatch(@NonNull DetailFilm detailFilm) {
+    private void insertFilm(@NonNull DetailFilm detailFilm) {
         if (filmDB == null) {
             Film film = new Film(detailFilm.getId(), detailFilm.getTitle(),
                     MainActivity.HEADER_URL_IMAGE + detailFilm.getPosterPath(),
-                    Float.parseFloat(detailFilm.getVoteAverage() / 2 + ""), Converter.convertStringToDate(detailFilms.getReleaseDate()), 0, 0, 1);
-            binding.videoViewClick.setOnClickListener(view -> detailFilmViewModels.insertFilm(film));
-        }
-    }
-
-    private void insertMovieLove(@NonNull DetailFilm detailFilm) {
-        if (filmDB == null) {
-            Film film = new Film(detailFilm.getId(), detailFilm.getTitle(),
-                    MainActivity.HEADER_URL_IMAGE + detailFilm.getPosterPath(),
-                    Float.parseFloat(detailFilm.getVoteAverage() / 2 + ""), Converter.convertStringToDate(detailFilms.getReleaseDate()), 1, 0, 0);
-            binding.rlLove.setOnClickListener(view -> {
-                binding.imgHeart.setImageResource(R.drawable.heart_red);
-                detailFilmViewModels.insertFilm(film);
-            });
+                    Float.parseFloat(detailFilm.getVoteAverage() / 2 + ""), Converter.convertStringToDate(detailFilms.getReleaseDate()), 0, 0, 0);
+            detailFilmViewModels.insertFilm(film);
         }
     }
 
     private void updateFilmBuy(Film films) {
-        if (films.getIsWantBuy() == 0) {
-            binding.payment.setOnClickListener(view -> {
-                Film film = films;
-                film.setIsWantBuy(1);
-                detailFilmViewModels.updateFilm(film);
-            });
+        if (filmDB != null && filmDB.getIsWantBuy() == 0) {
+            binding.payment.setOnClickListener(view -> new CircleAnimationUtil().attachActivity(DetailFilmActivity.this).setTargetView(binding.payment).setMoveDuration(1000).setDestView(binding.rlCart).setAnimationListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+                    Film film = films;
+                    film.setIsWantBuy(1);
+                    detailFilmViewModels.updateFilm(film);
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+
+                }
+            }).startAnimation());
         } else
             binding.payment.setVisibility(View.GONE);
     }
-
 
     private void updateFilmLove(Film films) {
         if (films.getFilmLove() == 1) {
@@ -383,26 +359,6 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
         }
     }
 
-    private void updateFilmWatch(Film films) {
-        if (films.getFilmWatch() == 0) {
-            binding.videoViewClick.setOnClickListener(view -> {
-                Film film = films;
-                film.setFilmWatch(1);
-                detailFilmViewModels.updateFilm(film);
-            });
-        }
-    }
-
-    private void openCartFilm() {
-        binding.rlCart.setOnClickListener(view -> {
-            Bundle bundle = new Bundle();
-            Intent intent = new Intent(DetailFilmActivity.this, MainActivity.class);
-            bundle.putString(KEY_FROM, FROM_DETAIL);
-            intent.putExtras(bundle);
-            startActivity(intent);
-        });
-    }
-
     private void refreshLayout() {
         Handler handler = new Handler();
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -412,13 +368,13 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
                     @Override
                     public void run() {
                         detailFilmViewModels.fetchDetailFilm(id, MainActivity.API_KEY);
-                        detailFilmViewModels.fetchRecommendFilm(id, MainActivity.API_KEY );
+                        detailFilmViewModels.fetchRecommendFilm(id, MainActivity.API_KEY);
                         detailFilmViewModels.fetchCastFilm(id, MainActivity.API_KEY);
                         detailFilmViewModels.fetchVideoTrailerFilm(id, MainActivity.API_KEY);
                         detailFilmViewModels.fetchCastFilm(id, MainActivity.API_KEY);
                         binding.swipeRefreshLayout.setRefreshing(false);
                     }
-                },1000);
+                }, 1000);
             }
         });
     }

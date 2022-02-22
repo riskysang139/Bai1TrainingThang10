@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.example.moviefilm.R;
 import com.example.moviefilm.databinding.FragmentUserBinding;
+import com.example.moviefilm.film.home.allfilm.view.AllFilmActivity;
+import com.example.moviefilm.film.home.allfilm.view.HistoryFilmActivity;
 import com.example.moviefilm.film.user.login.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 //import com.google.firebase.auth.FirebaseAuth;
@@ -37,27 +39,21 @@ public class UserFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_user, container, false);
-        View view = binding.getRoot();
-        BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setVisibility(View.VISIBLE);
-        Glide.with(getContext()).load(R.drawable.logomovieapp).into(binding.imgProfile);
         checkUser();
-        return view;
+        return binding.getRoot();
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        login();
-        onRefresh();
-        register();
-        binding.btndangKi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), LoginActivity.class));
-            }
-        });
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initView();
+        openVideoHistory();
+    }
 
+    private void initView() {
+        BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setVisibility(View.VISIBLE);
+        Glide.with(getActivity()).load(R.drawable.logo_movie_app).into(binding.imgProfile);
     }
 
     private void checkUser() {
@@ -109,19 +105,17 @@ public class UserFragment extends Fragment {
 //        });
     }
 
-    private void onRefresh() {
-//        binding.refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                Handler handler = new Handler();
-//                handler.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment, new UserFragment()).commit();
-//                        binding.refreshLayout.setRefreshing(false);
-//                    }
-//                }, 1000);
-//            }
-//        });
+    private void openVideoHistory() {
+        binding.btnHistory.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), HistoryFilmActivity.class);
+            startActivity(intent);
+        });
+    }
+
+    private void openLoveHistory() {
+        binding.btnHistory.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), HistoryFilmActivity.class);
+            startActivity(intent);
+        });
     }
 }

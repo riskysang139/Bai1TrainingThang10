@@ -22,12 +22,17 @@ import com.example.moviefilm.databinding.ActivityAllFilmBinding;
 import com.example.moviefilm.film.home.adapter.EndlessRecyclerViewScrollListener;
 import com.example.moviefilm.film.home.adapter.FilmAdapter;
 import com.example.moviefilm.film.home.allfilm.viewmodel.AllFilmViewModels;
-import com.example.moviefilm.film.home.detailFilm.DetailFilmActivity;
+import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.film.models.Results;
 import com.example.moviefilm.film.view.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class AllFilmActivity extends AppCompatActivity implements OnClickListener {
 
@@ -42,7 +47,7 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
     private TextView txtTitle;
     private RelativeLayout btnBack;
     private EndlessRecyclerViewScrollListener mLoadMoreListener;
-    String fromScreen = "";
+    private String fromScreen = "";
 
     /**
      * Operator
@@ -166,10 +171,9 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
         });
     }
 
+
     @SuppressLint("NotifyDataSetChanged")
     private void initAdapter() {
-        if (listFilm == null)
-            listFilm = new ArrayList<>();
         filmAdapter = new FilmAdapter(listFilm, this, this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, RecyclerView.VERTICAL, false);
         rcvAllFilm.addItemDecoration(new GridItemDecoration(Converter.dpToPx(this, 30), 2));

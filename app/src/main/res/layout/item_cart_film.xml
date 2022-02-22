@@ -28,14 +28,14 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
+            android:fontFamily="@font/beau_sans_pro_bold"
             android:text="Delete"
             android:textColor="@color/white"
-            android:fontFamily="@font/beausanspro_bold"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/rl_info"
+    <LinearLayout
+        android:id="@+id/ll_info"
         android:layout_width="match_parent"
         android:layout_height="135dp"
         android:background="@color/main_color">
@@ -60,47 +60,49 @@
             android:src="@drawable/image_login"
             app:riv_corner_radius="10dp" />
 
-        <TextView
-            android:id="@+id/title_film"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginTop="15dp"
-            android:layout_toRightOf="@id/img_cart_film"
-            android:ellipsize="end"
-            android:fontFamily="@font/beausanspro_bold"
-            android:maxLines="2"
-            android:text="title"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:layout_toRightOf="@id/img_cart_film">
 
-        <TextView
-            android:id="@+id/txt_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/title_film"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="14dp"
-            android:layout_marginTop="2dp"
-            android:layout_toRightOf="@id/img_cart_film"
-            android:fontFamily="@font/pro_text_semibold"
-            android:gravity="center_vertical"
-            android:text="12/12/2021"
-            android:textColor="@color/color_979797"
-            android:textSize="14sp" />
+            <TextView
+                android:id="@+id/title_film"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginTop="15dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/beau_sans_pro_bold"
+                android:maxLines="2"
+                android:text="title"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/txt_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/txt_date"
-            android:layout_marginLeft="14dp"
-            android:layout_toRightOf="@id/img_cart_film"
-            android:ellipsize="end"
-            android:fontFamily="@font/pro_text_semibold"
-            android:textColor="@color/color_979797"
-            android:textSize="14sp" />
+            <TextView
+                android:id="@+id/txt_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_film"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="14dp"
+                android:layout_marginTop="2dp"
+                android:fontFamily="@font/pro_text_semibold"
+                android:gravity="center_vertical"
+                android:text="12/12/2021"
+                android:textColor="@color/color_979797"
+                android:textSize="14sp" />
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/txt_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_date"
+                android:layout_marginLeft="14dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/pro_text_semibold"
+                android:textColor="@color/color_979797"
+                android:textSize="14sp" />
+        </RelativeLayout>
+    </LinearLayout>
 
 </com.chauthai.swipereveallayout.SwipeRevealLayout>

@@ -30,4 +30,15 @@ public class CartRepository {
     public Flowable<List<Film>> getFilmCart(int isWantBuy){
         return filmDao.getFilmCart(isWantBuy);
     }
+
+    //Get all film watch
+    public Flowable<List<Film>> getFilmWithWatched(int isWatched){
+        return filmDao.getFilmWatched(isWatched);
+    }
+
+    //Get all film watch
+    public Flowable<List<Film>> getFilmWithLoved(int isWatched){
+        return filmDao.getFilmLoved(isWatched);
+    }
+
 }

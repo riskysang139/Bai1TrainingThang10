@@ -8,8 +8,11 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.moviefilm.film.home.allfilm.repo.AllFilmRepo;
 import com.example.moviefilm.film.models.MovieAdverb;
 import com.example.moviefilm.film.models.ResultResponse;
+import com.example.moviefilm.roomdb.Film;
 
 import java.util.List;
+
+import io.reactivex.Flowable;
 
 public class AllFilmViewModels extends AndroidViewModel {
     private MutableLiveData<ResultResponse> mNowPlayingMutableLiveData;
@@ -17,7 +20,6 @@ public class AllFilmViewModels extends AndroidViewModel {
     private MutableLiveData<ResultResponse> mPopularMutableLiveData;
     private MutableLiveData<ResultResponse> mTopRateMutableLiveData;
     private MutableLiveData<ResultResponse> mUpcomingMutableLiveData;
-    private MutableLiveData<List<MovieAdverb>> movieAdverMutableLiveData;
     private MutableLiveData<ResultResponse> similarFilmLiveData;
     private MutableLiveData<ResultResponse> recommendFilmLiveData;
 

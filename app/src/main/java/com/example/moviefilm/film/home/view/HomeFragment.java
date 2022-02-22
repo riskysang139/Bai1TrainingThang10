@@ -29,7 +29,7 @@ import com.example.moviefilm.base.HorizontalItemDecoration;
 import com.example.moviefilm.base.OnClickListener;
 import com.example.moviefilm.base.customview.SearchActionBarView;
 import com.example.moviefilm.databinding.FragmentHomeBinding;
-import com.example.moviefilm.film.home.detailFilm.DetailFilmActivity;
+import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.film.view.MainActivity;
 import com.example.moviefilm.film.home.adapter.FilmAdapter;
 import com.example.moviefilm.film.home.adapter.MovieAdverAdapter;
