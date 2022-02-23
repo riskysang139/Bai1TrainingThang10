@@ -1,6 +1,11 @@
 package com.example.moviefilm.film.home.detailFilm.watchfilm.view;
 
+import android.app.PictureInPictureParams;
+import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.Rational;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,13 +14,11 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.moviefilm.R;
-import com.example.moviefilm.base.Converter;
 import com.example.moviefilm.databinding.ActivityWatchFilmBinding;
-import com.example.moviefilm.film.home.detailFilm.models.DetailFilm;
 import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.film.home.detailFilm.watchfilm.viewmodels.WatchFilmViewModels;
-import com.example.moviefilm.film.view.MainActivity;
 import com.example.moviefilm.roomdb.Film;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 
@@ -30,6 +33,7 @@ public class WatchFilmActivity extends AppCompatActivity {
     private WatchFilmViewModels watchFilmViewModels;
     private final CompositeDisposable compositeDisposableNew = new CompositeDisposable();
     private Film filmDB;
+    private PictureInPictureParams.Builder pictureInPictureParams;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,14 +43,20 @@ public class WatchFilmActivity extends AppCompatActivity {
         watchFilmViewModels = ViewModelProviders.of(this).get(WatchFilmViewModels.class);
         observerFilm();
         getLifecycle().addObserver(binding.youtubePlayerView);
-        binding.youtubePlayerView.exitFullScreen();
         binding.youtubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
             @Override
             public void onReady(@NonNull YouTubePlayer youTubePlayer) {
                 super.onReady(youTubePlayer);
                 youTubePlayer.loadVideo(videoId.equals("") ? "kim9qcN3CqE" : videoId, 0);
             }
+
         });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Log.d("tag", "support picture in picture");
+            pictureInPictureParams = new PictureInPictureParams.Builder();
+        } else
+            Log.d("tag", " not support picture in picture");
     }
 
     private void getData() {
@@ -74,6 +84,41 @@ public class WatchFilmActivity extends AppCompatActivity {
             Film film = films;
             film.setFilmWatch(1);
             watchFilmViewModels.updateFilm(film);
+        }
+    }
+
+    private void pictureInPictureModel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Log.d("tag", "support picture in picture");
+
+            //set up height and width of PIP window
+            Rational rational = new Rational(160, 110);
+            pictureInPictureParams.setAspectRatio(rational).build();
+            enterPictureInPictureMode(pictureInPictureParams.build());
+        } else
+            Log.d("tag", "not support picture in picture");
+    }
+
+    @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+        //called when user press home button
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (!isInPictureInPictureMode()) {
+                Log.d("tag", "was not in pip");
+                pictureInPictureModel();
+            } else
+                Log.d("tag", "onUserLeverHint : Already in PIP ");
+        }
+    }
+
+    @Override
+    public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
+        if (isInPictureInPictureMode) {
+            Log.d("tag","Endtered PIP");
+            //hide PIP button and acton bar
+
         }
     }
 

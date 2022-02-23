@@ -1,7 +1,6 @@
 package com.example.moviefilm.film.user;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,25 +15,15 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.example.moviefilm.R;
 import com.example.moviefilm.databinding.FragmentUserBinding;
-import com.example.moviefilm.film.home.allfilm.view.AllFilmActivity;
 import com.example.moviefilm.film.home.allfilm.view.HistoryFilmActivity;
 import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
-import com.example.moviefilm.film.user.login.LoginActivity;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.moviefilm.film.user.login.view.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 
 public class UserFragment extends Fragment {
 
     FragmentUserBinding binding;
-    private UserInfo profile;
     private FirebaseAuth firebaseAuth;
 
     public static UserFragment getInstance() {
@@ -56,7 +45,6 @@ public class UserFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initView();
         login();
         register();
         openVideoHistory();
@@ -64,21 +52,18 @@ public class UserFragment extends Fragment {
         logOut();
     }
 
-    private void initView() {
-        Glide.with(getActivity()).load(R.drawable.logo_movie_app).into(binding.imgProfile);
-    }
-
     private void checkUser() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        String email = "";
-        Uri photo = null;
         if (firebaseUser == null) {
-            Glide.with(getContext()).load(R.drawable.logo_movie_app).circleCrop().into(binding.imgProfile);
+            Glide.with(UserFragment.this).load(R.drawable.logo_movie_app).circleCrop().into(binding.imgProfile);
             binding.btnLogOut.setVisibility(View.GONE);
             binding.btnHistory.setVisibility(View.GONE);
             binding.bnLoveHis.setVisibility(View.GONE);
             binding.btnFreeData.setBackgroundResource(R.drawable.shape_btn_down_up);
             binding.linearSignInUp.setVisibility(View.VISIBLE);
+            binding.txtUserId.setText("Movie Funny");
+            binding.txtEmail.setText("Movie Funny");
+            Glide.with(UserFragment.this).load(R.drawable.logo_movie_app).into(binding.imgProfile);
         } else {
             binding.btnFreeData.setBackgroundResource(R.drawable.shape_linear_btn_down);
             binding.btnLogOut.setVisibility(View.VISIBLE);
@@ -87,7 +72,7 @@ public class UserFragment extends Fragment {
             binding.linearSignInUp.setVisibility(View.INVISIBLE);
             binding.txtUserId.setText(firebaseUser.getDisplayName());
             binding.txtEmail.setText(firebaseUser.getEmail());
-            Glide.with(getContext()).asBitmap().load("https://lh3.googleusercontent.com/a-/AOh14GhaQdKr_PnBbJ82r0VCxmDNgcsqv4wBVS8B1aRimg=s96-c").circleCrop().into(binding.imgProfile);
+            Glide.with(getContext()).load(firebaseUser.getPhotoUrl()).circleCrop().into(binding.imgProfile);
         }
     }
 
@@ -105,7 +90,7 @@ public class UserFragment extends Fragment {
         binding.btnHistory.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(), HistoryFilmActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putString(DetailFilmActivity.KEY_FROM,DetailFilmActivity.FROM_VIDEO_HISTORY);
+            bundle.putString(DetailFilmActivity.KEY_FROM, DetailFilmActivity.FROM_VIDEO_HISTORY);
             intent.putExtras(bundle);
             startActivity(intent);
         });
@@ -115,7 +100,7 @@ public class UserFragment extends Fragment {
         binding.bnLoveHis.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(), HistoryFilmActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putString(DetailFilmActivity.KEY_FROM,DetailFilmActivity.FROM_LOVED);
+            bundle.putString(DetailFilmActivity.KEY_FROM, DetailFilmActivity.FROM_LOVED);
             intent.putExtras(bundle);
             startActivity(intent);
         });
@@ -124,7 +109,7 @@ public class UserFragment extends Fragment {
     private void logOut() {
         binding.btnLogOut.setOnClickListener(view -> {
             firebaseAuth.signOut();
-            Toast.makeText(getContext(),"Log out Success !!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Log out Success !!!", Toast.LENGTH_SHORT).show();
             checkUser();
         });
     }

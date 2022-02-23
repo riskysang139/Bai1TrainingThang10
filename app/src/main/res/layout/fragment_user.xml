@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_regular"
                 android:gravity="center"
-                android:text="Display Name :"
+                android:text="Nick Name :"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
 
@@ -104,7 +104,8 @@
             android:layout_marginTop="@dimen/_30sdp"
             android:layout_marginRight="@dimen/_15sdp"
             android:background="@color/main_color"
-            android:src="@drawable/pencil" />
+            android:src="@drawable/pencil"
+            android:visibility="gone"/>
 
         <LinearLayout
             android:id="@+id/linear_first"

@@ -25,14 +25,22 @@
         </activity>
         <activity
             android:name=".film.home.allfilm.view.HistoryFilmActivity"/>
-        <activity android:name=".film.home.detailFilm.watchfilm.view.WatchFilmActivity" />
+        <activity android:name=".film.home.detailFilm.watchfilm.view.WatchFilmActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:supportsPictureInPicture="true"
+            tools:targetApi="n" />
         <activity android:name=".film.home.detailFilm.view.DetailFilmActivity" />
         <activity
             android:name=".film.view.MainActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".film.home.searchFilm.SearchFilmActivity" />
         <activity android:name=".film.home.allfilm.view.AllFilmActivity" />
-        <activity android:name=".film.user.login.LoginActivity" />
+        <activity android:name=".film.user.login.view.LoginActivity" />
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+
     </application>
 
 </manifest>
