@@ -206,7 +206,7 @@ public class DetailFilm {
     }
 
     public String getReleaseDate() {
-        return releaseDate.equals("") ? "" : Converter.convertDate(releaseDate);
+        return releaseDate.equals("") ? "" : releaseDate;
     }
 
     public void setReleaseDate(String releaseDate) {

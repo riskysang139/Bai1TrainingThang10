@@ -216,7 +216,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
             txtAdult.setVisibility(View.VISIBLE);
         else
             txtAdult.setVisibility(View.GONE);
-        txtRelease.setText(detailFilms.getReleaseDate());
+        txtRelease.setText(Converter.convertDate(detailFilms.getReleaseDate()));
         binding.txtPrice.setText("Add to cart : " + detailFilms.getVoteAverage() * 2 + " $");
     }
 

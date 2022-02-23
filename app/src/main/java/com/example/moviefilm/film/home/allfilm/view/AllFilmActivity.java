@@ -38,14 +38,11 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
 
     private ActivityAllFilmBinding binding;
     private AllFilmViewModels filmViewModels;
-    private RecyclerView rcvAllFilm;
     private List<Results> listFilm;
     private FilmAdapter filmAdapter;
     private static final String TAG = "Tag";
     private String id = "";
     private String title = "";
-    private TextView txtTitle;
-    private RelativeLayout btnBack;
     private EndlessRecyclerViewScrollListener mLoadMoreListener;
     private String fromScreen = "";
 
@@ -64,16 +61,9 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_all_film);
         filmViewModels = ViewModelProviders.of(this).get(AllFilmViewModels.class);
-        initView();
-        initAdapter();
         getData();
+        initAdapter();
         onBackPress();
-    }
-
-    private void initView() {
-        rcvAllFilm = findViewById(R.id.all_film);
-        txtTitle = findViewById(R.id.txtTitle);
-        btnBack = findViewById(R.id.btn_back);
     }
 
     private void getData() {
@@ -105,7 +95,7 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
                     break;
             }
         }
-        txtTitle.setText(title);
+        binding.txtTitle.setText(title);
     }
 
     private void observerPopularFilm(int page) {
@@ -114,7 +104,7 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
                     if (resultRespone != null) {
                         if (filmAdapter != null)
                             filmAdapter.setResultsList(resultRespone.getResults());
-                        Log.e(TAG, "result response popular : " + listFilm.toString());
+                        Log.e(TAG, "result response popular : ");
                     } else
                         Log.e(TAG, "call api popular failure");
                 }
@@ -127,7 +117,7 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
                     if (resultRespone != null) {
                         if (filmAdapter != null)
                             filmAdapter.setResultsList(resultRespone.getResults());
-                        Log.e(TAG, "result response top rated : " + listFilm.toString());
+                        Log.e(TAG, "result response top rated ");
                     } else
                         Log.e(TAG, "call api top rated failure");
                 }
@@ -140,7 +130,7 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
                     if (resultRespone != null) {
                         if (filmAdapter != null)
                             filmAdapter.setResultsList(resultRespone.getResults());
-                        Log.e(TAG, "result response upcoming : " + listFilm.toString());
+                        Log.e(TAG, "result response upcoming ");
                     } else
                         Log.e(TAG, "call api upcoming failure");
                 }
@@ -153,7 +143,7 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
             if (resultResponse != null) {
                 if (filmAdapter != null)
                     filmAdapter.setResultsList(resultResponse.getResults());
-                Log.e(TAG, "result response upcoming : " + listFilm.toString());
+                Log.e(TAG, "result response similar ");
             } else
                 Log.e(TAG, "call api similar failure");
         });
@@ -165,7 +155,7 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
             if (resultResponse != null) {
                 if (filmAdapter != null)
                     filmAdapter.setResultsList(resultResponse.getResults());
-                Log.e(TAG, "result response recommend : " + listFilm.toString());
+                Log.e(TAG, "result response recommend ");
             } else
                 Log.e(TAG, "call api recommend failure");
         });
@@ -176,9 +166,9 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
     private void initAdapter() {
         filmAdapter = new FilmAdapter(listFilm, this, this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, RecyclerView.VERTICAL, false);
-        rcvAllFilm.addItemDecoration(new GridItemDecoration(Converter.dpToPx(this, 30), 2));
-        rcvAllFilm.setLayoutManager(gridLayoutManager);
-        rcvAllFilm.setAdapter(filmAdapter);
+        binding.allFilm.addItemDecoration(new GridItemDecoration(Converter.dpToPx(this, 30), 2));
+        binding.allFilm.setLayoutManager(gridLayoutManager);
+        binding.allFilm.setAdapter(filmAdapter);
         mLoadMoreListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -206,7 +196,7 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
 
             }
         };
-        rcvAllFilm.addOnScrollListener(mLoadMoreListener);
+        binding.allFilm.addOnScrollListener(mLoadMoreListener);
     }
 
     @Override
@@ -221,6 +211,6 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
     }
 
     private void onBackPress() {
-        btnBack.setOnClickListener(view -> finish());
+        binding.btnBack.setOnClickListener(view -> finish());
     }
 }

@@ -15,23 +15,21 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
-            android:name=".film.home.allfilm.view.HistoryFilmActivity"
-            android:exported="false" />
-        <activity
-            android:name=".film.user.videohistory.HistoryVideoActivity"
-            android:exported="false" />
-        <activity android:name=".film.home.detailFilm.watchfilm.view.WatchFilmActivity" />
-        <activity android:name=".film.home.detailFilm.view.DetailFilmActivity" />
-        <activity
-            android:name=".film.view.MainActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustNothing">
+            android:name=".base.SplashActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".film.home.allfilm.view.HistoryFilmActivity"/>
+        <activity android:name=".film.home.detailFilm.watchfilm.view.WatchFilmActivity" />
+        <activity android:name=".film.home.detailFilm.view.DetailFilmActivity" />
+        <activity
+            android:name=".film.view.MainActivity"
+            android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".film.home.searchFilm.SearchFilmActivity" />
         <activity android:name=".film.home.allfilm.view.AllFilmActivity" />
         <activity android:name=".film.user.login.LoginActivity" />

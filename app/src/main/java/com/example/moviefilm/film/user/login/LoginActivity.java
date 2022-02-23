@@ -3,6 +3,7 @@ package com.example.moviefilm.film.user.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,6 +12,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.example.moviefilm.R;
 import com.example.moviefilm.databinding.ActivityLoginBinding;
+import com.example.moviefilm.film.view.MainActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -32,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
 
-    private  FirebaseUser firebaseUser;
+    private FirebaseUser firebaseUser;
 
     private static final String GOOGLE_SIGN_IN_TAG = "GOOGLE_SIGN_IN_TAG";
 
@@ -78,7 +80,6 @@ public class LoginActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> accountTask = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 //google sign in success, now auth with firebase
-
                 GoogleSignInAccount account = accountTask.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
@@ -100,24 +101,32 @@ public class LoginActivity extends AppCompatActivity {
                         //get logged user
                         firebaseUser = firebaseAuth.getCurrentUser();
                         String uid = firebaseUser.getUid();
-
+                        String email = firebaseUser.getEmail();
                         //check if user is new or existing
 
                         if (authResult.getAdditionalUserInfo().isNewUser()) {
-
+                            // user is new - Account Created
+                            Toast.makeText(getBaseContext(), "Account Created ... \n" + email, Toast.LENGTH_SHORT).show();
+                        } else {
+                            // user is existing - Logging in
+                            Toast.makeText(getBaseContext(), "Welcome back ... \n" + email, Toast.LENGTH_SHORT).show();
                         }
+
+                        //start main activity
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-
+                        Toast.makeText(getBaseContext(), "Login Failed", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     private void checkLogOut() {
-        if (firebaseUser !=null) {
+        if (firebaseUser != null) {
             firebaseAuth.signOut();
         }
     }

@@ -43,7 +43,6 @@ public class HistoryFilmActivity extends AppCompatActivity implements CartAdapte
     }
 
     private void initView() {
-        binding.txtTitle.setText("Video Watched");
         binding.rlPayment.setVisibility(View.GONE);
         binding.btnBack.setVisibility(View.VISIBLE);
         finishes();
@@ -56,9 +55,11 @@ public class HistoryFilmActivity extends AppCompatActivity implements CartAdapte
         }
         switch (fromScreen) {
             case DetailFilmActivity.FROM_VIDEO_HISTORY:
+                binding.txtTitle.setText("Video Watched");
                 observerFilmWatched(1);
                 break;
             case DetailFilmActivity.FROM_LOVED:
+                binding.txtTitle.setText("Love History");
                 observerFilmLoved(1);
                 break;
         }
@@ -89,7 +90,7 @@ public class HistoryFilmActivity extends AppCompatActivity implements CartAdapte
     }
 
     private void observerFilmLoved(int isLoved) {
-        Disposable disposable = filmViewModels.getFilmWatched(isLoved).subscribeOn(Schedulers.io())
+        Disposable disposable = filmViewModels.getFilmWLoved(isLoved).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(films -> {
                     if (films != null) {
@@ -116,7 +117,7 @@ public class HistoryFilmActivity extends AppCompatActivity implements CartAdapte
         bundle.putString(DetailFilmActivity.ID, id);
         bundle.putString(DetailFilmActivity.KEY_FROM, DetailFilmActivity.FROM_VIDEO_HISTORY);
         intent.putExtras(bundle);
-        getBaseContext().startActivity(intent);
+        startActivity(intent);
     }
 
 

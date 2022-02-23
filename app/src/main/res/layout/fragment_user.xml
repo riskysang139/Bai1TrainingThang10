@@ -31,7 +31,7 @@
             android:layout_marginTop="@dimen/_20sdp"
             android:src="@drawable/logo_movie_app"
             app:civ_border_color="@color/main"
-            app:civ_border_width="2dp" />
+            app:civ_border_width="2dp"/>
 
         <LinearLayout
             android:id="@+id/txt_title_user_id"
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_regular"
                 android:gravity="center"
-                android:text="User ID :"
+                android:text="Display Name :"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
 
@@ -131,7 +131,7 @@
                 android:textSize="@dimen/_14sdp" />
 
             <Button
-                android:id="@+id/btn_no_adverb"
+                android:id="@+id/bn_love_his"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_marginTop="@dimen/_2sdp"
@@ -148,6 +148,7 @@
                 android:textStyle="bold" />
 
             <Button
+                android:id="@+id/btn_free_data"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_marginTop="@dimen/_2sdp"
@@ -226,16 +227,17 @@
             android:layout_marginHorizontal="@dimen/_15sdp"
             android:layout_marginTop="@dimen/_10sdp"
             android:background="@drawable/shape_btn_log_out"
-            android:drawableLeft="@drawable/logout"
+            android:drawableLeft="@drawable/ic_turn_off"
             android:drawablePadding="@dimen/_10sdp"
-            android:fontFamily="@font/roboto_regular"
+            android:fontFamily="@font/beau_sans_pro_bold"
             android:gravity="left|center"
             android:paddingLeft="@dimen/_10sdp"
             android:text="@string/log_out"
             android:textAllCaps="false"
-            android:textSize="@dimen/_12sdp"
+            android:textSize="@dimen/_14sdp"
             android:textStyle="bold"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:textColor="@color/white"/>
 
         <LinearLayout
             android:id="@+id/linearSignInUp"
