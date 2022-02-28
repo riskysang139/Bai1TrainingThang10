@@ -66,6 +66,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         private CheckBox cbCart;
         private SwipeRevealLayout swipeRevealLayout;
         private LinearLayout llInfo;
+        private RelativeLayout rlDelete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -76,6 +77,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             cbCart = itemView.findViewById(R.id.cb_film);
             swipeRevealLayout = itemView.findViewById(R.id.dl_layout);
             llInfo = itemView.findViewById(R.id.ll_info);
+            rlDelete = itemView.findViewById(R.id.layout_delete);
         }
 
         @SuppressLint("SetTextI18n")
@@ -100,8 +102,15 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 cbCart.setChecked(false);
             }
             viewBinderHelper.bind(swipeRevealLayout, String.valueOf(film.getFilmId()));
-            swipeRevealLayout.setOnClickListener(view -> {
-
+//            swipeRevealLayout.setOnClickListener(view -> {
+//                onCartClickListener.onCLickDelete(film);
+//            });
+            rlDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    filmListDB.remove(position);
+                    onCartClickListener.onCLickDelete(film, position);
+                }
             });
             llInfo.setOnClickListener(view -> onCartClickListener.onClickDetail(film.getFilmId() + ""));
 
@@ -116,6 +125,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         void onClickCart(int position, boolean isChoose, int numberChoice);
 
         void onClickDetail(String id);
+
+        void onCLickDelete(Film film, int position);
     }
 
 }

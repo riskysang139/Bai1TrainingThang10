@@ -41,4 +41,31 @@ public class CartRepository {
         return filmDao.getFilmLoved(isWatched);
     }
 
+    //Update Movie
+    public void updateMovie(final Film film){
+        Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                filmDao.updateFilm(film);
+            }
+        }).observeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Log.d(TAG, "onSubscribe: Called");
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete: Called");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, "onError: Called"+e.getMessage());
+                    }
+                });
+    }
+
 }

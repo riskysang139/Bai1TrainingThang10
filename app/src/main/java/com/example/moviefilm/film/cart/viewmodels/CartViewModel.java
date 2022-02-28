@@ -33,4 +33,9 @@ public class CartViewModel extends AndroidViewModel{
     public Flowable<List<Film>> getFilmWLoved(int isWatched){
         return cartRepository.getFilmWithLoved(isWatched);
     }
+
+    //Update Movie
+    public void updateFilm(Film film){
+        cartRepository.updateMovie(film);
+    }
 }

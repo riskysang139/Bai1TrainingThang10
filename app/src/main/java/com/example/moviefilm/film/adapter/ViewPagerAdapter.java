@@ -7,7 +7,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.moviefilm.film.cart.view.CartFragment;
 import com.example.moviefilm.film.home.view.HomeFragment;
-import com.example.moviefilm.film.user.UserFragment;
+import com.example.moviefilm.film.user.view.UserFragment;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
     public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {

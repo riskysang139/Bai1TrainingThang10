@@ -1,4 +1,4 @@
-package com.example.moviefilm.film.home.allfilm.view;
+package com.example.moviefilm.film.user.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -118,6 +118,16 @@ public class HistoryFilmActivity extends AppCompatActivity implements CartAdapte
         bundle.putString(DetailFilmActivity.KEY_FROM, DetailFilmActivity.FROM_VIDEO_HISTORY);
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    @Override
+    public void onCLickDelete(Film film, int position) {
+        if (fromScreen.equals(DetailFilmActivity.FROM_VIDEO_HISTORY))
+            film.setFilmWatch(0);
+        else if (fromScreen.equals(DetailFilmActivity.FROM_LOVED))
+            film.setFilmLove(0);
+        filmViewModels.updateFilm(film);
+        filmAdapter.notifyItemRemoved(position);
     }
 
 

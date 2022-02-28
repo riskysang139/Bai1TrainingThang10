@@ -76,8 +76,10 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
                         if (films.size() > 0) {
                             initAdapter(films);
                             binding.txtNoData.setVisibility(View.GONE);
+                            binding.rlPayment.setVisibility(View.VISIBLE);
                         } else {
                             binding.txtNoData.setVisibility(View.VISIBLE);
+                            binding.rlPayment.setVisibility(View.GONE);
                         }
 
                     }
@@ -114,6 +116,14 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
         bundle.putString(DetailFilmActivity.KEY_FROM, DetailFilmActivity.FROM_CART);
         intent.putExtras(bundle);
         getActivity().startActivity(intent);
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void onCLickDelete(Film film, int position) {
+        film.setIsWantBuy(0);
+        cartViewModel.updateFilm(film);
+        cartAdapter.notifyItemRemoved(position);
     }
 
     @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})

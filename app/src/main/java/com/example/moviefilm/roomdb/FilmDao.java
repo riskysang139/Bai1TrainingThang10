@@ -28,7 +28,6 @@ public interface FilmDao {
     @Query("SELECT * from movie_database WHERE film_love ==:isLoved")
     Flowable<List<Film>> getFilmLoved(int isLoved);
 
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Film... films);
 

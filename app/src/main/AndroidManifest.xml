@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".film.home.allfilm.view.HistoryFilmActivity"/>
+            android:name=".film.user.view.HistoryFilmActivity"/>
         <activity android:name=".film.home.detailFilm.watchfilm.view.WatchFilmActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTask"

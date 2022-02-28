@@ -1,4 +1,4 @@
-package com.example.moviefilm.film.user;
+package com.example.moviefilm.film.user.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.example.moviefilm.R;
 import com.example.moviefilm.databinding.FragmentUserBinding;
-import com.example.moviefilm.film.home.allfilm.view.HistoryFilmActivity;
 import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.film.user.login.view.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
