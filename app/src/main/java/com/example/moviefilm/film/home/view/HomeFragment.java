@@ -261,6 +261,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
                     bundle.putString(SearchFilmActivity.KEY, keySearch);
                     intent.putExtras(bundle);
                     getActivity().startActivity(intent);
+                    binding.sbSearchAll.setTextSearch("");
                 }
 
             }
