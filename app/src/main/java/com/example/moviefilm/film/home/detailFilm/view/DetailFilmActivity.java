@@ -222,7 +222,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
     @SuppressLint("SetTextI18n")
     private void setUpViewDetail() {
         txtTitle.setText(detailFilms.getTitle());
-        txtDetail.setText(detailFilms.getOverview() + getString(R.string.read_more));
+        txtDetail.setText(detailFilms.getOverview());
         Glide.with(this).load(MainActivity.HEADER_URL_IMAGE + detailFilms.getPosterPath()).into(imgFilm);
         txtRated.setRating(Float.parseFloat(detailFilms.getVoteAverage() / 2 + ""));
         if (detailFilms.getGenres().size() == 0 || detailFilms.getGenres().isEmpty())
