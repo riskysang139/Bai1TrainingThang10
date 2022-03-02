@@ -16,6 +16,7 @@
     <string name="log_out" translatable="false">Log Out</string>
     <string name="title_cart_fragment" translatable="false">Cart</string>
     <string name="read_more"><u><font fgcolor="#4CD1EE">red</font></u></string>
-    <string name="facebook_app_id">344120937612160</string> <string name="fb_login_protocol_scheme">fb344120937612160</string>
+    <string name="facebook_app_id">344120937612160</string>
+    <string name="fb_login_protocol_scheme">fb344120937612160</string>
 
 </resources>

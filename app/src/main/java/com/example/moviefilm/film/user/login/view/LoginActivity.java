@@ -66,10 +66,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private LoginViewModels loginViewModels;
 
+    public static final String KEY_FROM = "KEY_FROM";
+
+    public static final String FROM_LOGIN = "FROM_LOGIN";
+
+    public static final String FROM_REGISTER = "FROM_REGISTER";
+
+    private String fromScreen = "";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
+        getData();
         observedLogin();
 
         //configure for Google Sign in
@@ -93,12 +102,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             startActivityForResult(intent, RC_SIGN_IN); // handler this result
         });
 
-        //Login Button : Click to begin Email and Password SignIn
-
-        binding.btnLogin.setOnClickListener(view -> {
-            firebaseWithEmailAndPass();
-        });
-
         //Login Facebook Button : Click to begin SignIn
 
         binding.btnLoginFace.setOnClickListener(this);
@@ -109,6 +112,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
 
         checkLogOut();
+    }
+
+    private void getData() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            fromScreen = bundle.getString(KEY_FROM, "");
+            if (fromScreen.equals(FROM_LOGIN))
+                setUpViewLogin();
+            else
+                setUpViewRegister();
+        }
     }
 
     @Override
@@ -151,7 +165,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void firebaseWithEmailAndPass() {
-        firebaseAuth.signInWithEmailAndPassword(binding.txtEmail.getText().toString(), binding.txtPassword.getText().toString())
+        firebaseAuth.signInWithEmailAndPassword(binding.txtEmail.getText().toString().trim(), binding.txtPassword.getText().toString().trim())
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
@@ -162,6 +176,28 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(getBaseContext(), "Login Failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void firebaseWithEmailAndPassSignUp() {
+        firebaseAuth.createUserWithEmailAndPassword(binding.txtEmail.getText().toString().trim(), binding.txtPassword.getText().toString().trim())
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        onSuccessLogin(authResult);
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getBaseContext(), "Register Failed " + e.toString(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -274,24 +310,56 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 if (TextUtils.isEmpty(Objects.requireNonNull(user).getEmail())) {
                     binding.txtEmail.setError("Enter an E-Mail Address");
-                    binding.txtPassword.requestFocus();
-                }
-                else if (!user.isEmailValid()) {
+                    binding.txtEmail.requestFocus();
+                } else if (!user.isEmailValid()) {
                     binding.txtEmail.setError("Enter a Valid E-mail Address");
-                    binding.txtPassword.requestFocus();
-                }
-                else if (TextUtils.isEmpty(Objects.requireNonNull(user).getPassWord())) {
+                    binding.txtEmail.requestFocus();
+                } else if (TextUtils.isEmpty(Objects.requireNonNull(user).getPassWord())) {
                     binding.txtPassword.setError("Enter a Password");
                     binding.txtPassword.requestFocus();
-                }
-                else if (!user.isPasswordLengthGreaterThan5()) {
+                } else if (!user.isPasswordLengthGreaterThan5()) {
                     binding.txtPassword.setError("Enter at least 6 Digit password");
                     binding.txtPassword.requestFocus();
-                }
-                else {
+                } else if (fromScreen.equals(FROM_REGISTER) && !user.isPasswordAndConfirm()) {
+                    binding.txtPassword.setError("Your password and password confirm not match");
+                    binding.txtPassword.requestFocus();
+                } else {
                     binding.txtEmail.setText(user.getEmail());
                     binding.txtPassword.setText(user.getPassWord());
+                    if (fromScreen.equals(FROM_REGISTER)) {
+                        binding.txtPasswordConfirm.setText(user.getPassWordConfirm());
+                        //Register Button : Click to begin Email and Password SignUp
+                        binding.btnLogin.setOnClickListener(view -> {
+                            firebaseWithEmailAndPassSignUp();
+                        });
+                    } else {
+                        //Login Button : Click to begin Email and Password SignIn
+                        binding.btnLogin.setOnClickListener(view -> {
+                            firebaseWithEmailAndPass();
+                        });
+                    }
+
                 }
+            }
+        });
+    }
+
+    private void setUpViewRegister() {
+        binding.btnLogin.setText("Register");
+        binding.lnSignUp.setVisibility(View.GONE);
+        binding.layoutTxtPassConfirm.setVisibility(View.VISIBLE);
+        binding.txtQuenMatKhau.setVisibility(View.GONE);
+    }
+
+    private void setUpViewLogin() {
+        binding.btnLogin.setText("Login");
+        binding.lnSignUp.setVisibility(View.VISIBLE);
+        binding.layoutTxtPassConfirm.setVisibility(View.GONE);
+        binding.txtQuenMatKhau.setVisibility(View.VISIBLE);
+        binding.btnSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setUpViewRegister();
             }
         });
     }

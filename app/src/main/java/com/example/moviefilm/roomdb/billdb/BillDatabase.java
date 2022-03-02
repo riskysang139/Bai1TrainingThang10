@@ -1,4 +1,4 @@
-package com.example.moviefilm.roomdb;
+package com.example.moviefilm.roomdb.billdb;
 
 import android.content.Context;
 
@@ -8,16 +8,16 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Film.class}, version = 1)
-public abstract class FilmDatabase extends RoomDatabase {
-    public abstract FilmDao filmDao();
+@Database(entities = {Bill.class}, version = 1)
+public abstract class BillDatabase extends RoomDatabase {
+    public abstract BillDao billDao();
 
-    private static FilmDatabase instance;
+    private static BillDatabase instance;
 
-    public static synchronized FilmDatabase getInstance(Context context){
-        if(instance==null){
+    public static synchronized BillDatabase getInstance(Context context) {
+        if (instance == null) {
             //If instance is null that's mean database is not created and create new database
-            instance = Room.databaseBuilder(context.getApplicationContext(),FilmDatabase.class,"movie_database")
+            instance = Room.databaseBuilder(context.getApplicationContext(), BillDatabase.class, "bill_database")
                     .fallbackToDestructiveMigration()
                     .addCallback(roomCallBack)
                     .allowMainThreadQueries()
@@ -27,7 +27,7 @@ public abstract class FilmDatabase extends RoomDatabase {
         return instance;
     }
 
-    private static RoomDatabase.Callback roomCallBack = new RoomDatabase.Callback(){
+    private static RoomDatabase.Callback roomCallBack = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);

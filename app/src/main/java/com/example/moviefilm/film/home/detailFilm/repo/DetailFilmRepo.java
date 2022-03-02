@@ -11,11 +11,12 @@ import com.example.moviefilm.film.home.detailFilm.models.CastResponse;
 import com.example.moviefilm.film.home.detailFilm.models.DetailFilm;
 import com.example.moviefilm.film.home.detailFilm.models.VideoResponse;
 import com.example.moviefilm.film.models.ResultResponse;
-import com.example.moviefilm.roomdb.Film;
-import com.example.moviefilm.roomdb.FilmDao;
-import com.example.moviefilm.roomdb.FilmDatabase;
-
-import java.util.List;
+import com.example.moviefilm.roomdb.cartdb.Cart;
+import com.example.moviefilm.roomdb.cartdb.CartDao;
+import com.example.moviefilm.roomdb.cartdb.CartDatabase;
+import com.example.moviefilm.roomdb.filmdb.Film;
+import com.example.moviefilm.roomdb.filmdb.FilmDao;
+import com.example.moviefilm.roomdb.filmdb.FilmDatabase;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
@@ -37,19 +38,22 @@ public class DetailFilmRepo {
     private MutableLiveData<ResultResponse> recommendMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<CastResponse> castResponseMutableLiveData = new MutableLiveData<>();
     private FilmDao filmDao;
+    private CartDao cartDao;
 
     public DetailFilmRepo(Application application) {
         FilmDatabase filmDatabase = FilmDatabase.getInstance(application);
         filmDao = filmDatabase.filmDao();
+        CartDatabase cartDatabase = CartDatabase.getInstance(application);
+        cartDao = cartDatabase.cartDao();
     }
 
     //Get film with id
-    public Flowable<Film> getFilmWithId(String id){
+    public Flowable<Film> getFilmWithId(String id) {
         return filmDao.getFilmWithId(id);
     }
 
     //Insert film
-    public void insertFilm (final Film film) {
+    public void insertFilm(final Film film) {
         Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
@@ -70,13 +74,13 @@ public class DetailFilmRepo {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, "onError: "+e.getMessage());
+                        Log.d(TAG, "onError: " + e.getMessage());
                     }
                 });
     }
 
     //Update Movie
-    public void updateMovie(final Film film){
+    public void updateMovie(final Film film) {
         Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
@@ -97,10 +101,44 @@ public class DetailFilmRepo {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, "onError: Called"+e.getMessage());
+                        Log.d(TAG, "onError: Called" + e.getMessage());
                     }
                 });
     }
+
+    //Get film with id
+    public Flowable<Cart> getFilmCart(String id) {
+        return cartDao.getCart(id);
+    }
+
+
+    //Insert film to cart
+    public void insertFilmCart(final Cart cart) {
+        Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                cartDao.insertCart(cart);
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Log.d(TAG, "onSubscribe: Called");
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete: Called");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, "onError: " + e.getMessage());
+                    }
+                });
+    }
+
 
     public MutableLiveData<DetailFilm> getDetailFilmMutableLiveData() {
         return detailFilmMutableLiveData;
@@ -165,6 +203,7 @@ public class DetailFilmRepo {
             public void onError(@NonNull Throwable e) {
                 Log.e("Sang", e.toString());
             }
+
             @Override
             public void onComplete() {
 
@@ -190,6 +229,7 @@ public class DetailFilmRepo {
             public void onError(@NonNull Throwable e) {
                 Log.e("Sang", e.toString());
             }
+
             @Override
             public void onComplete() {
 
@@ -215,6 +255,7 @@ public class DetailFilmRepo {
             public void onError(@NonNull Throwable e) {
                 Log.e("Sang", e.toString());
             }
+
             @Override
             public void onComplete() {
 
@@ -240,6 +281,7 @@ public class DetailFilmRepo {
             public void onError(@NonNull Throwable e) {
                 Log.e("cast response", e.toString());
             }
+
             @Override
             public void onComplete() {
 

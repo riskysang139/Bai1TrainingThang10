@@ -2,6 +2,8 @@ package com.example.moviefilm.film.home.detailFilm.view;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,8 +41,12 @@ import com.example.moviefilm.film.home.detailFilm.models.DetailFilm;
 import com.example.moviefilm.film.home.detailFilm.viewmodel.DetailFilmViewModels;
 import com.example.moviefilm.film.home.detailFilm.watchfilm.view.WatchFilmActivity;
 import com.example.moviefilm.film.models.Results;
+import com.example.moviefilm.film.user.login.view.LoginActivity;
 import com.example.moviefilm.film.view.MainActivity;
-import com.example.moviefilm.roomdb.Film;
+import com.example.moviefilm.roomdb.cartdb.Cart;
+import com.example.moviefilm.roomdb.filmdb.Film;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +54,7 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class DetailFilmActivity extends AppCompatActivity implements OnClickListener {
@@ -84,18 +92,21 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
     private List<Cast> castList = new ArrayList<>();
     private CastAdapter castAdapter;
     private Film filmDB;
+    private Cart cartFilm;
+    private FirebaseAuth firebaseAuth;
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private final CompositeDisposable compositeDisposableNew = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_film);
         detailFilmViewModels = ViewModelProviders.of(this).get(DetailFilmViewModels.class);
+        firebaseAuth = FirebaseAuth.getInstance();
         initView();
         getData();
         observerFilm();
+        observerFilmCart();
         observerDetailFilm();
         observerRecommendFilm();
         observeSimilarFilm();
@@ -141,6 +152,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
             detailFilms = detailFilm;
             setUpViewDetail();
             insertFilm(detailFilm);
+            insertFilmToCart(detailFilm);
         });
     }
 
@@ -182,10 +194,18 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
                     filmDB = films;
                     if (films != null) {
                         updateFilmLove(films);
-                        updateFilmBuy(films);
                     }
                 });
-        compositeDisposableNew.add(disposable);
+        compositeDisposable.add(disposable);
+    }
+
+    public void observerFilmCart() {
+        Disposable disposable = detailFilmViewModels.getMovieCart(id).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(cart -> {
+                    cartFilm = cart;
+                });
+        compositeDisposable.add(disposable);
     }
 
     public void observerCastFilm() {
@@ -311,14 +331,14 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
         }
     }
 
-    private void updateFilmBuy(Film films) {
-        if (filmDB != null && filmDB.getIsWantBuy() == 0) {
+    private void insertFilmToCart(DetailFilm detailFilm) {
+        if (cartFilm == null) {
             binding.payment.setOnClickListener(view -> new CircleAnimationUtil().attachActivity(DetailFilmActivity.this).setTargetView(binding.payment).setMoveDuration(1000).setDestView(binding.rlCart).setAnimationListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animator) {
-                    Film film = films;
-                    film.setIsWantBuy(1);
-                    detailFilmViewModels.updateFilm(film);
+                    detailFilmViewModels.insertFilmCart(new Cart(detailFilm.getId(), detailFilm.getTitle(),
+                            MainActivity.HEADER_URL_IMAGE + detailFilm.getPosterPath(),
+                            Float.parseFloat(detailFilm.getVoteAverage() / 2 + ""), Converter.convertStringToDate(detailFilms.getReleaseDate())));
                 }
 
                 @Override
@@ -341,22 +361,32 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
     }
 
     private void updateFilmLove(Film films) {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (films.getFilmLove() == 1) {
             binding.imgHeart.setImageResource(R.drawable.heart_red);
             binding.rlLove.setOnClickListener(view -> {
-                Film film = films;
-                film.setFilmLove(0);
-                detailFilmViewModels.updateFilm(film);
-                binding.imgHeart.setImageResource(R.drawable.heart);
+                if (firebaseUser == null) {
+                    Toast.makeText(getBaseContext(), "Please login to unloved this movie", Toast.LENGTH_LONG).show();
+                } else {
+                    Film film = films;
+                    film.setFilmLove(0);
+                    detailFilmViewModels.updateFilm(film);
+                    binding.imgHeart.setImageResource(R.drawable.heart);
+                }
             });
         } else {
             binding.rlLove.setOnClickListener(view -> {
-                Film film = films;
-                film.setFilmLove(1);
-                detailFilmViewModels.updateFilm(film);
-                binding.imgHeart.setImageResource(R.drawable.heart_red);
+                if (firebaseUser == null) {
+                    Toast.makeText(getBaseContext(), "Please login to love this movie", Toast.LENGTH_LONG).show();
+                } else {
+                    Film film = films;
+                    film.setFilmLove(1);
+                    detailFilmViewModels.updateFilm(film);
+                    binding.imgHeart.setImageResource(R.drawable.heart_red);
+                }
             });
         }
+
     }
 
     private void refreshLayout() {
@@ -383,6 +413,5 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
     protected void onDestroy() {
         super.onDestroy();
         compositeDisposable.dispose();
-        compositeDisposableNew.dispose();
     }
 }

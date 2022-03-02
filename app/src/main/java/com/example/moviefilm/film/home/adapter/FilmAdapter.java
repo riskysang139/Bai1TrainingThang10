@@ -18,7 +18,6 @@ import com.example.moviefilm.base.Converter;
 import com.example.moviefilm.base.OnClickListener;
 import com.example.moviefilm.film.view.MainActivity;
 import com.example.moviefilm.film.models.Results;
-import com.example.moviefilm.roomdb.Film;
 
 import java.text.DecimalFormat;
 import java.util.List;

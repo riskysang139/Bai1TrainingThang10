@@ -1,4 +1,4 @@
-package com.example.moviefilm.roomdb;
+package com.example.moviefilm.roomdb.filmdb;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

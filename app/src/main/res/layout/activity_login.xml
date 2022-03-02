@@ -2,7 +2,9 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="LoginViewModel"
             type="com.example.moviefilm.film.user.login.viewmodels.LoginViewModels" />
@@ -19,7 +21,7 @@
             android:layout_height="@dimen/_25sdp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_margin="@dimen/_5sdp"
+            android:layout_margin="10dp"
             android:src="@drawable/ic_baseline_arrow_back_24" />
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -38,145 +40,170 @@
 
         </TextView>
 
-        <TextView
-            android:id="@+id/theRule"
+        <LinearLayout
+            android:id="@+id/ln_login"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_centerVertical="true"
-            android:visibility="invisible" />
-
-        <EditText
-            android:id="@+id/txt_email"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_40sdp"
-            android:layout_above="@id/theRule"
-            android:layout_centerVertical="true"
-            android:layout_marginHorizontal="@dimen/_20sdp"
-            android:layout_marginBottom="7dp"
-            android:background="@drawable/shape_txt_title"
-            android:drawableStart="@drawable/ic_baseline_email_24"
-            android:drawableLeft="@drawable/ic_baseline_email_24"
-            android:drawablePadding="@dimen/_10sdp"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:hint="Enter your email"
-            android:inputType="text"
-            android:maxLines="1"
-            android:paddingLeft="@dimen/_10sdp"
-            android:paddingEnd="20dp"
-            android:paddingRight="20dp"
-            android:text="@={LoginViewModel.emailAdd}"
-            android:textColor="@color/white"
-            android:textColorHint="#BAFFFFFF" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutTxtPass"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_40sdp"
-            android:layout_below="@id/theRule"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="@dimen/_20sdp"
-            android:layout_marginRight="@dimen/_20sdp"
-            app:hintEnabled="false"
-            app:passwordToggleEnabled="true"
-            app:passwordToggleTint="@color/white">
+            android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtPassword"
+            <EditText
+                android:id="@+id/txt_email"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginBottom="7dp"
                 android:background="@drawable/shape_txt_title"
-                android:drawableStart="@drawable/ic_baseline_lock_24"
-                android:drawableLeft="@drawable/ic_baseline_lock_24"
+                android:drawableStart="@drawable/ic_baseline_email_24"
+                android:drawableLeft="@drawable/ic_baseline_email_24"
                 android:drawablePadding="@dimen/_10sdp"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:hint="Enter your password"
-                android:inputType="textPassword"
+                android:hint="Enter your email"
+                android:inputType="text"
                 android:maxLines="1"
                 android:paddingLeft="@dimen/_10sdp"
-                android:paddingRight="@dimen/_5sdp"
+                android:paddingEnd="20dp"
+                android:paddingRight="20dp"
+                android:text="@={LoginViewModel.emailAdd}"
                 android:textColor="@color/white"
-                android:textColorHint="#BAFFFFFF"
-                android:text="@={LoginViewModel.passWord}"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:textColorHint="#BAFFFFFF" />
 
-        <Button
-            android:id="@+id/btn_login"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_40sdp"
-            android:layout_below="@id/layoutTxtPass"
-            android:layout_centerHorizontal="true"
-            android:layout_marginHorizontal="@dimen/_20sdp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:background="@drawable/shapebtnlogin"
-            android:text="Login"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_14sdp"
-            android:onClick="@{(v) -> LoginViewModel.onClick(v)}"/>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutTxtPass"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:layout_marginBottom="7dp"
+                app:hintEnabled="false"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="@color/white">
 
-        <TextView
-            android:id="@+id/txtQuenMatKhau"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/btn_login"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:layout_marginRight="@dimen/_20sdp"
-            android:text="Forgot Password ?"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_12sdp" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:background="@drawable/shape_txt_title"
+                    android:drawableStart="@drawable/ic_baseline_lock_24"
+                    android:drawableLeft="@drawable/ic_baseline_lock_24"
+                    android:drawablePadding="@dimen/_10sdp"
+                    android:gravity="center_vertical"
+                    android:hint="Enter your password"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_5sdp"
+                    android:text="@={LoginViewModel.passWord}"
+                    android:textColor="@color/white"
+                    android:textColorHint="#BAFFFFFF" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/txtSelect"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/txtQuenMatKhau"
-            android:layout_marginTop="@dimen/_35sdp"
-            android:gravity="center"
-            android:text="Or Login With"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_12sdp" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutTxtPassConfirm"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_below="@id/layoutTxtPass"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:visibility="gone"
+                app:hintEnabled="false"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="@color/white">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtPasswordConfirm"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:background="@drawable/shape_txt_title"
+                    android:drawableStart="@drawable/ic_baseline_lock_24"
+                    android:drawableLeft="@drawable/ic_baseline_lock_24"
+                    android:drawablePadding="@dimen/_10sdp"
+                    android:gravity="center_vertical"
+                    android:hint="Confirm your password"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingRight="@dimen/_5sdp"
+                    android:text="@={LoginViewModel.passWordConfirm}"
+                    android:textColor="@color/white"
+                    android:textColorHint="#BAFFFFFF" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/btn_login"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_below="@id/layoutTxtPass"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/shape_btn_login_screen"
+                android:onClick="@{(v) -> LoginViewModel.onClick(v)}"
+                android:text="Login"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14sdp" />
+
+            <TextView
+                android:id="@+id/txtQuenMatKhau"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btn_login"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:text="Forgot Password ?"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12sdp" />
+
+            <TextView
+                android:id="@+id/txtSelect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtQuenMatKhau"
+                android:layout_marginTop="@dimen/_35sdp"
+                android:gravity="center"
+                android:text="Or Login With"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12sdp" />
+        </LinearLayout>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/btn_login_google"
             android:layout_width="@dimen/_40sdp"
             android:layout_height="@dimen/_40sdp"
-            android:layout_below="@id/txtSelect"
+            android:layout_below="@id/ln_login"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_5sdp"
             android:layout_toLeftOf="@id/theRuleVertical"
             android:src="@drawable/google" />
 
-        <LinearLayout
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/view_btn_login_face"
             android:layout_width="@dimen/_40sdp"
             android:layout_height="@dimen/_40sdp"
-            android:layout_below="@id/txtSelect"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="@dimen/_5sdp"
-            android:layout_marginTop="@dimen/_20sdp"
-            android:layout_toRightOf="@id/theRuleVertical"
-            android:orientation="horizontal">
+            android:layout_below="@id/ln_login"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginBottom="12dp"
+            android:layout_toRightOf="@id/btn_login_google"
+            android:gravity="center"
+            android:src="@drawable/facebook" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/view_btn_login_face"
-                android:layout_width="@dimen/_40sdp"
-                android:layout_height="@dimen/_40sdp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="12dp"
-                android:gravity="center"
-                android:src="@drawable/facebook" />
-
-            <com.facebook.login.widget.LoginButton
-                android:id="@+id/btn_login_face"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="12dp"
-                android:visibility="invisible" />
-        </LinearLayout>
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/btn_login_face"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="12dp"
+            android:visibility="gone" />
 
         <LinearLayout
+            android:id="@+id/ln_sign_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -196,9 +223,9 @@
                 android:id="@+id/btnSignUp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:text="Sign Up"
                 android:textColor="@color/white"
-                android:layout_marginLeft="10dp"
                 android:textSize="@dimen/_12sdp" />
         </LinearLayout>
     </RelativeLayout>

@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.moviefilm.R;
 import com.example.moviefilm.databinding.FragmentUserBinding;
 import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
+import com.example.moviefilm.film.user.bill.view.BillActivity;
 import com.example.moviefilm.film.user.login.view.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -46,6 +47,7 @@ public class UserFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         login();
         register();
+        openBillScreen();
         openVideoHistory();
         openLoveHistory();
         logOut();
@@ -54,9 +56,11 @@ public class UserFragment extends Fragment {
     private void checkUser() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser == null) {
+            binding.txtTitleUserId.setVisibility(View.VISIBLE);
             Glide.with(UserFragment.this).load(R.drawable.logo_movie_app).circleCrop().into(binding.imgProfile);
             binding.btnLogOut.setVisibility(View.GONE);
             binding.btnHistory.setVisibility(View.GONE);
+            binding.btnBill.setVisibility(View.GONE);
             binding.bnLoveHis.setVisibility(View.GONE);
             binding.btnFreeData.setBackgroundResource(R.drawable.shape_btn_down_up);
             binding.linearSignInUp.setVisibility(View.VISIBLE);
@@ -68,20 +72,45 @@ public class UserFragment extends Fragment {
             binding.btnLogOut.setVisibility(View.VISIBLE);
             binding.btnHistory.setVisibility(View.VISIBLE);
             binding.bnLoveHis.setVisibility(View.VISIBLE);
+            binding.btnBill.setVisibility(View.VISIBLE);
             binding.linearSignInUp.setVisibility(View.INVISIBLE);
-            binding.txtUserId.setText(firebaseUser.getDisplayName());
+            if (firebaseUser.getDisplayName() == null || firebaseUser.getDisplayName().equals(""))
+                binding.txtTitleUserId.setVisibility(View.INVISIBLE);
+            else {
+                binding.txtUserId.setText(firebaseUser.getDisplayName());
+                binding.txtTitleUserId.setVisibility(View.VISIBLE);
+            }
             binding.txtEmail.setText(firebaseUser.getEmail());
-            Glide.with(getContext()).load(firebaseUser.getPhotoUrl()).circleCrop().into(binding.imgProfile);
+            if (firebaseUser.getPhotoUrl() == null || firebaseUser.getPhotoUrl().equals(""))
+                Glide.with(UserFragment.this).load(R.drawable.logo_movie_app).into(binding.imgProfile);
+            else
+                Glide.with(getContext()).load(firebaseUser.getPhotoUrl()).circleCrop().into(binding.imgProfile);
         }
     }
 
     private void login() {
-        binding.btnLogin.setOnClickListener(v -> startActivity(new Intent(getActivity(), LoginActivity.class)));
+        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString(LoginActivity.KEY_FROM,LoginActivity.FROM_LOGIN);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
     }
 
     private void register() {
-        binding.btnRegister.setOnClickListener(v -> {
-//                startActivity(new Intent(getActivity(), SignUpActivity.class));
+        binding.btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString(LoginActivity.KEY_FROM,LoginActivity.FROM_REGISTER);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
         });
     }
 
@@ -111,5 +140,9 @@ public class UserFragment extends Fragment {
             Toast.makeText(getContext(), "Log out Success !!!", Toast.LENGTH_SHORT).show();
             checkUser();
         });
+    }
+
+    private void openBillScreen() {
+        binding.btnBill.setOnClickListener(view -> startActivity(new Intent(getActivity(), BillActivity.class)));
     }
 }

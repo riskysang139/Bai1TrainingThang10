@@ -17,8 +17,7 @@ import com.example.moviefilm.R;
 import com.example.moviefilm.databinding.ActivityWatchFilmBinding;
 import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.film.home.detailFilm.watchfilm.viewmodels.WatchFilmViewModels;
-import com.example.moviefilm.roomdb.Film;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
+import com.example.moviefilm.roomdb.filmdb.Film;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 

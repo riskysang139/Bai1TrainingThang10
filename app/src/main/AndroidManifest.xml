@@ -15,6 +15,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
+            android:name=".film.user.bill.view.BillActivity"
+            android:exported="false" />
+        <activity
+            android:name=".film.user.bill.view.MainActivity"
+            android:exported="false" />
+        <activity
             android:name=".base.SplashActivity"
             android:exported="true">
             <intent-filter>
@@ -23,9 +29,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".film.user.view.HistoryFilmActivity" />
         <activity
-            android:name=".film.user.view.HistoryFilmActivity"/>
-        <activity android:name=".film.home.detailFilm.watchfilm.view.WatchFilmActivity"
+            android:name=".film.home.detailFilm.watchfilm.view.WatchFilmActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
@@ -39,8 +45,9 @@
         <activity android:name=".film.home.allfilm.view.AllFilmActivity" />
         <activity android:name=".film.user.login.view.LoginActivity" />
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
-
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
     </application>
 
 </manifest>

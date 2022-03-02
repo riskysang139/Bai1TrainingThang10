@@ -8,13 +8,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.moviefilm.base.FilmApi;
 import com.example.moviefilm.base.RetroClass;
 import com.example.moviefilm.film.models.ResultResponse;
-import com.example.moviefilm.roomdb.Film;
-import com.example.moviefilm.roomdb.FilmDao;
-import com.example.moviefilm.roomdb.FilmDatabase;
+import com.example.moviefilm.roomdb.filmdb.FilmDao;
 
-import java.util.List;
-
-import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
@@ -32,8 +27,6 @@ public class AllFilmRepo {
     private FilmDao filmDao;
 
     public AllFilmRepo(Application application) {
-        FilmDatabase filmDatabase = FilmDatabase.getInstance(application);
-        filmDao = filmDatabase.filmDao();
     }
 
     public void fetchPopularMovies(String apiKey, int page) {

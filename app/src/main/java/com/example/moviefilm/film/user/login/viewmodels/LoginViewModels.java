@@ -10,6 +10,7 @@ import com.example.moviefilm.film.user.login.model.User;
 public class LoginViewModels extends ViewModel {
     public MutableLiveData<String> emailAdd = new MutableLiveData<>();
     public MutableLiveData<String> passWord = new MutableLiveData<>();
+    public MutableLiveData<String> passWordConfirm = new MutableLiveData<>();
 
     public MutableLiveData<User> userMutableLiveData;
 
@@ -21,7 +22,7 @@ public class LoginViewModels extends ViewModel {
     }
 
     public void onClick(View view) {
-        User user = new User(emailAdd.getValue(), passWord.getValue());
+        User user = new User(emailAdd.getValue(), passWord.getValue(), passWordConfirm.getValue());
         userMutableLiveData.setValue(user);
     }
 

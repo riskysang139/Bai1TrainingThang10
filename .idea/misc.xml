@@ -18,6 +18,8 @@
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout-v21/fragment_cart.xml" value="0.18541666666666667" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout-v21/fragment_home.xml" value="0.3625" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_all_film.xml" value="0.2975630611372381" />
+        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_bill.xml" value="0.22894736842105262" />
+        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_delete_bill.xml" value="0.22894736842105262" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_detail_film.xml" value="0.176" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_history_film.xml" value="0.22894736842105262" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_history_video.xml" value="0.22894736842105262" />
@@ -29,6 +31,7 @@
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/fragment_cart.xml" value="0.2" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/fragment_home.xml" value="0.18121546961325966" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/fragment_user.xml" value="0.24547101449275363" />
+        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/item_bill_film.xml" value="0.22894736842105262" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/item_cart_film.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/item_cast_film.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/item_film_horizontal.xml" value="0.2975630611372381" />

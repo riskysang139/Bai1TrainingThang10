@@ -11,9 +11,8 @@ import com.example.moviefilm.film.home.detailFilm.models.DetailFilm;
 import com.example.moviefilm.film.home.detailFilm.models.VideoResponse;
 import com.example.moviefilm.film.home.detailFilm.repo.DetailFilmRepo;
 import com.example.moviefilm.film.models.ResultResponse;
-import com.example.moviefilm.roomdb.Film;
-
-import java.util.List;
+import com.example.moviefilm.roomdb.cartdb.Cart;
+import com.example.moviefilm.roomdb.filmdb.Film;
 
 import io.reactivex.Flowable;
 
@@ -74,6 +73,17 @@ public class DetailFilmViewModels extends AndroidViewModel {
     public void updateFilm(Film film){
         detailFilmRepo.updateMovie(film);
     }
+
+    //Get Movie with id
+    public Flowable<Cart> getMovieCart(String id){
+        return detailFilmRepo.getFilmCart(id);
+    }
+
+    //Insert Cart
+    public void insertFilmCart(Cart cart){
+        detailFilmRepo.insertFilmCart(cart);
+    }
+
 
     public void fetchDetailFilm(String id , String apiKey) {
         detailFilmRepo.fetchDetailFilm(id,apiKey);

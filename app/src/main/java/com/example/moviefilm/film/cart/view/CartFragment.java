@@ -1,11 +1,14 @@
 package com.example.moviefilm.film.cart.view;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,8 +23,16 @@ import com.example.moviefilm.databinding.FragmentCartBinding;
 import com.example.moviefilm.film.cart.adapter.CartAdapter;
 import com.example.moviefilm.film.cart.viewmodels.CartViewModel;
 import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
-import com.example.moviefilm.roomdb.Film;
+import com.example.moviefilm.film.user.login.view.LoginActivity;
+import com.example.moviefilm.roomdb.billdb.Bill;
+import com.example.moviefilm.roomdb.cartdb.Cart;
+import com.example.moviefilm.roomdb.filmdb.Film;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -33,12 +44,13 @@ import io.reactivex.schedulers.Schedulers;
 public class CartFragment extends Fragment implements CartAdapter.OnCartClickListener {
     FragmentCartBinding binding;
     private CartAdapter cartAdapter;
-    private List<Film> filmList;
+    private List<Cart> filmList;
     private CartViewModel cartViewModel;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private CartAdapter.OnCartClickListener onCartClickListener;
     private String keyFrom = "";
     public static float totalPrice = 0;
+    private FirebaseAuth firebaseAuth;
 
     public static CartFragment getInstance() {
         Bundle args = new Bundle();
@@ -51,6 +63,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_cart, container, false);
+        firebaseAuth = FirebaseAuth.getInstance();
         totalPrice = 0;
         cartViewModel = ViewModelProviders.of(this).get(CartViewModel.class);
         observerCartFilm();
@@ -64,37 +77,42 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
         binding.totalPayment.setSelected(true);
         binding.btnBack.setVisibility(View.GONE);
         binding.rlPayment.setVisibility(View.VISIBLE);
+        binding.btnPayment.setOnClickListener(view1 -> insertBill());
+        initAdapter();
     }
 
     private void observerCartFilm() {
-        Disposable disposable = cartViewModel.getFilmCart(1).subscribeOn(Schedulers.io())
+        Disposable disposable = cartViewModel.getFilmCart().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Film>>() {
+                .subscribe(new Consumer<List<Cart>>() {
                     @Override
-                    public void accept(List<Film> films) throws Exception {
-                        filmList = films;
-                        if (films.size() > 0) {
-                            initAdapter(films);
+                    public void accept(List<Cart> carts) throws Exception {
+                        filmList = carts;
+                        if (carts.size() > 0) {
                             binding.txtNoData.setVisibility(View.GONE);
                             binding.rlPayment.setVisibility(View.VISIBLE);
+                            if (cartAdapter !=null) {
+                                cartAdapter.setFilmListDB(carts);
+                                slPaymentAllFilm(carts);
+                            }
                         } else {
                             binding.txtNoData.setVisibility(View.VISIBLE);
                             binding.rlPayment.setVisibility(View.GONE);
                         }
-
                     }
                 });
         compositeDisposable.add(disposable);
     }
 
     @SuppressLint("SetTextI18n")
-    private void initAdapter(List<Film> filmList) {
+    private void initAdapter() {
+        if (filmList == null)
+            filmList = new ArrayList<>();
         cartAdapter = new CartAdapter(filmList, getContext(), this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         binding.rcvCart.setLayoutManager(layoutManager);
         binding.rcvCart.setAdapter(cartAdapter);
-        slPaymentAllFilm(filmList);
     }
 
     @SuppressLint("SetTextI18n")
@@ -120,18 +138,17 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void onCLickDelete(Film film, int position) {
-        film.setIsWantBuy(0);
-        cartViewModel.updateFilm(film);
+    public void onCLickDelete(Cart film, int position) {
+        cartViewModel.deleteFilm(film);
         cartAdapter.notifyItemRemoved(position);
     }
 
     @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
-    private void slPaymentAllFilm(List<Film> filmList) {
+    private void slPaymentAllFilm(List<Cart> filmList) {
         binding.cbSlAll.setOnClickListener(view -> {
             if (binding.cbSlAll.isChecked()) {
                 if (cartAdapter != null) {
-                    for (Film film : filmList)
+                    for (Cart film : filmList)
                         film.setChecked(true);
                     cartAdapter.setFilmListDB(filmList);
                     cartAdapter.notifyDataSetChanged();
@@ -141,7 +158,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
                     binding.btnPayment.setText("Payment (" + filmList.size() + ")");
                 }
             } else {
-                for (Film film : filmList)
+                for (Cart film : filmList)
                     film.setChecked(false);
                 cartAdapter.setFilmListDB(filmList);
                 cartAdapter.notifyDataSetChanged();
@@ -158,5 +175,37 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
     public void onDestroyView() {
         super.onDestroyView();
         compositeDisposable.dispose();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void insertBill () {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser == null) {
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Warning !!!")
+                    .setMessage("Please login to payment your bill, Thanh you !")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            startActivity(new Intent(getActivity(), LoginActivity.class));
+                        }
+                    })
+                    .setNegativeButton("No", null)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        } else {
+            if (CartAdapter.numberChoice == 0)
+                Toast.makeText(getContext(),"Please Choose Film You Want To Buy !",Toast.LENGTH_LONG).show();
+            else {
+                @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+                cartViewModel.insertBill(new Bill( CartAdapter.numberChoice, totalPrice, timeStamp, firebaseUser.getEmail()));
+                cartViewModel.deleteAllFilm();
+                filmList.clear();
+                cartAdapter.notifyDataSetChanged();
+                binding.cbSlAll.setSelected(false);
+                CartAdapter.numberChoice = 0;
+                Toast.makeText(getContext(),"Buy Film SuccessFully !",Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

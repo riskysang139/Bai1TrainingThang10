@@ -1,4 +1,4 @@
-package com.example.moviefilm.film.cart.adapter;
+package com.example.moviefilm.film.user.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -18,28 +18,30 @@ import com.bumptech.glide.Glide;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.example.moviefilm.R;
+import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.roomdb.cartdb.Cart;
 import com.example.moviefilm.roomdb.filmdb.Film;
 
 import java.util.List;
 
-public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
-    private List<Cart> filmListDB;
+public class HistoryFilmAdapter extends RecyclerView.Adapter<HistoryFilmAdapter.ViewHolder> {
+    private List<Film> filmListDB;
     private final Context context;
-    public OnCartClickListener onCartClickListener;
+    public OnHistoryFilmClickListener onCartClickListener;
     private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
     public static int numberChoice = 0;
-    private String isCheckScreen = "";
+    private String fromLoved = "";
 
-    public CartAdapter(List<Cart> filmListDB, Context context, OnCartClickListener onCartClickListener) {
+    public HistoryFilmAdapter(List<Film> filmListDB, Context context, OnHistoryFilmClickListener onCartClickListener) {
         this.filmListDB = filmListDB;
         this.context = context;
         this.onCartClickListener = onCartClickListener;
     }
 
-    public void setFilmListDB(List<Cart> filmListDB) {
-        this.filmListDB = filmListDB;
+    public void setFilmListDBWithChecked(List<Film> films, String fromLoved) {
+        this.filmListDB = films;
         notifyDataSetChanged();
+        this.fromLoved = fromLoved;
     }
 
     @NonNull
@@ -84,7 +86,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
         @SuppressLint("SetTextI18n")
         private void initView(int position) {
-            Cart film = filmListDB.get(position);
+            Film film = filmListDB.get(position);
             Glide.with(context).load(film.getFilmImage()).into(imgFilm);
             txtPrice.setText(film.getFilmRate() * 4 + " $");
             txtNameFilm.setText(film.getFilmName());
@@ -115,15 +117,20 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 }
             });
             llInfo.setOnClickListener(view -> onCartClickListener.onClickDetail(film.getFilmId() + ""));
+
+            if (film.isChecked2() && fromLoved.equals(DetailFilmActivity.FROM_LOVED))
+                cbCart.setVisibility(View.GONE);
+            else
+                cbCart.setVisibility(View.VISIBLE);
         }
     }
 
-    public interface OnCartClickListener {
+    public interface OnHistoryFilmClickListener {
         void onClickCart(int position, boolean isChoose, int numberChoice);
 
         void onClickDetail(String id);
 
-        void onCLickDelete(Cart film, int position);
+        void onCLickDelete(Film film, int position);
     }
 
 }

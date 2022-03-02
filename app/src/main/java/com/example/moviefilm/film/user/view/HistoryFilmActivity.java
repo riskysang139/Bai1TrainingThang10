@@ -14,7 +14,8 @@ import com.example.moviefilm.databinding.FragmentCartBinding;
 import com.example.moviefilm.film.cart.adapter.CartAdapter;
 import com.example.moviefilm.film.cart.viewmodels.CartViewModel;
 import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
-import com.example.moviefilm.roomdb.Film;
+import com.example.moviefilm.roomdb.cartdb.Cart;
+import com.example.moviefilm.roomdb.filmdb.Film;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +25,11 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class HistoryFilmActivity extends AppCompatActivity implements CartAdapter.OnCartClickListener {
+public class HistoryFilmActivity extends AppCompatActivity implements HistoryFilmAdapter.OnHistoryFilmClickListener {
     FragmentCartBinding binding;
     private CartViewModel filmViewModels;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private CartAdapter filmAdapter;
+    private HistoryFilmAdapter filmAdapter;
     private List<Film> listFilm = new ArrayList<>();
     private String fromScreen = "";
 
@@ -66,7 +67,7 @@ public class HistoryFilmActivity extends AppCompatActivity implements CartAdapte
     }
 
     private void initAdapter() {
-        filmAdapter = new CartAdapter(listFilm, getBaseContext(), this);
+        filmAdapter = new HistoryFilmAdapter(listFilm, getBaseContext(), this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getBaseContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         binding.rcvCart.setLayoutManager(layoutManager);
@@ -77,14 +78,17 @@ public class HistoryFilmActivity extends AppCompatActivity implements CartAdapte
         Disposable disposable = filmViewModels.getFilmWatched(isWatched).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(films -> {
-                    if (films != null) {
+                    if (films.size() > 0) {
                         for (Film film : films)
                             film.setChecked2(true);
                         if (filmAdapter != null)
-                            filmAdapter.setFilmListDB(films);
+                            filmAdapter.setFilmListDBWithChecked(films, DetailFilmActivity.FROM_LOVED);
                         binding.txtNoData.setVisibility(View.GONE);
-                    } else
+                        binding.rcvCart.setVisibility(View.VISIBLE);
+                    } else {
                         binding.txtNoData.setVisibility(View.VISIBLE);
+                        binding.rcvCart.setVisibility(View.GONE);
+                    }
                 });
         compositeDisposable.add(disposable);
     }
@@ -93,14 +97,17 @@ public class HistoryFilmActivity extends AppCompatActivity implements CartAdapte
         Disposable disposable = filmViewModels.getFilmWLoved(isLoved).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(films -> {
-                    if (films != null) {
+                    if (films.size() > 0) {
                         for (Film film : films)
                             film.setChecked2(true);
                         if (filmAdapter != null)
-                            filmAdapter.setFilmListDB(films);
+                            filmAdapter.setFilmListDBWithChecked(films, DetailFilmActivity.FROM_LOVED);
                         binding.txtNoData.setVisibility(View.GONE);
-                    } else
+                        binding.rcvCart.setVisibility(View.VISIBLE);
+                    } else {
                         binding.txtNoData.setVisibility(View.VISIBLE);
+                        binding.rcvCart.setVisibility(View.GONE);
+                    }
                 });
         compositeDisposable.add(disposable);
     }
@@ -124,12 +131,11 @@ public class HistoryFilmActivity extends AppCompatActivity implements CartAdapte
     public void onCLickDelete(Film film, int position) {
         if (fromScreen.equals(DetailFilmActivity.FROM_VIDEO_HISTORY))
             film.setFilmWatch(0);
-        else if (fromScreen.equals(DetailFilmActivity.FROM_LOVED))
+        else
             film.setFilmLove(0);
         filmViewModels.updateFilm(film);
         filmAdapter.notifyItemRemoved(position);
     }
-
 
     @Override
     protected void onDestroy() {

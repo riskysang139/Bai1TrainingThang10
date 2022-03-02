@@ -5,9 +5,8 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
-import com.example.moviefilm.film.home.detailFilm.repo.DetailFilmRepo;
 import com.example.moviefilm.film.home.detailFilm.watchfilm.repo.WatchFilmRepo;
-import com.example.moviefilm.roomdb.Film;
+import com.example.moviefilm.roomdb.filmdb.Film;
 
 import io.reactivex.Flowable;
 
