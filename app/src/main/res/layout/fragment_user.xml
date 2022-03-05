@@ -192,6 +192,7 @@
             android:orientation="vertical">
 
             <Button
+                android:id="@+id/btn_setting"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:background="@drawable/shape_linear_btn_up"
@@ -207,6 +208,7 @@
                 android:textStyle="bold" />
 
             <Button
+                android:id="@+id/btn_feed_back"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_marginTop="@dimen/_2sdp"
@@ -222,6 +224,7 @@
                 android:textSize="@dimen/_14sdp" />
 
             <Button
+                android:id="@+id/btn_about_us"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_marginTop="@dimen/_2sdp"

@@ -140,6 +140,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
         loadingDialog = findViewById(R.id.progress_loading);
         btnRecommend = findViewById(R.id.btn_more_recommend);
         btnSimilar = findViewById(R.id.btn_more_similar);
+        binding.rlDownload.setOnClickListener(view -> Toast.makeText(getBaseContext(), "The feauture will be soon updated", Toast.LENGTH_LONG).show());
     }
 
     private void onComeback() {

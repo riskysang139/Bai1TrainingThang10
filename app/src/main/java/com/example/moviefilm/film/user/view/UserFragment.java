@@ -1,6 +1,7 @@
 package com.example.moviefilm.film.user.view;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +51,7 @@ public class UserFragment extends Fragment {
         openBillScreen();
         openVideoHistory();
         openLoveHistory();
+        openFeaure();
         logOut();
     }
 
@@ -94,7 +96,7 @@ public class UserFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString(LoginActivity.KEY_FROM,LoginActivity.FROM_LOGIN);
+                bundle.putString(LoginActivity.KEY_FROM, LoginActivity.FROM_LOGIN);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -107,7 +109,7 @@ public class UserFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString(LoginActivity.KEY_FROM,LoginActivity.FROM_REGISTER);
+                bundle.putString(LoginActivity.KEY_FROM, LoginActivity.FROM_REGISTER);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -144,5 +146,19 @@ public class UserFragment extends Fragment {
 
     private void openBillScreen() {
         binding.btnBill.setOnClickListener(view -> startActivity(new Intent(getActivity(), BillActivity.class)));
+    }
+
+    private void openFeaure() {
+        // about us
+        binding.btnAboutUs.setOnClickListener(view -> {
+            String url = "https://www.facebook.com/riskysang.139";
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            startActivity(i);
+        });
+        // feedback, setting, free data
+        binding.btnFreeData.setOnClickListener(view -> Toast.makeText(getContext(), "The feauture will be soon updated", Toast.LENGTH_LONG).show());
+        binding.btnSetting.setOnClickListener(view -> Toast.makeText(getContext(), "The feauture will be soon updated", Toast.LENGTH_LONG).show());
+        binding.btnFeedBack.setOnClickListener(view -> Toast.makeText(getContext(), "The feauture will be soon updated", Toast.LENGTH_LONG).show());
     }
 }
