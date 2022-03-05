@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.moviefilm.R;
 import com.example.moviefilm.databinding.ActivityLoginBinding;
+import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.film.user.login.model.User;
 import com.example.moviefilm.film.user.login.viewmodels.LoginViewModels;
 import com.example.moviefilm.film.view.MainActivity;
@@ -118,7 +119,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             fromScreen = bundle.getString(KEY_FROM, "");
-            if (fromScreen.equals(FROM_LOGIN))
+            if (fromScreen.equals(FROM_LOGIN) || fromScreen.equals(DetailFilmActivity.FROM_CART))
                 setUpViewLogin();
             else
                 setUpViewRegister();
@@ -250,6 +251,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     firebaseUser = firebaseAuth.getCurrentUser();
                     //start main activity
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    if (fromScreen.equals(DetailFilmActivity.FROM_CART)) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(DetailFilmActivity.KEY_FROM,DetailFilmActivity.FROM_CART);
+                        intent.putExtras(bundle);
+                    }
                     startActivity(intent);
                     finishAffinity();
                     Toast.makeText(getBaseContext(), "Welcome \n" + (firebaseUser.getDisplayName() == null ? "" : firebaseUser.getDisplayName()), Toast.LENGTH_SHORT).show();
@@ -279,6 +285,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         //start main activity
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        if (fromScreen.equals(DetailFilmActivity.FROM_CART)) {
+            Bundle bundle = new Bundle();
+            bundle.putString(DetailFilmActivity.KEY_FROM,DetailFilmActivity.FROM_CART);
+            intent.putExtras(bundle);
+        }
         startActivity(intent);
         finishAffinity();
     }

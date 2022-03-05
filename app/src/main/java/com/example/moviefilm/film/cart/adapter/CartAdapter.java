@@ -92,10 +92,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             cbCart.setOnClickListener(view -> {
                 if (cbCart.isChecked()) {
                     numberChoice++;
-                    onCartClickListener.onClickCart(position, true, numberChoice);
+                    onCartClickListener.onClickCart(position, true, numberChoice, film);
                 } else {
                     numberChoice--;
-                    onCartClickListener.onClickCart(position, false, numberChoice);
+                    onCartClickListener.onClickCart(position, false, numberChoice, film);
                 }
             });
             if (film.isChecked()) {
@@ -119,7 +119,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     }
 
     public interface OnCartClickListener {
-        void onClickCart(int position, boolean isChoose, int numberChoice);
+        void onClickCart(int position, boolean isChoose, int numberChoice, Cart cart);
 
         void onClickDetail(String id);
 

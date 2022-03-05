@@ -333,6 +333,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
 
     private void insertFilmToCart(DetailFilm detailFilm) {
         if (cartFilm == null) {
+            binding.payment.setVisibility(View.VISIBLE);
             binding.payment.setOnClickListener(view -> new CircleAnimationUtil().attachActivity(DetailFilmActivity.this).setTargetView(binding.payment).setMoveDuration(1000).setDestView(binding.rlCart).setAnimationListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animator) {

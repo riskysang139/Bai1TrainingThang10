@@ -55,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
                 viewPager.setCurrentItem(1);
                 Bundle bundleFragment = new Bundle();
                 bundleFragment.putString(DetailFilmActivity.KEY_FROM,DetailFilmActivity.FROM_DETAIL);
-
-            }
+            } else if (id.equals(DetailFilmActivity.FROM_CART))
+                viewPager.setCurrentItem(1);
             else
                 Toast.makeText(getBaseContext(),"Error !!!",Toast.LENGTH_LONG).show();
         }
