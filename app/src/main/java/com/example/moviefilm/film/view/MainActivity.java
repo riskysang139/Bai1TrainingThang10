@@ -2,8 +2,10 @@ package com.example.moviefilm.film.view;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
@@ -15,7 +17,10 @@ import com.example.moviefilm.databinding.ActivityMainBinding;
 import com.example.moviefilm.film.adapter.ViewPagerAdapter;
 import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.film.home.searchFilm.SearchFilmViewModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,6 +43,16 @@ public class MainActivity extends AppCompatActivity {
         initView();
         setUpViewpager();
         initData();
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("TAG", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+                    }
+                });
     }
 
     private void initView() {

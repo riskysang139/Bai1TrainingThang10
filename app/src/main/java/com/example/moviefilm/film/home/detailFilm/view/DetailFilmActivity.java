@@ -160,9 +160,8 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
     public void observerVideoTrailerFilm() {
         detailFilmViewModels.fetchVideoTrailerFilm(id, MainActivity.API_KEY);
         detailFilmViewModels.getVideoFilmLiveData().observe(DetailFilmActivity.this, videoResponse -> {
-            if (videoResponse != null && videoResponse.getResults().size() > 0) {
+            if (videoResponse != null && videoResponse.getResults().size() > 0)
                 watchFilm(videoResponse.getResults().get(0).getKey());
-            }
         });
     }
 
