@@ -14,6 +14,8 @@ import com.example.moviefilm.film.models.ResultResponse;
 import com.example.moviefilm.roomdb.cartdb.Cart;
 import com.example.moviefilm.roomdb.filmdb.Film;
 
+import java.util.List;
+
 import io.reactivex.Flowable;
 
 public class DetailFilmViewModels extends AndroidViewModel {
@@ -77,6 +79,11 @@ public class DetailFilmViewModels extends AndroidViewModel {
     //Get Movie with id
     public Flowable<Cart> getMovieCart(String id){
         return detailFilmRepo.getFilmCart(id);
+    }
+
+    //Get Movie with id
+    public Flowable<List<Cart>> getListMovieCart(){
+        return detailFilmRepo.getListFilmCart();
     }
 
     //Insert Cart

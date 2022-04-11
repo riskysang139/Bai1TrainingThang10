@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -169,34 +171,43 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
         binding.allFilm.addItemDecoration(new GridItemDecoration(Converter.dpToPx(this, 30), 2));
         binding.allFilm.setLayoutManager(gridLayoutManager);
         binding.allFilm.setAdapter(filmAdapter);
-        mLoadMoreListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
+        binding.allFilm.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                page_++;
-                switch (fromScreen) {
-                    case DetailFilmActivity.FROM_POPULAR:
-                        observerPopularFilm(page_);
-                        break;
-                    case DetailFilmActivity.FROM_TOP_RATE:
-                        observerTopRateFilm(page_);
-                        break;
-                    case DetailFilmActivity.FROM_UP_COMING:
-                        observerUpComingFilm(page_);
-                        break;
-                    case DetailFilmActivity.FROM_SIMILAR:
-                        observerSimilarFilm(page_);
-                        break;
-                    case DetailFilmActivity.FROM_RECOMMEND:
-                        observerRecommendFilm(page_);
-                        break;
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) { // only when scrolling up
+
+                    final int visibleThreshold = 2;
+
+                    GridLayoutManager layoutManager = (GridLayoutManager) binding.allFilm.getLayoutManager();
+                    assert layoutManager != null;
+                    int lastItem = layoutManager.findLastCompletelyVisibleItemPosition();
+                    int currentTotalCount = layoutManager.getItemCount();
+
+                    if (currentTotalCount <= lastItem + visibleThreshold) {
+                        page_++;
+                        switch (fromScreen) {
+                            case DetailFilmActivity.FROM_POPULAR:
+                                observerPopularFilm(page_);
+                                break;
+                            case DetailFilmActivity.FROM_TOP_RATE:
+                                observerTopRateFilm(page_);
+                                break;
+                            case DetailFilmActivity.FROM_UP_COMING:
+                                observerUpComingFilm(page_);
+                                break;
+                            case DetailFilmActivity.FROM_SIMILAR:
+                                observerSimilarFilm(page_);
+                                break;
+                            case DetailFilmActivity.FROM_RECOMMEND:
+                                observerRecommendFilm(page_);
+                                break;
+                        }
+                        layoutManager.smoothScrollToPosition(binding.allFilm, null, 0);
+                    }
                 }
             }
-            @Override
-            public void onPastVisiblePosition(int pastVisibleItems, int totalItemCount) {
-
-            }
-        };
-        binding.allFilm.addOnScrollListener(mLoadMoreListener);
+        });
     }
 
     @Override

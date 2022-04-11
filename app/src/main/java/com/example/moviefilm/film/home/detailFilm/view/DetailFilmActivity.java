@@ -94,6 +94,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
     private Film filmDB;
     private Cart cartFilm;
     private FirebaseAuth firebaseAuth;
+    private List<Cart> cartFilmList;
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -111,6 +112,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
         observerRecommendFilm();
         observeSimilarFilm();
         observerCastFilm();
+        observerListFilmCart();
         observerVideoTrailerFilm();
         onComeback();
         setUpReFilmAdapter();
@@ -204,6 +206,15 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(cart -> {
                     cartFilm = cart;
+                });
+        compositeDisposable.add(disposable);
+    }
+
+    public void observerListFilmCart() {
+        Disposable disposable = detailFilmViewModels.getListMovieCart().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(cart -> {
+                    cartFilmList = cart;
                 });
         compositeDisposable.add(disposable);
     }
@@ -331,7 +342,10 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void insertFilmToCart(DetailFilm detailFilm) {
+        if (cartFilmList != null)
+            binding.txtNumCart.setText(cartFilmList.size() + "");
         if (cartFilm == null) {
             binding.payment.setVisibility(View.VISIBLE);
             binding.payment.setOnClickListener(view -> new CircleAnimationUtil().attachActivity(DetailFilmActivity.this).setTargetView(binding.payment).setMoveDuration(1000).setDestView(binding.rlCart).setAnimationListener(new Animator.AnimatorListener() {
@@ -344,7 +358,8 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
 
                 @Override
                 public void onAnimationEnd(Animator animator) {
-
+                    if (cartFilmList != null)
+                        binding.txtNumCart.setText(cartFilmList.size() + "");
                 }
 
                 @Override

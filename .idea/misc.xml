@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/drawable/bg_cart.xml" value="0.2595" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/drawable/bg_checkbox_custom.xml" value="0.237" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/drawable/bg_checkbox_custome.xml" value="0.237" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/drawable/bg_checkbox_nor.xml" value="0.237" />
@@ -17,10 +18,10 @@
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/drawable/vtecom_bg_search_box.xml" value="0.237" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout-v21/fragment_cart.xml" value="0.18541666666666667" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout-v21/fragment_home.xml" value="0.3625" />
-        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_all_film.xml" value="0.2975630611372381" />
+        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_all_film.xml" value="0.2" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_bill.xml" value="0.22894736842105262" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_delete_bill.xml" value="0.22894736842105262" />
-        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_detail_film.xml" value="0.176" />
+        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_detail_film.xml" value="0.264" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_history_film.xml" value="0.22894736842105262" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_history_video.xml" value="0.22894736842105262" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_login.xml" value="0.22894736842105262" />

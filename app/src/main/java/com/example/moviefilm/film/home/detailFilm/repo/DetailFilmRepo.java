@@ -18,6 +18,8 @@ import com.example.moviefilm.roomdb.filmdb.Film;
 import com.example.moviefilm.roomdb.filmdb.FilmDao;
 import com.example.moviefilm.roomdb.filmdb.FilmDatabase;
 
+import java.util.List;
+
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.Flowable;
@@ -111,6 +113,10 @@ public class DetailFilmRepo {
         return cartDao.getCart(id);
     }
 
+    //Get film with
+    public Flowable<List<Cart>> getListFilmCart() {
+        return cartDao.getCart();
+    }
 
     //Insert film to cart
     public void insertFilmCart(final Cart cart) {
