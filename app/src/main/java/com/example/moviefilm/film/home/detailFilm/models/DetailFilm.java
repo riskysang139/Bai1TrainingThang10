@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
-public class DetailFilm {
+public class DetailFilm implements Serializable {
     @SerializedName("adult")
     @Expose
     private Boolean adult;
@@ -166,7 +166,7 @@ public class DetailFilm {
     }
 
     public String getOverview() {
-        return overview;
+        return overview == null ? "" : overview;
     }
 
     public void setOverview(String overview) {
@@ -206,7 +206,7 @@ public class DetailFilm {
     }
 
     public String getReleaseDate() {
-        return releaseDate.equals("") ? "" : releaseDate;
+        return releaseDate == null ? " 1999/01/01" : releaseDate;
     }
 
     public void setReleaseDate(String releaseDate) {
@@ -222,7 +222,7 @@ public class DetailFilm {
     }
 
     public Integer getRuntime() {
-        return runtime;
+        return runtime == null ? 0 : runtime;
     }
 
     public void setRuntime(Integer runtime) {
@@ -254,7 +254,7 @@ public class DetailFilm {
     }
 
     public String getTitle() {
-        return title;
+        return title == null ? "" : title;
     }
 
     public void setTitle(String title) {
@@ -270,7 +270,7 @@ public class DetailFilm {
     }
 
     public Double getVoteAverage() {
-        return voteAverage;
+        return voteAverage == null ? 0 : voteAverage;
     }
 
     public void setVoteAverage(Double voteAverage) {

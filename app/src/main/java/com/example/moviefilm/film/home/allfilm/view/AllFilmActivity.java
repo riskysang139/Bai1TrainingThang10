@@ -25,6 +25,7 @@ import com.example.moviefilm.film.home.adapter.EndlessRecyclerViewScrollListener
 import com.example.moviefilm.film.home.adapter.FilmAdapter;
 import com.example.moviefilm.film.home.allfilm.viewmodel.AllFilmViewModels;
 import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
+import com.example.moviefilm.film.models.ResultResponse;
 import com.example.moviefilm.film.models.Results;
 import com.example.moviefilm.film.view.MainActivity;
 
@@ -56,7 +57,9 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
     private int limit = 40;
     private boolean isCanLoadMore;
 
-    private static int page_ = 1;
+    private static int page_ = 2;
+
+    private List<Results> resultResponseList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,10 +105,12 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
 
     private void observerPopularFilm(int page) {
         filmViewModels.fetchPopularMovies(MainActivity.API_KEY, page);
-        filmViewModels.getPopularMutableLiveData().observe(this, resultRespone -> {
-                    if (resultRespone != null) {
-                        if (filmAdapter != null)
-                            filmAdapter.setResultsList(resultRespone.getResults());
+        filmViewModels.getPopularMutableLiveData().observe(this, resultResponse -> {
+                    if (resultResponse != null) {
+                        if (filmAdapter != null) {
+                            resultResponseList.addAll(resultResponse.getResults());
+                            filmAdapter.setResultsList(resultResponseList);
+                        }
                         Log.e(TAG, "result response popular : ");
                     } else
                         Log.e(TAG, "call api popular failure");
@@ -115,10 +120,12 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
 
     private void observerTopRateFilm(int page) {
         filmViewModels.fetchTopRateMovies(MainActivity.API_KEY, page);
-        filmViewModels.getTopRateMutableLiveData().observe(this, resultRespone -> {
-                    if (resultRespone != null) {
-                        if (filmAdapter != null)
-                            filmAdapter.setResultsList(resultRespone.getResults());
+        filmViewModels.getTopRateMutableLiveData().observe(this, resultResponse -> {
+                    if (resultResponse != null) {
+                        if (filmAdapter != null) {
+                            resultResponseList.addAll(resultResponse.getResults());
+                            filmAdapter.setResultsList(resultResponseList);
+                        }
                         Log.e(TAG, "result response top rated ");
                     } else
                         Log.e(TAG, "call api top rated failure");
@@ -128,10 +135,12 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
 
     private void observerUpComingFilm(int page) {
         filmViewModels.fetchUpcomingMovies(MainActivity.API_KEY, page);
-        filmViewModels.getUpcomingMutableLiveData().observe(this, resultRespone -> {
-                    if (resultRespone != null) {
-                        if (filmAdapter != null)
-                            filmAdapter.setResultsList(resultRespone.getResults());
+        filmViewModels.getUpcomingMutableLiveData().observe(this, resultResponse -> {
+                    if (resultResponse != null) {
+                        if (filmAdapter != null) {
+                            resultResponseList.addAll(resultResponse.getResults());
+                            filmAdapter.setResultsList(resultResponseList);
+                        }
                         Log.e(TAG, "result response upcoming ");
                     } else
                         Log.e(TAG, "call api upcoming failure");
@@ -143,8 +152,10 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
         filmViewModels.fetchSimilarFilm(id, MainActivity.API_KEY, page);
         filmViewModels.getSimilarFilmLiveData().observe(this, resultResponse -> {
             if (resultResponse != null) {
-                if (filmAdapter != null)
-                    filmAdapter.setResultsList(resultResponse.getResults());
+                if (filmAdapter != null) {
+                    resultResponseList.addAll(resultResponse.getResults());
+                    filmAdapter.setResultsList(resultResponseList);
+                }
                 Log.e(TAG, "result response similar ");
             } else
                 Log.e(TAG, "call api similar failure");
@@ -155,8 +166,10 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
         filmViewModels.fetchRecommendFilm(id, MainActivity.API_KEY, page);
         filmViewModels.getRecommendFilmLiveData().observe(this, resultResponse -> {
             if (resultResponse != null) {
-                if (filmAdapter != null)
-                    filmAdapter.setResultsList(resultResponse.getResults());
+                if (filmAdapter != null) {
+                    resultResponseList.addAll(resultResponse.getResults());
+                    filmAdapter.setResultsList(resultResponseList);
+                }
                 Log.e(TAG, "result response recommend ");
             } else
                 Log.e(TAG, "call api recommend failure");
@@ -166,7 +179,7 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
 
     @SuppressLint("NotifyDataSetChanged")
     private void initAdapter() {
-        filmAdapter = new FilmAdapter(listFilm, this, this);
+        filmAdapter = new FilmAdapter(resultResponseList, this, this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, RecyclerView.VERTICAL, false);
         binding.allFilm.addItemDecoration(new GridItemDecoration(Converter.dpToPx(this, 30), 2));
         binding.allFilm.setLayoutManager(gridLayoutManager);
@@ -185,25 +198,24 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
                     int currentTotalCount = layoutManager.getItemCount();
 
                     if (currentTotalCount <= lastItem + visibleThreshold) {
-                        page_++;
                         switch (fromScreen) {
                             case DetailFilmActivity.FROM_POPULAR:
-                                observerPopularFilm(page_);
+                                filmViewModels.fetchPopularMovies(MainActivity.API_KEY, page_);
                                 break;
                             case DetailFilmActivity.FROM_TOP_RATE:
-                                observerTopRateFilm(page_);
+                                filmViewModels.fetchTopRateMovies(MainActivity.API_KEY, page_);
                                 break;
                             case DetailFilmActivity.FROM_UP_COMING:
-                                observerUpComingFilm(page_);
+                                filmViewModels.fetchUpcomingMovies(MainActivity.API_KEY, page_);
                                 break;
                             case DetailFilmActivity.FROM_SIMILAR:
-                                observerSimilarFilm(page_);
+                                filmViewModels.fetchSimilarFilm(DetailFilmActivity.ID, MainActivity.API_KEY, page_);
                                 break;
                             case DetailFilmActivity.FROM_RECOMMEND:
-                                observerRecommendFilm(page_);
+                                filmViewModels.fetchRecommendFilm(DetailFilmActivity.ID, MainActivity.API_KEY, page_);
                                 break;
                         }
-                        layoutManager.smoothScrollToPosition(binding.allFilm, null, 0);
+                        page_++;
                     }
                 }
             }

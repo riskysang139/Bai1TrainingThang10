@@ -1,13 +1,17 @@
 package com.example.moviefilm.base;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.format.DateFormat;
 import android.util.TypedValue;
+import android.view.inputmethod.InputMethodManager;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -135,7 +139,7 @@ public class Converter {
         else return Character.toUpperCase(ch);
     }
 
-    public static  String convertStringToDate(String date) {
+    public static String convertStringToDate(String date) {
         String displayDate = "";
         try {
             SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd");
@@ -147,14 +151,51 @@ public class Converter {
         } catch (ParseException e) {
             e.printStackTrace();
         } finally {
-            displayDate = date;
+            if (date == null || date.length() == 0)
+                displayDate = "01/01/2099";
+            else
+                displayDate = date;
         }
         return displayDate;
     }
 
 
     public static String convertDate(String date) {
-        String year = date.substring(0, 4);
+        String year = "";
+        try {
+            year = date.substring(0, 4);
+        } catch (Exception e) {
+            e.printStackTrace();
+            year = "1900";
+        }
         return year;
+    }
+
+    @SuppressLint("DefaultLocale")
+    public static String convertTime(long time) {
+        String videoTime;
+        int duration = (int) time;
+        int hour = duration / 3600000;
+        int mns = (duration / 60000) % 60000;
+        int scs = duration % 60000 / 1000;
+        if (hour > 0) {
+            videoTime = String.format("%02d:%02d:%02d", hour, mns, scs);
+        } else {
+            videoTime = String.format("%02d:%02d", mns, scs);
+        }
+        return videoTime;
+    }
+
+    public static String convertTimeStampToDate(long time) {
+        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
+        cal.setTimeInMillis(time * 1000);
+        String date;
+        try {
+            date = DateFormat.format("dd/MM/yyyy", cal).toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            date = "01/01/2099";
+        }
+        return date;
     }
 }

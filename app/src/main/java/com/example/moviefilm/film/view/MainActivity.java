@@ -14,7 +14,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.moviefilm.R;
 import com.example.moviefilm.base.customview.SearchActionBarView;
 import com.example.moviefilm.databinding.ActivityMainBinding;
-import com.example.moviefilm.film.adapter.ViewPagerAdapter;
+import com.example.moviefilm.film.viewpageradapter.ViewPagerAdapter;
 import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.film.home.searchFilm.SearchFilmViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -91,6 +91,9 @@ public class MainActivity extends AppCompatActivity {
                         bottomNavigationView.getMenu().findItem(R.id.navigation_cart).setChecked(true);
                         break;
                     case 2:
+                        bottomNavigationView.getMenu().findItem(R.id.navigation_film_offline).setChecked(true);
+                        break;
+                    case 3:
                         bottomNavigationView.getMenu().findItem(R.id.navigation_user).setChecked(true);
                         break;
                 }
@@ -104,12 +107,15 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_cart:
                     viewPager.setCurrentItem(1);
                     break;
-                case R.id.navigation_user:
+                case R.id.navigation_film_offline:
                     viewPager.setCurrentItem(2);
+                    break;
+                case R.id.navigation_user:
+                    viewPager.setCurrentItem(3);
                     break;
             }
             return true;
         });
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(4);
     }
 }

@@ -90,11 +90,16 @@ public class HomeFragment extends Fragment implements OnClickListener {
     private void observerPopularFilm() {
         filmViewModels.fetchPopularMovies(MainActivity.API_KEY, 1);
         filmViewModels.getPopularMutableLiveData().observe(getActivity(), resultResponse -> {
-                    if (resultResponse != null) {
+                    if (resultResponse.getResults().size() > 0) {
+                        binding.rcvPopular.setVisibility(View.VISIBLE);
+                        binding.btnMorePopular.setVisibility(View.VISIBLE);
                         if (popularFilmAdapter != null)
                             popularFilmAdapter.setResultsList(resultResponse.getResults());
-                    } else
-                        Log.e(TAG, "call api failure");
+                    } else {
+                        binding.rcvPopular.setVisibility(View.GONE);
+                        binding.btnMorePopular.setVisibility(View.GONE);
+                    }
+
                 }
         );
     }
@@ -102,14 +107,18 @@ public class HomeFragment extends Fragment implements OnClickListener {
     private void observerTopRateFilm() {
         filmViewModels.fetchTopRateMovies(MainActivity.API_KEY, 1);
         filmViewModels.getTopRateMutableLiveData().observe(getActivity(), resultResponse -> {
-                    if (resultResponse != null) {
+                    if (resultResponse.getResults().size() > 0) {
+                        binding.rcvTopRate.setVisibility(View.VISIBLE);
+                        binding.btnTopRated.setVisibility(View.VISIBLE);
                         topRateMovieList = resultResponse.getResults();
                         for (Results results : topRateMovieList)
                             results.setType(1);
                         if (topRatedFilmAdapter != null)
                             topRatedFilmAdapter.setResultsList(topRateMovieList);
-                    } else
-                        Log.e(TAG, "call api failure");
+                    } else {
+                        binding.rcvTopRate.setVisibility(View.GONE);
+                        binding.btnTopRated.setVisibility(View.GONE);
+                    }
                 }
         );
     }
@@ -117,11 +126,15 @@ public class HomeFragment extends Fragment implements OnClickListener {
     private void observerUpComingFilm() {
         filmViewModels.fetchUpcomingMovies(MainActivity.API_KEY, 1);
         filmViewModels.getUpcomingMutableLiveData().observe(getActivity(), resultResponse -> {
-                    if (resultResponse != null) {
+                    if (resultResponse.getResults().size() > 0) {
+                        binding.btnUpComing.setVisibility(View.VISIBLE);
+                        binding.rcvUpComing.setVisibility(View.VISIBLE);
                         if (upComingFilmAdapter != null)
                             upComingFilmAdapter.setResultsList(resultResponse.getResults());
-                    } else
-                        Log.e(TAG, "call api failure");
+                    } else {
+                        binding.rcvUpComing.setVisibility(View.GONE);
+                        binding.btnUpComing.setVisibility(View.GONE);
+                    }
                 }
         );
     }

@@ -17,4 +17,10 @@
         <item name="colorControlNormal">#E7E7E7</item>
         <item name="colorControlActivated">#FFAD38</item>
     </style>
+    <style name="BottomSheetTheme" parent="Theme.Design.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
+    </style>
+    <style name="BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="background">@color/gray</item>
+    </style>
 </resources>

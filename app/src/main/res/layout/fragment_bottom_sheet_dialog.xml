@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_bottom_sheet"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:background="@color/main_color"
+            android:fontFamily="@font/beau_sans_pro_bold"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/_15sdp"
+            android:text="Name"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14sdp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray" />
+
+        <Button
+            android:id="@+id/btn_remove"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginTop="1dp"
+            android:background="@color/main_color"
+            android:drawableLeft="@drawable/ic_bin_24"
+            android:drawablePadding="@dimen/_10sdp"
+            android:fontFamily="@font/beau_sans_pro_bold"
+            android:gravity="left|center"
+            android:paddingLeft="@dimen/_10sdp"
+            android:text="Remove"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14sdp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray" />
+
+        <Button
+            android:id="@+id/btn_share"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginTop="1dp"
+            android:background="@color/main_color"
+            android:drawableLeft="@drawable/ic_share"
+            android:drawablePadding="@dimen/_10sdp"
+            android:fontFamily="@font/beau_sans_pro_bold"
+            android:gravity="left|center"
+            android:paddingLeft="@dimen/_10sdp"
+            android:text="Share"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14sdp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray" />
+
+        <Button
+            android:id="@+id/btn_rename"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginTop="1dp"
+            android:background="@color/main_color"
+            android:drawableLeft="@drawable/ic_edit"
+            android:drawablePadding="@dimen/_10sdp"
+            android:fontFamily="@font/beau_sans_pro_bold"
+            android:gravity="left|center"
+            android:paddingLeft="@dimen/_10sdp"
+            android:text="Rename"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14sdp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray" />
+
+        <Button
+            android:id="@+id/btn_properties"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginTop="1dp"
+            android:background="@color/main_color"
+            android:drawableLeft="@drawable/ic_info_new"
+            android:drawablePadding="@dimen/_10sdp"
+            android:fontFamily="@font/beau_sans_pro_bold"
+            android:gravity="left|center"
+            android:paddingLeft="@dimen/_10sdp"
+            android:text="Properties"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14sdp" />
+    </LinearLayout>
+
+</layout>

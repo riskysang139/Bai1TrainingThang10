@@ -1,5 +1,6 @@
 package com.example.moviefilm.film.home.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ public class FilmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.onClickListener = onClickListener;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setResultsList(List<Results> resultsList) {
         this.resultsList = resultsList;
         notifyDataSetChanged();

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dl_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/ll_info"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:background="@color/main_color">
+
+        <RelativeLayout
+            android:id="@+id/rl_img"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/img_cart_film"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@id/cb_film"
+                android:background="@color/main_color"
+                android:scaleType="fitXY"
+                android:src="@drawable/image_login"
+                app:riv_corner_radius="10dp" />
+
+            <TextView
+                android:id="@+id/txt_time_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/bg_time_duration"
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="3dp"
+                android:text="12 mins"
+                android:textSize="11sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/btn_edit"
+            android:layout_toRightOf="@id/rl_img">
+
+            <TextView
+                android:id="@+id/title_film"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginTop="15dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/beau_sans_pro_bold"
+                android:maxLines="2"
+                android:text="title"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/txt_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_film"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="14dp"
+                android:layout_marginTop="2dp"
+                android:fontFamily="@font/pro_text_semibold"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:text="12/12/2021"
+                android:textColor="@color/color_979797"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txt_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_date"
+                android:layout_marginLeft="14dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/pro_text_semibold"
+                android:maxLines="1"
+                android:text="14.5 MB"
+                android:textColor="@color/color_979797"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/btn_edit"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30dp"
+            android:padding="7dp"
+            android:src="@drawable/ic_more_vertical" />
+    </RelativeLayout>
+
+</RelativeLayout>

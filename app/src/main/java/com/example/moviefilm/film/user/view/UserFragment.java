@@ -1,5 +1,6 @@
 package com.example.moviefilm.film.user.view;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import com.example.moviefilm.databinding.FragmentUserBinding;
 import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.film.user.bill.view.BillActivity;
 import com.example.moviefilm.film.user.login.view.LoginActivity;
+import com.example.moviefilm.film.watchfilmlocal.view.WatchFilmLocalFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -51,6 +53,7 @@ public class UserFragment extends Fragment {
         openBillScreen();
         openVideoHistory();
         openLoveHistory();
+        openLoveHistor1();
         openFeaure();
         logOut();
     }
@@ -136,11 +139,26 @@ public class UserFragment extends Fragment {
         });
     }
 
+    private void openLoveHistor1() {
+        binding.btnFreeData.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), WatchFilmLocalFragment.class);
+            startActivity(intent);
+        });
+    }
+
     private void logOut() {
         binding.btnLogOut.setOnClickListener(view -> {
-            firebaseAuth.signOut();
-            Toast.makeText(getContext(), "Log out Success !!!", Toast.LENGTH_SHORT).show();
-            checkUser();
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Notification")
+                    .setMessage("Do you want to log out !")
+                    .setNegativeButton("Cancel", (dialogInterface, i) -> {})
+                    .setPositiveButton("Yes", (dialogInterface, i) -> {
+                        firebaseAuth.signOut();
+                        Toast.makeText(getContext(), "Log out Success !!!", Toast.LENGTH_SHORT).show();
+                        checkUser();
+
+                    }).setIcon(R.drawable.logo_movie_app)
+                    .show();
         });
     }
 
@@ -157,7 +175,7 @@ public class UserFragment extends Fragment {
             startActivity(i);
         });
         // feedback, setting, free data
-        binding.btnFreeData.setOnClickListener(view -> Toast.makeText(getContext(), "The feauture will be soon updated", Toast.LENGTH_LONG).show());
+//        binding.btnFreeData.setOnClickListener(view -> Toast.makeText(getContext(), "The feauture will be soon updated", Toast.LENGTH_LONG).show());
         binding.btnSetting.setOnClickListener(view -> Toast.makeText(getContext(), "The feauture will be soon updated", Toast.LENGTH_LONG).show());
         binding.btnFeedBack.setOnClickListener(view -> Toast.makeText(getContext(), "The feauture will be soon updated", Toast.LENGTH_LONG).show());
     }

@@ -190,8 +190,8 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser == null) {
             new AlertDialog.Builder(getContext())
-                    .setTitle("Warning !!!")
-                    .setMessage("Please login to payment your bill, Thanh you !")
+                    .setTitle("Notification")
+                    .setMessage("Please login to payment your bill")
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -203,7 +203,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
                         }
                     })
                     .setNegativeButton("No", null)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setIcon(R.drawable.logo_movie_app)
                     .show();
         } else {
             if (CartAdapter.numberChoice == 0)
@@ -237,7 +237,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
                             }
                         })
                         .setNegativeButton("No", null)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setIcon(R.drawable.logo_movie_app)
                         .show();
             }
         }

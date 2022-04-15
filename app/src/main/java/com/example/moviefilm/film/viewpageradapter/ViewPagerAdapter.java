@@ -1,4 +1,4 @@
-package com.example.moviefilm.film.adapter;
+package com.example.moviefilm.film.viewpageradapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -21,6 +21,8 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
             case 1:
                 return CartFragment.getInstance();
             case 2:
+                return UserFragment.getInstance();
+            case 3:
                 return UserFragment.getInstance();
             case 0:
             default:

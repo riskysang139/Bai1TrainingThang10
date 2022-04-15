@@ -60,7 +60,7 @@ public class Video {
     }
 
     public String getKey() {
-        return key;
+        return key == null ? "" : key;
     }
 
     public void setKey(String key) {

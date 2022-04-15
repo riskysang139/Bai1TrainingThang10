@@ -2,12 +2,15 @@ package com.example.moviefilm.film.home.detailFilm.view;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -31,7 +34,6 @@ import com.example.moviefilm.base.HorizontalItemDecoration;
 import com.example.moviefilm.base.LoadingDialog;
 import com.example.moviefilm.base.OnClickListener;
 import com.example.moviefilm.base.customview.CircleAnimationUtil;
-import com.example.moviefilm.base.customview.ExpandableTextView;
 import com.example.moviefilm.databinding.ActivityDetailFilmBinding;
 import com.example.moviefilm.film.home.adapter.FilmAdapter;
 import com.example.moviefilm.film.home.allfilm.view.AllFilmActivity;
@@ -41,7 +43,6 @@ import com.example.moviefilm.film.home.detailFilm.models.DetailFilm;
 import com.example.moviefilm.film.home.detailFilm.viewmodel.DetailFilmViewModels;
 import com.example.moviefilm.film.home.detailFilm.watchfilm.view.WatchFilmActivity;
 import com.example.moviefilm.film.models.Results;
-import com.example.moviefilm.film.user.login.view.LoginActivity;
 import com.example.moviefilm.film.view.MainActivity;
 import com.example.moviefilm.roomdb.cartdb.Cart;
 import com.example.moviefilm.roomdb.filmdb.Film;
@@ -51,13 +52,15 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.huber.youtubeExtractor.VideoMeta;
+import at.huber.youtubeExtractor.YouTubeExtractor;
+import at.huber.youtubeExtractor.YtFile;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class DetailFilmActivity extends AppCompatActivity implements OnClickListener {
+public class DetailFilmActivity extends AppCompatActivity implements OnClickListener, View.OnClickListener {
     private static final String TAG = "TAG";
     ActivityDetailFilmBinding binding;
     public static final String KEY_FROM = "_from_screen";
@@ -77,10 +80,11 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
     private static String id = "";
 
     public static final String VIDEO_ID = "VIDEO_ID";
+    private static final String VIDEO_LINK = "https://www.youtube.com/watch?v=";
 
     private RelativeLayout btnBack;
     private TextView txtTitle, txtAdult, txtGenres, txtTimeFilm, txtRelease;
-    private ExpandableTextView txtDetail;
+    private TextView txtDetail;
     private RatingBar txtRated;
     private ImageView imgFilm;
     private DetailFilmViewModels detailFilmViewModels;
@@ -95,6 +99,8 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
     private Cart cartFilm;
     private FirebaseAuth firebaseAuth;
     private List<Cart> cartFilmList;
+    private String videoResponseStr = "";
+    private boolean seeMore = true;
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -106,6 +112,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
         firebaseAuth = FirebaseAuth.getInstance();
         initView();
         getData();
+        setUpViewDetail();
         observerFilm();
         observerFilmCart();
         observerDetailFilm();
@@ -142,11 +149,14 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
         loadingDialog = findViewById(R.id.progress_loading);
         btnRecommend = findViewById(R.id.btn_more_recommend);
         btnSimilar = findViewById(R.id.btn_more_similar);
-        binding.rlDownload.setOnClickListener(view -> Toast.makeText(getBaseContext(), "The feauture will be soon updated", Toast.LENGTH_LONG).show());
+        binding.detailFilm.setOnClickListener(this::onClick);
+        binding.txtExpanded.setOnClickListener(this::onClick);
     }
 
     private void onComeback() {
         btnBack.setOnClickListener(v -> finish());
+        binding.btnBackNoData.setOnClickListener(v -> finish());
+
     }
 
     private void observerDetailFilm() {
@@ -162,27 +172,36 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
     public void observerVideoTrailerFilm() {
         detailFilmViewModels.fetchVideoTrailerFilm(id, MainActivity.API_KEY);
         detailFilmViewModels.getVideoFilmLiveData().observe(DetailFilmActivity.this, videoResponse -> {
-            if (videoResponse != null && videoResponse.getResults().size() > 0)
+            if (videoResponse != null && videoResponse.getResults().size() > 0) {
                 watchFilm(videoResponse.getResults().get(0).getKey());
+                downloadVideo(VIDEO_LINK + videoResponse.getResults().get(0).getKey());
+            } else {
+                Toast.makeText(getBaseContext(),"The movies is will be updated soon", Toast.LENGTH_LONG).show();
+            }
         });
     }
 
     public void observeSimilarFilm() {
         detailFilmViewModels.fetchSimilarFilm(id, MainActivity.API_KEY);
         detailFilmViewModels.getSimilarFilmLiveData().observe(this, resultResponse -> {
-            if (resultResponse != null) {
+            if (resultResponse.getResults().size() > 0) {
+                binding.sectionSimilar.setVisibility(View.VISIBLE);
                 if (simFilmAdapter != null)
                     simFilmAdapter.setResultsList(resultResponse.getResults());
-            }
+            } else
+                binding.sectionSimilar.setVisibility(View.GONE);
         });
     }
 
     public void observerRecommendFilm() {
         detailFilmViewModels.fetchRecommendFilm(id, MainActivity.API_KEY);
         detailFilmViewModels.getRecommendFilmLiveData().observe(this, resultResponse -> {
-            if (resultResponse != null) {
+            if (resultResponse.getResults().size() > 0) {
+                binding.sectionRecommends.setVisibility(View.VISIBLE);
                 if (recFilmAdapter != null)
                     recFilmAdapter.setResultsList(resultResponse.getResults());
+            } else {
+                binding.sectionRecommends.setVisibility(View.GONE);
             }
         });
     }
@@ -222,9 +241,12 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
     public void observerCastFilm() {
         detailFilmViewModels.fetchCastFilm(id, MainActivity.API_KEY);
         detailFilmViewModels.getCastResponseMutableLiveData().observe(this, resultResponse -> {
-            if (resultResponse != null) {
+            if (resultResponse.getCast().size() > 0) {
+                binding.sectionCast.setVisibility(View.VISIBLE);
                 if (castAdapter != null)
                     castAdapter.setCastList(resultResponse.getCast());
+            } else {
+                binding.sectionCast.setVisibility(View.GONE);
             }
         });
 
@@ -232,23 +254,38 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
 
     @SuppressLint("SetTextI18n")
     private void setUpViewDetail() {
-        txtTitle.setText(detailFilms.getTitle());
-        txtDetail.setText(detailFilms.getOverview());
-        Glide.with(this).load(MainActivity.HEADER_URL_IMAGE + detailFilms.getPosterPath()).into(imgFilm);
-        txtRated.setRating(Float.parseFloat(detailFilms.getVoteAverage() / 2 + ""));
-        if (detailFilms.getGenres().size() == 0 || detailFilms.getGenres().isEmpty())
-            txtGenres.setText("•    No Data    •");
-        else if (detailFilms.getGenres().size() == 1)
-            txtGenres.setText("•    " + detailFilms.getGenres().get(0).getName() + "    •");
-        else
-            txtGenres.setText("•    " + detailFilms.getGenres().get(0).getName() + ", " + detailFilms.getGenres().get(1).getName() + "    •");
-        txtTimeFilm.setText(detailFilms.getRuntime() + " mins");
-        if (detailFilms.getAdult())
-            txtAdult.setVisibility(View.VISIBLE);
-        else
-            txtAdult.setVisibility(View.GONE);
-        txtRelease.setText(Converter.convertDate(detailFilms.getReleaseDate()));
-        binding.txtPrice.setText("Add to cart : " + detailFilms.getVoteAverage() * 2 + " $");
+        if (detailFilms != null) {
+            binding.layoutMain.setVisibility(View.VISIBLE);
+            binding.progressLoading.setVisibility(View.GONE);
+            binding.btnBackNoData.setVisibility(View.GONE);
+            txtTitle.setText(detailFilms.getTitle());
+            txtDetail.setText(detailFilms.getOverview());
+            Glide.with(this).load(MainActivity.HEADER_URL_IMAGE + detailFilms.getPosterPath()).into(imgFilm);
+            txtRated.setRating(Float.parseFloat(detailFilms.getVoteAverage() / 2 + ""));
+            if (detailFilms.getGenres().size() == 0 || detailFilms.getGenres().isEmpty())
+                txtGenres.setText("•    No Data    •");
+            else if (detailFilms.getGenres().size() == 1)
+                txtGenres.setText("•    " + detailFilms.getGenres().get(0).getName() + "    •");
+            else
+                txtGenres.setText("•    " + detailFilms.getGenres().get(0).getName() + ", " + detailFilms.getGenres().get(1).getName() + "    •");
+            txtTimeFilm.setText(detailFilms.getRuntime() + " mins");
+            if (detailFilms.getAdult())
+                txtAdult.setVisibility(View.VISIBLE);
+            else
+                txtAdult.setVisibility(View.GONE);
+            txtRelease.setText(Converter.convertDate(detailFilms.getReleaseDate()));
+            binding.txtPrice.setText("Add to cart : " + detailFilms.getVoteAverage() * 2 + " $");
+            if (txtDetail.getLayout().getLineCount() <= 5) {
+                binding.txtExpanded.setVisibility(View.GONE);
+            } else {
+                binding.txtExpanded.setVisibility(View.VISIBLE);
+                txtDetail.setMaxLines(5);
+            }
+        } else {
+            binding.layoutMain.setVisibility(View.GONE);
+            binding.progressLoading.setVisibility(View.VISIBLE);
+            binding.btnBackNoData.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setUpReFilmAdapter() {
@@ -425,9 +462,81 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
         });
     }
 
+    public void downloadVideo(String link) {
+
+        binding.rlDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                if (firebaseUser == null) {
+                    Toast.makeText(getBaseContext(), "Please login to download this movie", Toast.LENGTH_LONG).show();
+                } else {
+                    if (detailFilms != null) {
+                        if (link.equals(VIDEO_LINK))
+                            Toast.makeText(getBaseContext(), "Video does not exist", Toast.LENGTH_LONG).show();
+                        else {
+                            Toast.makeText(getBaseContext(), "Downloading", Toast.LENGTH_SHORT).show();
+                            new YouTubeExtractor(getBaseContext()) {
+                                @Override
+                                public void onExtractionComplete(SparseArray<YtFile> ytFiles, VideoMeta vMeta) {
+                                    if (ytFiles != null) {
+                                        int itag = 22;
+                                        String downloadUrl = ytFiles.get(itag).getUrl();
+                                        DownloadManager downloadmanager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                                        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
+                                        request.setTitle("Movie Funny");
+                                        request.setDescription(detailFilms.getTitle());
+                                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                                        request.setVisibleInDownloadsUi(false);
+                                        request.allowScanningByMediaScanner();
+                                        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
+                                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Movie_Funny" +
+                                                "/" + detailFilms.getTitle() + ".mp4");
+                                        downloadmanager.enqueue(request);
+                                    }
+                                }
+                            }.extract(link);
+                        }
+                    } else
+                        Toast.makeText(getBaseContext(), "Please wait a minute", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         compositeDisposable.dispose();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.detail_film:
+            case R.id.txt_expanded:
+                if (detailFilms != null) {
+                    binding.txtExpanded.setVisibility(View.VISIBLE);
+                    if (detailFilms.getOverview() != null || detailFilms.getOverview().length() != 0) {
+                        if (seeMore) {
+                            if (txtDetail.getLineCount() >= 5) {
+                                binding.titleExpand.setText("Collapse");
+                                binding.imgExpand.setImageResource(R.drawable.ic_arrown_up);
+                                txtDetail.setMaxLines(1000);
+                                seeMore = false;
+                            }
+                        } else {
+                            binding.titleExpand.setText("See more");
+                            binding.imgExpand.setImageResource(R.drawable.ic_arrown_down);
+                            txtDetail.setMaxLines(5);
+                            seeMore = true;
+                        }
+                        break;
+                    }
+                } else {
+                    binding.txtExpanded.setVisibility(View.GONE);
+                }
+        }
     }
 }

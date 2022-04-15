@@ -8,6 +8,11 @@
         android:id="@+id/navigation_cart"
         android:icon="@drawable/img_cart_menu"
         android:title="Cart" />
+
+    <item
+        android:id="@+id/navigation_film_offline"
+        android:icon="@drawable/ic_film_offline"
+        android:title="Film Offline" />
     <item
         android:id="@+id/navigation_user"
         android:icon="@drawable/ic_user"

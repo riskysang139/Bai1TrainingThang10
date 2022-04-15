@@ -7,6 +7,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -18,10 +19,10 @@ import com.example.moviefilm.R;
 import com.example.moviefilm.base.OnClickListener;
 import com.example.moviefilm.base.customview.SearchActionBarView;
 import com.example.moviefilm.databinding.ActivitySearchFilmBinding;
-import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
-import com.example.moviefilm.film.view.MainActivity;
 import com.example.moviefilm.film.home.adapter.FilmAdapter;
+import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.film.models.Results;
+import com.example.moviefilm.film.view.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,8 @@ public class SearchFilmActivity extends AppCompatActivity implements OnClickList
     private RelativeLayout imgBack;
     private TextView txtNoData;
     public static final String KEY = "KEY";
-    private String key="";
+    private String key = "";
+    private int page_ = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class SearchFilmActivity extends AppCompatActivity implements OnClickList
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search_film);
         mViewModel = ViewModelProviders.of(this).get(SearchFilmViewModel.class);
         initView();
+        setUpAdapter();
         getData();
         obServerData();
         onComeBack();
@@ -70,11 +73,14 @@ public class SearchFilmActivity extends AppCompatActivity implements OnClickList
     private void obServerData() {
         mViewModel.getResultResponeLiveData().observe(this, resultResponse -> {
             resultSearchResultsList = resultResponse.getResults();
-            if(resultSearchResultsList.size()==0)
+            if (resultSearchResultsList.size() == 0)
                 txtNoData.setVisibility(View.VISIBLE);
-            else
+            else {
                 txtNoData.setVisibility(View.GONE);
-            setUpAdapter();
+                if (searchFilmAdapter != null) {
+                    searchFilmAdapter.setResultsList(resultSearchResultsList);
+                }
+            }
         });
     }
 
@@ -117,11 +123,11 @@ public class SearchFilmActivity extends AppCompatActivity implements OnClickList
             @Override
             public void onSubmitSearch(String s) {
                 if ("".equals(s.trim())) {
-                    Toast.makeText(getBaseContext(),"Not Input Data",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), "Not Input Data", Toast.LENGTH_LONG).show();
                 } else {
                     String keySearch = s.toLowerCase();
                     key = keySearch.trim();
-                    mViewModel.fetchSearchResponse(MainActivity.API_KEY,key);
+                    mViewModel.fetchSearchResponse(MainActivity.API_KEY, key);
                     searchFilmAdapter.notifyDataSetChanged();
                 }
 
