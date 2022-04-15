@@ -8,6 +8,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.example.moviefilm.film.cart.view.CartFragment;
 import com.example.moviefilm.film.home.view.HomeFragment;
 import com.example.moviefilm.film.user.view.UserFragment;
+import com.example.moviefilm.film.watchfilmlocal.view.WatchFilmLocalFragment;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
     public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
@@ -21,7 +22,7 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
             case 1:
                 return CartFragment.getInstance();
             case 2:
-                return UserFragment.getInstance();
+                return WatchFilmLocalFragment.getInstance();
             case 3:
                 return UserFragment.getInstance();
             case 0:
