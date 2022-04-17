@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/quangsang/.gradle/caches/transforms-3/dbc5d9ae930485deec49b2bf4e48e24d/transformed/jetified-exoplayer-ui-2.14.1/res/layout/exo_player_view.xml" value="0.17664473684210527" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/drawable/bg_bottom_sheet.xml" value="0.2595" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/drawable/bg_cart.xml" value="0.2595" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/drawable/bg_checkbox_custom.xml" value="0.237" />
@@ -11,9 +12,12 @@
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/drawable/bg_corner_payment.xml" value="0.237" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/drawable/bg_corner_payment_new.xml" value="0.237" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/drawable/bg_detail_film.xml" value="0.1935" />
+        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/drawable/bg_permission_corner.xml" value="0.256" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/drawable/bg_time_duration.xml" value="0.2595" />
+        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/drawable/fragment_bottom_sheet_sort.xml" value="0.249" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/drawable/ic_baseline_radio_button_unchecked_24.xml" value="0.237" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/drawable/ic_home.xml" value="0.237" />
+        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/drawable/ic_play.xml" value="0.2015" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/drawable/ic_promo.xml" value="0.237" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/drawable/shape_btn_down_up.xml" value="0.173" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/drawable/shape_btn_register.xml" value="0.2595" />
@@ -32,22 +36,32 @@
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_main2.xml" value="0.24547101449275363" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_search_film.xml" value="0.20069444444444445" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_splash.xml" value="0.2" />
+        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_video_local.xml" value="0.20657894736842106" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_watch_film.xml" value="0.264" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/activity_watch_film_local.xml" value="0.22894736842105262" />
+        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/custom_playback_view.xml" value="0.2" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/fragment_bottom_sheet_dialog.xml" value="0.264" />
+        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/fragment_bottom_sheet_edit_video.xml" value="0.2256578947368421" />
+        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/fragment_bottom_sheet_sort.xml" value="0.4" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/fragment_cart.xml" value="0.2" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/fragment_home.xml" value="0.18121546961325966" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/fragment_user.xml" value="0.24547101449275363" />
+        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/fragment_watch_film_local.xml" value="0.2256578947368421" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/item_bill_film.xml" value="0.22894736842105262" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/item_cart_film.xml" value="0.2" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/item_cast_film.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/item_film_horizontal.xml" value="0.2975630611372381" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/item_films.xml" value="0.22894736842105262" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/item_folder_media.xml" value="0.264" />
+        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/item_icon_play_back.xml" value="0.264" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/item_video_trailer.xml" value="0.15789473684210525" />
+        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/layout_exo_player.xml" value="0.20657894736842106" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/layout_item_adv.xml" value="0.15789473684210525" />
+        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/vol_dialog_item.xml" value="0.2256578947368421" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/layout/vtecom_custom_media_controller.xml" value="0.15789473684210525" />
         <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/menu/menu_bottom_navigation.xml" value="0.176" />
+        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/menu/menu_bottom_navigation_login.xml" value="0.2256578947368421" />
+        <entry key="..\:/Users/quangsang/AndroidStudioProjects/Bai1TrainingThang10/app/src/main/res/menu/menu_sort.xml" value="0.20657894736842106" />
       </map>
     </option>
   </component>

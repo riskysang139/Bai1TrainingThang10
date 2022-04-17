@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_sort_name"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:background="@color/main_color"
+            android:fontFamily="@font/beau_sans_pro_bold"
+            android:gravity="center"
+            android:paddingLeft="@dimen/_15sdp"
+            android:text="Sort by name"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14sdp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray" />
+
+        <LinearLayout
+            android:id="@+id/ln_sort_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/btn_sort_name_az"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginTop="1dp"
+                android:background="@color/main_color"
+                android:drawableLeft="@drawable/ic_sort_az"
+                android:drawablePadding="@dimen/_10sdp"
+                android:fontFamily="@font/beau_sans_pro_bold"
+                android:gravity="left|center"
+                android:paddingLeft="@dimen/_10sdp"
+                android:text="Sort by name (A -> Z)"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14sdp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray" />
+
+            <Button
+                android:id="@+id/btn_sort_name_za"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginTop="1dp"
+                android:background="@color/main_color"
+                android:drawableLeft="@drawable/sortza"
+                android:drawablePadding="@dimen/_10sdp"
+                android:fontFamily="@font/beau_sans_pro_bold"
+                android:gravity="left|center"
+                android:paddingLeft="@dimen/_10sdp"
+                android:text="Sort by name (Z -> A)"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14sdp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txt_sort_date"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:background="@color/main_color"
+            android:fontFamily="@font/beau_sans_pro_bold"
+            android:gravity="center"
+            android:paddingLeft="@dimen/_15sdp"
+            android:text="Sort by date"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14sdp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray" />
+
+        <LinearLayout
+            android:id="@+id/ln_sort_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/btn_sort_date_new"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginTop="1dp"
+                android:background="@color/main_color"
+                android:drawableLeft="@drawable/ic_sort_time"
+                android:drawablePadding="@dimen/_10sdp"
+                android:fontFamily="@font/beau_sans_pro_bold"
+                android:gravity="left|center"
+                android:paddingLeft="@dimen/_10sdp"
+                android:text="Sort by date (new -> old)"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14sdp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray" />
+
+            <Button
+                android:id="@+id/btn_sort_date_old"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginTop="1dp"
+                android:background="@color/main_color"
+                android:drawableLeft="@drawable/ic_sort_time"
+                android:drawablePadding="@dimen/_10sdp"
+                android:fontFamily="@font/beau_sans_pro_bold"
+                android:gravity="left|center"
+                android:paddingLeft="@dimen/_10sdp"
+                android:text="Sort by date (old -> new)"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14sdp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txt_sort_size"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:background="@color/main_color"
+            android:fontFamily="@font/beau_sans_pro_bold"
+            android:gravity="center"
+            android:paddingLeft="@dimen/_15sdp"
+            android:text="Sort by size"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14sdp" />
+
+        <LinearLayout
+            android:id="@+id/ln_sort_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray" />
+
+            <Button
+                android:id="@+id/btn_sort_size_big"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginTop="1dp"
+                android:background="@color/main_color"
+                android:drawableLeft="@drawable/ic_sort_big"
+                android:drawablePadding="@dimen/_10sdp"
+                android:fontFamily="@font/beau_sans_pro_bold"
+                android:gravity="left|center"
+                android:paddingLeft="@dimen/_10sdp"
+                android:text="Sort by size (small -> big)"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14sdp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray" />
+
+            <Button
+                android:id="@+id/btn_sort_size_small"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginTop="1dp"
+                android:background="@color/main_color"
+                android:drawableLeft="@drawable/ic_sort_big"
+                android:drawablePadding="@dimen/_10sdp"
+                android:fontFamily="@font/beau_sans_pro_bold"
+                android:gravity="left|center"
+                android:paddingLeft="@dimen/_10sdp"
+                android:text="Sort by size (big -> small)"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14sdp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray" />
+        </LinearLayout>
+    </LinearLayout>
+
+</layout>

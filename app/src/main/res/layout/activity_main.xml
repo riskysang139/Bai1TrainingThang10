@@ -8,50 +8,6 @@
         android:layout_height="match_parent"
         android:background="@color/main_color">
 
-        <!--        <RelativeLayout-->
-        <!--            android:id="@+id/rl_header_search"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="90dp"-->
-        <!--            android:visibility="gone"-->
-        <!--            android:background="@drawable/vtecom_bg_header_search">-->
-
-        <!--            <RelativeLayout-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="60dp">-->
-
-        <!--                <androidx.appcompat.widget.AppCompatImageView-->
-        <!--                    android:id="@+id/image_menu_search"-->
-        <!--                    android:layout_width="24dp"-->
-        <!--                    android:layout_height="24dp"-->
-        <!--                    android:visibility="visible"-->
-        <!--                    android:layout_centerVertical="true"-->
-        <!--                    android:layout_marginLeft="16dp"-->
-        <!--                    android:src="@drawable/vtecom_ic_menu_white" />-->
-
-        <!--                <com.example.bai1training.base.customview.SearchActionBarView-->
-        <!--                    android:id="@+id/sb_search_all"-->
-        <!--                    android:layout_width="match_parent"-->
-        <!--                    android:layout_height="40dp"-->
-        <!--                    android:layout_centerVertical="true"-->
-        <!--                    android:layout_marginHorizontal="25dp"-->
-        <!--                    android:layout_toRightOf="@+id/image_menu_search"-->
-        <!--                    android:layout_toLeftOf="@id/image_back_search"-->
-        <!--                    tools:ignore="MissingClass" />-->
-        <!--                <androidx.appcompat.widget.AppCompatImageView-->
-        <!--                    android:id="@+id/image_back_search"-->
-        <!--                    android:layout_alignParentRight="true"-->
-        <!--                    android:layout_marginRight="16dp"-->
-        <!--                    android:layout_width="24dp"-->
-        <!--                    android:layout_height="24dp"-->
-        <!--                    android:visibility="visible"-->
-        <!--                    android:layout_centerVertical="true"-->
-        <!--                    android:src="@drawable/vtecom_ic_bell_white"-->
-        <!--                    android:layout_alignParentEnd="true"-->
-        <!--                    android:layout_marginEnd="16dp" />-->
-        <!--            </RelativeLayout>-->
-
-        <!--        </RelativeLayout>-->
-
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"
             android:layout_width="match_parent"

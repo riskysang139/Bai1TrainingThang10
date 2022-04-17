@@ -112,7 +112,6 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
         firebaseAuth = FirebaseAuth.getInstance();
         initView();
         getData();
-        setUpViewDetail();
         observerFilm();
         observerFilmCart();
         observerDetailFilm();
@@ -155,17 +154,24 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
 
     private void onComeback() {
         btnBack.setOnClickListener(v -> finish());
-        binding.btnBackNoData.setOnClickListener(v -> finish());
-
     }
 
     private void observerDetailFilm() {
         detailFilmViewModels.fetchDetailFilm(id, MainActivity.API_KEY);
         detailFilmViewModels.getDetailFilmLiveData().observe(this, detailFilm -> {
-            detailFilms = detailFilm;
-            setUpViewDetail();
-            insertFilm(detailFilm);
-            insertFilmToCart(detailFilm);
+            if (detailFilm == null) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        detailFilmViewModels.fetchDetailFilm(id, MainActivity.API_KEY);
+                    }
+                },1000);
+            } else {
+                detailFilms = detailFilm;
+                setUpViewDetail();
+                insertFilm(detailFilm);
+                insertFilmToCart(detailFilm);
+            }
         });
     }
 
@@ -256,8 +262,10 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
     private void setUpViewDetail() {
         if (detailFilms != null) {
             binding.layoutMain.setVisibility(View.VISIBLE);
+            binding.rlDownload.setVisibility(View.VISIBLE);
+            binding.rlLove.setVisibility(View.VISIBLE);
+            binding.rlCart.setVisibility(View.VISIBLE);
             binding.progressLoading.setVisibility(View.GONE);
-            binding.btnBackNoData.setVisibility(View.GONE);
             txtTitle.setText(detailFilms.getTitle());
             txtDetail.setText(detailFilms.getOverview());
             Glide.with(this).load(MainActivity.HEADER_URL_IMAGE + detailFilms.getPosterPath()).into(imgFilm);
@@ -283,8 +291,10 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
             }
         } else {
             binding.layoutMain.setVisibility(View.GONE);
+            binding.rlDownload.setVisibility(View.GONE);
+            binding.rlLove.setVisibility(View.GONE);
+            binding.rlCart.setVisibility(View.GONE);
             binding.progressLoading.setVisibility(View.VISIBLE);
-            binding.btnBackNoData.setVisibility(View.VISIBLE);
         }
     }
 
@@ -517,8 +527,8 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
             case R.id.detail_film:
             case R.id.txt_expanded:
                 if (detailFilms != null) {
-                    binding.txtExpanded.setVisibility(View.VISIBLE);
-                    if (detailFilms.getOverview() != null || detailFilms.getOverview().length() != 0) {
+                    if ((detailFilms.getOverview() != null || detailFilms.getOverview().length() != 0) && txtDetail.getLineCount() >= 5) {
+                        binding.txtExpanded.setVisibility(View.VISIBLE);
                         if (seeMore) {
                             if (txtDetail.getLineCount() >= 5) {
                                 binding.titleExpand.setText("Collapse");

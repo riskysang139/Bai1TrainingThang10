@@ -53,7 +53,6 @@ public class UserFragment extends Fragment {
         openBillScreen();
         openVideoHistory();
         openLoveHistory();
-        openLoveHistor1();
         openFeaure();
         logOut();
     }
@@ -139,13 +138,6 @@ public class UserFragment extends Fragment {
         });
     }
 
-    private void openLoveHistor1() {
-        binding.btnFreeData.setOnClickListener(view -> {
-            Intent intent = new Intent(getActivity(), WatchFilmLocalFragment.class);
-            startActivity(intent);
-        });
-    }
-
     private void logOut() {
         binding.btnLogOut.setOnClickListener(view -> {
             new AlertDialog.Builder(getContext())
@@ -175,7 +167,7 @@ public class UserFragment extends Fragment {
             startActivity(i);
         });
         // feedback, setting, free data
-//        binding.btnFreeData.setOnClickListener(view -> Toast.makeText(getContext(), "The feauture will be soon updated", Toast.LENGTH_LONG).show());
+        binding.btnFreeData.setOnClickListener(view -> Toast.makeText(getContext(), "The feauture will be soon updated", Toast.LENGTH_LONG).show());
         binding.btnSetting.setOnClickListener(view -> Toast.makeText(getContext(), "The feauture will be soon updated", Toast.LENGTH_LONG).show());
         binding.btnFeedBack.setOnClickListener(view -> Toast.makeText(getContext(), "The feauture will be soon updated", Toast.LENGTH_LONG).show());
     }

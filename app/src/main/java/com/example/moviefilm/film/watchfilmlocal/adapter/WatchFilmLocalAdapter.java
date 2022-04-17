@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,14 +18,15 @@ import com.example.moviefilm.base.Converter;
 import com.example.moviefilm.film.watchfilmlocal.model.MediaFile;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WatchFilmLocalAdapter extends RecyclerView.Adapter<WatchFilmLocalAdapter.ViewHoder> {
-    private List<MediaFile> mediaFileList;
+    private ArrayList<MediaFile> mediaFileList;
     private Context context;
     private setOnClickListener setOnClickListener;
 
-    public WatchFilmLocalAdapter(List<MediaFile> mediaFileList, Context context) {
+    public WatchFilmLocalAdapter(ArrayList<MediaFile> mediaFileList, Context context) {
         this.mediaFileList = mediaFileList;
         this.context = context;
     }
@@ -34,7 +36,7 @@ public class WatchFilmLocalAdapter extends RecyclerView.Adapter<WatchFilmLocalAd
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setMediaFileList(List<MediaFile> mediaFileList) {
+    public void setMediaFileList(ArrayList<MediaFile> mediaFileList) {
         this.mediaFileList = mediaFileList;
         notifyDataSetChanged();
     }
@@ -49,7 +51,7 @@ public class WatchFilmLocalAdapter extends RecyclerView.Adapter<WatchFilmLocalAd
     @Override
     public void onBindViewHolder(@NonNull WatchFilmLocalAdapter.ViewHoder holder, int position) {
         MediaFile mediaFile = mediaFileList.get(position);
-        holder.onBind(mediaFile);
+        holder.onBind(mediaFile, position);
     }
 
     @Override
@@ -61,6 +63,7 @@ public class WatchFilmLocalAdapter extends RecyclerView.Adapter<WatchFilmLocalAd
         private RoundedImageView imgMedia;
         private ImageView btnEdit;
         private TextView txtTitle, txtSize, txtDateAdded, txtTimeDuration;
+        private RelativeLayout view;
         public ViewHoder(@NonNull View itemView) {
             super(itemView);
             imgMedia = itemView.findViewById(R.id.img_cart_film);
@@ -69,8 +72,9 @@ public class WatchFilmLocalAdapter extends RecyclerView.Adapter<WatchFilmLocalAd
             txtDateAdded = itemView.findViewById(R.id.txt_date);
             txtTimeDuration = itemView.findViewById(R.id.txt_time_duration);
             btnEdit = itemView.findViewById(R.id.btn_edit);
+            view = itemView.findViewById(R.id.dl_layout);
         }
-        public void onBind(MediaFile mediaFile) {
+        public void onBind(MediaFile mediaFile, int position) {
             txtTitle.setText(mediaFile.getDisplayName());
             txtSize.setText(android.text.format.Formatter.formatFileSize(context,Long.parseLong(mediaFile.getSize())));
             txtDateAdded.setText(Converter.convertTimeStampToDate(Long.parseLong(mediaFile.getDateAdded())));
@@ -79,10 +83,14 @@ public class WatchFilmLocalAdapter extends RecyclerView.Adapter<WatchFilmLocalAd
             btnEdit.setOnClickListener(view -> {
                 setOnClickListener.onClick(mediaFile);
             });
+            view.setOnClickListener(view -> {
+                setOnClickListener.onClickItem(mediaFileList, position);
+            });
         }
     }
 
     public interface setOnClickListener {
         void onClick(MediaFile mediaFile);
+        void onClickItem(ArrayList<MediaFile> mediaFile, int position);
     }
 }

@@ -18,9 +18,14 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
-            android:name=".film.watchfilmlocal.view.WatchFilmLocalFragment"
-            android:exported="false"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:name=".film.watchfilmlocal.filmlocal.VideoLocalActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:supportsPictureInPicture="true"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            tools:targetApi="n"
+            android:excludeFromRecents="true"/>
         <!--
      Set custom default icon. This is used when no icon is set for incoming notification messages.
      See README(https://goo.gl/l4GJaQ) for more.

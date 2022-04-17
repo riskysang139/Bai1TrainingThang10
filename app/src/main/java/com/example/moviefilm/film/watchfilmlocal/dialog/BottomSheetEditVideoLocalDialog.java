@@ -3,6 +3,7 @@ package com.example.moviefilm.film.watchfilmlocal.dialog;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -27,7 +28,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.io.File;
 
-public class BottomSheetDialog extends BottomSheetDialogFragment {
+public class BottomSheetEditVideoLocalDialog extends BottomSheetDialogFragment {
     FragmentBottomSheetDialogBinding binding;
     private MediaFile mediaFile;
     private bottomSheetDialogInterface bottomSheetDialogInterface;
@@ -45,12 +46,6 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bottom_sheet_dialog, container, false);
         View view = binding.getRoot();
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         binding.txtTitle.setText(mediaFile.getDisplayName());
         binding.btnRename.setOnClickListener(view1 -> {
             renameFile();
@@ -64,6 +59,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         binding.btnProperties.setOnClickListener(view14 -> {
             propertiesFile();
         });
+        return view;
     }
 
     private void renameFile() {
@@ -83,7 +79,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
                     String newPath = onlyPath + "/" + editText.getText().toString() + ext;
                     File newFile = new File(newPath);
                     boolean rename = file.renameTo(newFile);
-                    if (rename) {
+                    if (CommonUtilis.renameFile(file, newFile)) {
                         ContentResolver resolver = getContext().getApplicationContext().getContentResolver();
                         resolver.delete(MediaStore.Files.getContentUri("external"), MediaStore.MediaColumns.DATA + "=?", new String[]{
                                 file.getAbsolutePath()});
@@ -105,12 +101,23 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     }
 
     private void shareFile() {
+        String path = mediaFile.getPath(); //should be local path of downloaded video
+
+        ContentValues content = new ContentValues(4);
+        content.put(MediaStore.Video.VideoColumns.DATE_ADDED,
+                System.currentTimeMillis() / 1000);
+        content.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+        content.put(MediaStore.Video.Media.DATA, path);
+
+        ContentResolver resolver = getContext().getApplicationContext().getContentResolver();
+        Uri uri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, content);
+
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        Uri screenshotUri = Uri.parse(mediaFile.getPath());
-        sharingIntent.setType("video/mp4");
-        sharingIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
-        startActivity(Intent.createChooser(sharingIntent, "Share video via"));
-        bottomSheetDialogInterface.onShareVideo();
+        sharingIntent.setType("video/*");
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Hey this is the video subject");
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, "Hey this is the video text");
+        sharingIntent.putExtra(Intent.EXTRA_STREAM,uri);
+        startActivity(Intent.createChooser(sharingIntent,"Share Video"));
     }
 
     private void deleteFile() {
@@ -122,7 +129,12 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
                     Uri contentUri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                             Long.parseLong(mediaFile.getId()));
                     File file = new File(mediaFile.getPath());
-                    boolean deleteFile = file.delete();
+                    boolean deleteFile = false;
+                    try {
+                        deleteFile = file.delete();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     if (deleteFile) {
                         getContext().getContentResolver().delete(contentUri, null, null);
                         bottomSheetDialogInterface.onDeleteFilmSuccess();
