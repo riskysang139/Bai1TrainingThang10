@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.moviefilm.R;
 import com.example.moviefilm.databinding.ActivityLoginBinding;
 import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
+import com.example.moviefilm.film.home.detailFilm.viewmodel.DetailFilmViewModels;
 import com.example.moviefilm.film.user.login.model.User;
 import com.example.moviefilm.film.user.login.viewmodels.LoginViewModels;
 import com.example.moviefilm.film.view.MainActivity;
@@ -74,11 +75,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public static final String FROM_REGISTER = "FROM_REGISTER";
 
     private String fromScreen = "";
+    private DetailFilmViewModels detailFilmViewModels;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
+        detailFilmViewModels = ViewModelProviders.of(this).get(DetailFilmViewModels.class);
         getData();
         observedLogin();
 
@@ -98,6 +101,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         binding.btnLoginGoogle.setOnClickListener(v -> {
             //begin google sign in
+            detailFilmViewModels.setCartListMutableLiveData(null);
+            detailFilmViewModels.setFilmLoveListMutableLiveData(null);
             Log.d(GOOGLE_SIGN_IN_TAG, "on click : begin Google Sign in");
             Intent intent = googleSignInClient.getSignInIntent();
             startActivityForResult(intent, RC_SIGN_IN); // handler this result
@@ -204,6 +209,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void firebaseWithFacebook() {
+        detailFilmViewModels.setFilmLoveListMutableLiveData(null);
+        detailFilmViewModels.setCartListMutableLiveData(null);
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email", "public_profile"));
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -341,11 +348,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         binding.txtPasswordConfirm.setText(user.getPassWordConfirm());
                         //Register Button : Click to begin Email and Password SignUp
                         binding.btnLogin.setOnClickListener(view -> {
+                            detailFilmViewModels.setCartListMutableLiveData(null);
+                            detailFilmViewModels.setFilmLoveListMutableLiveData(null);
                             firebaseWithEmailAndPassSignUp();
                         });
                     } else {
                         //Login Button : Click to begin Email and Password SignIn
                         binding.btnLogin.setOnClickListener(view -> {
+                            detailFilmViewModels.setFilmLoveListMutableLiveData(null);
                             firebaseWithEmailAndPass();
                         });
                     }

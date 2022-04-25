@@ -11,7 +11,9 @@ import com.example.moviefilm.film.home.detailFilm.models.DetailFilm;
 import com.example.moviefilm.film.home.detailFilm.models.VideoResponse;
 import com.example.moviefilm.film.home.detailFilm.repo.DetailFilmRepo;
 import com.example.moviefilm.film.models.ResultResponse;
+import com.example.moviefilm.film.user.model.FilmLove;
 import com.example.moviefilm.roomdb.cartdb.Cart;
+import com.example.moviefilm.film.cart.model.CartFB;
 import com.example.moviefilm.roomdb.filmdb.Film;
 
 import java.util.List;
@@ -24,6 +26,8 @@ public class DetailFilmViewModels extends AndroidViewModel {
     private MutableLiveData<ResultResponse> similarFilmLiveData;
     private MutableLiveData<ResultResponse> recommendFilmLiveData;
     private MutableLiveData<CastResponse> castResponseMutableLiveData;
+    private MutableLiveData<List<CartFB>> cartListMutableLiveData;
+    private MutableLiveData<List<FilmLove>> filmLoveListMutableLiveData;
     private DetailFilmRepo detailFilmRepo;
 
     public DetailFilmViewModels(@NonNull Application application) {
@@ -107,5 +111,46 @@ public class DetailFilmViewModels extends AndroidViewModel {
     }
     public void fetchCastFilm(String id , String apiKey) {
         detailFilmRepo.fetchCastFilm(id,apiKey);
+    }
+
+    public void insertFilmCartFirebase(List<CartFB> cartList) {
+        detailFilmRepo.insertFilmCartFirebase(cartList);
+    }
+
+    public void fetchFilmCart() {
+        detailFilmRepo.fetchFilmCart();
+    }
+
+    public MutableLiveData<List<CartFB>> getCartListMutableLiveData() {
+        if (cartListMutableLiveData == null)
+            return detailFilmRepo.getCartListResponseLiveData();
+        return cartListMutableLiveData;
+    }
+
+    public void setCartListMutableLiveData(MutableLiveData<List<CartFB>> cartListMutableLiveData) {
+        this.cartListMutableLiveData = cartListMutableLiveData;
+    }
+
+
+    public void insertFilmLoveFirebase(List<FilmLove> filmLoveList) {
+        detailFilmRepo.insertFilmLoveFirebase(filmLoveList);
+    }
+
+    public void fetchFilmLove() {
+        detailFilmRepo.fetchFilmLove();
+    }
+
+    public MutableLiveData<List<FilmLove>> getFilmLoveListMutableLiveData() {
+        if (filmLoveListMutableLiveData == null)
+            return detailFilmRepo.getFilmLoveListResponseLiveData();
+        return filmLoveListMutableLiveData;
+    }
+
+    public void setFilmLoveListMutableLiveData(MutableLiveData<List<FilmLove>> filmLoveListMutableLiveData) {
+        this.filmLoveListMutableLiveData = filmLoveListMutableLiveData;
+    }
+
+    public void deleteFilmLoveFirebase(int position) {
+        detailFilmRepo.deleteFilmLoveFirebase(position);
     }
 }

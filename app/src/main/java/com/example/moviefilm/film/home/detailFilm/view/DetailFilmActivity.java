@@ -22,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -43,8 +44,10 @@ import com.example.moviefilm.film.home.detailFilm.models.DetailFilm;
 import com.example.moviefilm.film.home.detailFilm.viewmodel.DetailFilmViewModels;
 import com.example.moviefilm.film.home.detailFilm.watchfilm.view.WatchFilmActivity;
 import com.example.moviefilm.film.models.Results;
+import com.example.moviefilm.film.user.model.FilmLove;
 import com.example.moviefilm.film.view.MainActivity;
 import com.example.moviefilm.roomdb.cartdb.Cart;
+import com.example.moviefilm.film.cart.model.CartFB;
 import com.example.moviefilm.roomdb.filmdb.Film;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -95,12 +98,14 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
     private Button btnSimilar, btnRecommend;
     private List<Cast> castList = new ArrayList<>();
     private CastAdapter castAdapter;
-    private Film filmDB;
-    private Cart cartFilm;
     private FirebaseAuth firebaseAuth;
-    private List<Cart> cartFilmList;
+    private List<Cart> cartFilmList = new ArrayList<>();
+    private List<CartFB> cartFilmListFB = new ArrayList<>();
+    private List<FilmLove> filmLoveList = new ArrayList<>();
     private String videoResponseStr = "";
     private boolean seeMore = true;
+    private List<Cast> castListFB = new ArrayList<>();
+    private Film filmDB;
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -109,16 +114,14 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_film);
         detailFilmViewModels = ViewModelProviders.of(this).get(DetailFilmViewModels.class);
-        firebaseAuth = FirebaseAuth.getInstance();
         initView();
         getData();
-        observerFilm();
-        observerFilmCart();
         observerDetailFilm();
+        observerFilm();
         observerRecommendFilm();
         observeSimilarFilm();
         observerCastFilm();
-        observerListFilmCart();
+        observerCartList();
         observerVideoTrailerFilm();
         onComeback();
         setUpReFilmAdapter();
@@ -150,10 +153,39 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
         btnSimilar = findViewById(R.id.btn_more_similar);
         binding.detailFilm.setOnClickListener(this::onClick);
         binding.txtExpanded.setOnClickListener(this::onClick);
+        firebaseAuth = FirebaseAuth.getInstance();
+        binding.rlLove.setOnClickListener(view -> {
+            if (firebaseAuth.getCurrentUser() == null) {
+                Toast.makeText(getBaseContext(), "Please login to add film to list love", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void onComeback() {
         btnBack.setOnClickListener(v -> finish());
+    }
+
+
+    public void observerFilm() {
+        Disposable disposable = detailFilmViewModels.getMovieWithId(id).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(films -> {
+                    Log.d(TAG, "accept: getMovie");
+                    filmDB = films;
+                    if (films != null) {
+                        updateFilmLove(films);
+                    }
+                });
+        compositeDisposable.add(disposable);
+    }
+
+    private void observerCartList() {
+        if (firebaseAuth.getCurrentUser() != null) {
+            detailFilmViewModels.fetchFilmCart();
+            detailFilmViewModels.getCartListMutableLiveData().observe(this, cartList -> {
+                cartFilmListFB = cartList;
+            });
+        }
     }
 
     private void observerDetailFilm() {
@@ -165,7 +197,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
                     public void run() {
                         detailFilmViewModels.fetchDetailFilm(id, MainActivity.API_KEY);
                     }
-                },1000);
+                }, 1000);
             } else {
                 detailFilms = detailFilm;
                 setUpViewDetail();
@@ -182,7 +214,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
                 watchFilm(videoResponse.getResults().get(0).getKey());
                 downloadVideo(VIDEO_LINK + videoResponse.getResults().get(0).getKey());
             } else {
-                Toast.makeText(getBaseContext(),"The movies is will be updated soon", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), "The movies is will be updated soon", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -210,38 +242,6 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
                 binding.sectionRecommends.setVisibility(View.GONE);
             }
         });
-    }
-
-
-    public void observerFilm() {
-        Disposable disposable = detailFilmViewModels.getMovieWithId(id).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(films -> {
-                    Log.d(TAG, "accept: getMovie");
-                    filmDB = films;
-                    if (films != null) {
-                        updateFilmLove(films);
-                    }
-                });
-        compositeDisposable.add(disposable);
-    }
-
-    public void observerFilmCart() {
-        Disposable disposable = detailFilmViewModels.getMovieCart(id).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(cart -> {
-                    cartFilm = cart;
-                });
-        compositeDisposable.add(disposable);
-    }
-
-    public void observerListFilmCart() {
-        Disposable disposable = detailFilmViewModels.getListMovieCart().subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(cart -> {
-                    cartFilmList = cart;
-                });
-        compositeDisposable.add(disposable);
     }
 
     public void observerCastFilm() {
@@ -372,12 +372,70 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
 
     private void openCartFilm() {
         binding.rlCart.setOnClickListener(view -> {
-            Bundle bundle = new Bundle();
-            Intent intent = new Intent(DetailFilmActivity.this, MainActivity.class);
-            bundle.putString(KEY_FROM, FROM_DETAIL);
-            intent.putExtras(bundle);
-            startActivity(intent);
+            if (firebaseAuth.getCurrentUser() == null) {
+                Toast.makeText(getBaseContext(), "Please login to add film to cart", Toast.LENGTH_SHORT).show();
+            } else {
+                Bundle bundle = new Bundle();
+                Intent intent = new Intent(DetailFilmActivity.this, MainActivity.class);
+                bundle.putString(KEY_FROM, FROM_DETAIL);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
         });
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void insertFilmToCart(DetailFilm detailFilm) {
+        if (detailFilms != null) {
+            binding.payment.setVisibility(View.VISIBLE);
+            if (cartFilmListFB != null) {
+                binding.txtNumCart.setText(cartFilmListFB.size() + "");
+                for (CartFB cartFB : cartFilmListFB) {
+                    if (cartFB.getFilmId() == detailFilms.getId()) {
+                        binding.payment.setVisibility(View.GONE);
+                        break;
+                    } else {
+                        binding.payment.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+            if (firebaseAuth.getCurrentUser() != null) {
+                binding.payment.setOnClickListener(view -> new CircleAnimationUtil().attachActivity(DetailFilmActivity.this).setTargetView(binding.payment).setMoveDuration(1000).setDestView(binding.rlCart).setAnimationListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animator) {
+                        if (cartFilmListFB != null || cartFilmListFB.size() != 0) {
+                            CartFB cartFB = new CartFB();
+                            cartFB.setFilmId(detailFilm.getId());
+                            cartFB.setFilmName(detailFilm.getTitle());
+                            cartFB.setFilmImage(MainActivity.HEADER_URL_IMAGE + detailFilm.getPosterPath());
+                            cartFB.setFilmRate(Float.parseFloat(detailFilm.getVoteAverage() / 2 + ""));
+                            cartFB.setFilmReleaseDate(Converter.convertStringToDate(detailFilms.getReleaseDate()));
+
+                            cartFilmListFB.add(cartFB);
+                            detailFilmViewModels.insertFilmCartFirebase(cartFilmListFB);
+                            detailFilmViewModels.fetchFilmCart();
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
+                        if (cartFilmListFB != null)
+                            binding.txtNumCart.setText(cartFilmListFB.size() + "");
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animator) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animator) {
+
+                    }
+                }).startAnimation());
+            }
+        }
     }
 
     private void insertFilm(@NonNull DetailFilm detailFilm) {
@@ -387,40 +445,6 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
                     Float.parseFloat(detailFilm.getVoteAverage() / 2 + ""), Converter.convertStringToDate(detailFilms.getReleaseDate()), 0, 0, 0);
             detailFilmViewModels.insertFilm(film);
         }
-    }
-
-    @SuppressLint("SetTextI18n")
-    private void insertFilmToCart(DetailFilm detailFilm) {
-        if (cartFilmList != null)
-            binding.txtNumCart.setText(cartFilmList.size() + "");
-        if (cartFilm == null) {
-            binding.payment.setVisibility(View.VISIBLE);
-            binding.payment.setOnClickListener(view -> new CircleAnimationUtil().attachActivity(DetailFilmActivity.this).setTargetView(binding.payment).setMoveDuration(1000).setDestView(binding.rlCart).setAnimationListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animator) {
-                    detailFilmViewModels.insertFilmCart(new Cart(detailFilm.getId(), detailFilm.getTitle(),
-                            MainActivity.HEADER_URL_IMAGE + detailFilm.getPosterPath(),
-                            Float.parseFloat(detailFilm.getVoteAverage() / 2 + ""), Converter.convertStringToDate(detailFilms.getReleaseDate())));
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    if (cartFilmList != null)
-                        binding.txtNumCart.setText(cartFilmList.size() + "");
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animator) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animator) {
-
-                }
-            }).startAnimation());
-        } else
-            binding.payment.setVisibility(View.GONE);
     }
 
     private void updateFilmLove(Film films) {
@@ -449,67 +473,59 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
                 }
             });
         }
-
     }
-
     private void refreshLayout() {
         Handler handler = new Handler();
-        binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> handler.postDelayed(new Runnable() {
             @Override
-            public void onRefresh() {
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        detailFilmViewModels.fetchDetailFilm(id, MainActivity.API_KEY);
-                        detailFilmViewModels.fetchRecommendFilm(id, MainActivity.API_KEY);
-                        detailFilmViewModels.fetchCastFilm(id, MainActivity.API_KEY);
-                        detailFilmViewModels.fetchVideoTrailerFilm(id, MainActivity.API_KEY);
-                        detailFilmViewModels.fetchCastFilm(id, MainActivity.API_KEY);
-                        binding.swipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 1000);
+            public void run() {
+                detailFilmViewModels.fetchDetailFilm(id, MainActivity.API_KEY);
+                detailFilmViewModels.fetchRecommendFilm(id, MainActivity.API_KEY);
+                detailFilmViewModels.fetchCastFilm(id, MainActivity.API_KEY);
+                detailFilmViewModels.fetchVideoTrailerFilm(id, MainActivity.API_KEY);
+                detailFilmViewModels.fetchCastFilm(id, MainActivity.API_KEY);
+                if (firebaseAuth.getCurrentUser() != null)
+                    detailFilmViewModels.fetchFilmCart();
+                binding.swipeRefreshLayout.setRefreshing(false);
             }
-        });
+        }, 1000));
     }
 
     public void downloadVideo(String link) {
 
-        binding.rlDownload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                if (firebaseUser == null) {
-                    Toast.makeText(getBaseContext(), "Please login to download this movie", Toast.LENGTH_LONG).show();
-                } else {
-                    if (detailFilms != null) {
-                        if (link.equals(VIDEO_LINK))
-                            Toast.makeText(getBaseContext(), "Video does not exist", Toast.LENGTH_LONG).show();
-                        else {
-                            Toast.makeText(getBaseContext(), "Downloading", Toast.LENGTH_SHORT).show();
-                            new YouTubeExtractor(getBaseContext()) {
-                                @Override
-                                public void onExtractionComplete(SparseArray<YtFile> ytFiles, VideoMeta vMeta) {
-                                    if (ytFiles != null) {
-                                        int itag = 22;
-                                        String downloadUrl = ytFiles.get(itag).getUrl();
-                                        DownloadManager downloadmanager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-                                        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
-                                        request.setTitle("Movie Funny");
-                                        request.setDescription(detailFilms.getTitle());
-                                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                                        request.setVisibleInDownloadsUi(false);
-                                        request.allowScanningByMediaScanner();
-                                        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
-                                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Movie_Funny" +
-                                                "/" + detailFilms.getTitle() + ".mp4");
-                                        downloadmanager.enqueue(request);
-                                    }
+        binding.rlDownload.setOnClickListener(view -> {
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (firebaseUser == null) {
+                Toast.makeText(getBaseContext(), "Please login to download this movie", Toast.LENGTH_LONG).show();
+            } else {
+                if (detailFilms != null) {
+                    if (link.equals(VIDEO_LINK))
+                        Toast.makeText(getBaseContext(), "Video does not exist", Toast.LENGTH_LONG).show();
+                    else {
+                        Toast.makeText(getBaseContext(), "Downloading", Toast.LENGTH_SHORT).show();
+                        new YouTubeExtractor(getBaseContext()) {
+                            @Override
+                            public void onExtractionComplete(SparseArray<YtFile> ytFiles, VideoMeta vMeta) {
+                                if (ytFiles != null) {
+                                    int itag = 22;
+                                    String downloadUrl = ytFiles.get(itag).getUrl();
+                                    DownloadManager downloadmanager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                                    DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
+                                    request.setTitle("Movie Funny");
+                                    request.setDescription(detailFilms.getTitle());
+                                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                                    request.setVisibleInDownloadsUi(false);
+                                    request.allowScanningByMediaScanner();
+                                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
+                                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Movie_Funny" +
+                                            "/" + detailFilms.getTitle() + ".mp4");
+                                    downloadmanager.enqueue(request);
                                 }
-                            }.extract(link);
-                        }
-                    } else
-                        Toast.makeText(getBaseContext(), "Please wait a minute", Toast.LENGTH_SHORT).show();
-                }
+                            }
+                        }.extract(link);
+                    }
+                } else
+                    Toast.makeText(getBaseContext(), "Please wait a minute", Toast.LENGTH_SHORT).show();
             }
         });
 

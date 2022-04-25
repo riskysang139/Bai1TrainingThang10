@@ -4,7 +4,9 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
 
+import com.example.moviefilm.film.cart.model.CartFB;
 import com.example.moviefilm.film.cart.repo.CartRepository;
 import com.example.moviefilm.roomdb.billdb.Bill;
 import com.example.moviefilm.roomdb.cartdb.Cart;
@@ -16,6 +18,7 @@ import io.reactivex.Flowable;
 
 public class CartViewModel extends AndroidViewModel {
     private CartRepository cartRepository;
+    private MutableLiveData<List<CartFB>> cartListMutableLiveData;
 
     public CartViewModel(@NonNull Application application) {
         super(application);
@@ -37,11 +40,6 @@ public class CartViewModel extends AndroidViewModel {
         return cartRepository.getFilmWithWatched(isWatched);
     }
 
-    //Delete Film Cart
-    public void deleteFilm(Cart cart){
-        cartRepository.deleteFilmID(cart);
-    }
-
     //Update Movie
     public void updateFilm(Film film){
         cartRepository.updateMovie(film);
@@ -55,5 +53,19 @@ public class CartViewModel extends AndroidViewModel {
     //Insert Bill
     public void insertBill(Bill bill){
         cartRepository.insertBill(bill);
+    }
+
+    public MutableLiveData<List<CartFB>> getCartListMutableLiveData() {
+        if (cartListMutableLiveData == null)
+            return cartRepository.getCartListResponseLiveData();
+        return cartListMutableLiveData;
+    }
+
+    public void setCartListMutableLiveData(MutableLiveData<List<CartFB>> cartListMutableLiveData) {
+        this.cartListMutableLiveData = cartListMutableLiveData;
+    }
+
+    public void fetchFilmCart() {
+        cartRepository.fetchFilmCart();
     }
 }

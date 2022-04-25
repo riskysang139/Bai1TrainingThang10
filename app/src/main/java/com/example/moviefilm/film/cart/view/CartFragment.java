@@ -21,6 +21,7 @@ import com.example.moviefilm.R;
 import com.example.moviefilm.base.Converter;
 import com.example.moviefilm.databinding.FragmentCartBinding;
 import com.example.moviefilm.film.cart.adapter.CartAdapter;
+import com.example.moviefilm.film.cart.model.CartFB;
 import com.example.moviefilm.film.cart.viewmodels.CartViewModel;
 import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.film.user.login.view.LoginActivity;
@@ -45,10 +46,8 @@ import io.reactivex.schedulers.Schedulers;
 public class CartFragment extends Fragment implements CartAdapter.OnCartClickListener {
     FragmentCartBinding binding;
     private CartAdapter cartAdapter;
-    private List<Cart> filmList;
+    private List<CartFB> filmList;
     private CartViewModel cartViewModel;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private CartAdapter.OnCartClickListener onCartClickListener;
     private String keyFrom = "";
     public static float totalPrice = 0;
     private FirebaseAuth firebaseAuth;
@@ -65,11 +64,18 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_cart, container, false);
-        firebaseAuth = FirebaseAuth.getInstance();
-        totalPrice = 0;
         cartViewModel = ViewModelProviders.of(this).get(CartViewModel.class);
-        observerCartFilm();
-        keyFrom = getArguments().getString(DetailFilmActivity.KEY_FROM, "");
+        firebaseAuth = FirebaseAuth.getInstance();
+        if (firebaseAuth.getCurrentUser() != null) {
+            cartViewModel.fetchFilmCart();
+            totalPrice = 0;
+            keyFrom = getArguments().getString(DetailFilmActivity.KEY_FROM, "");
+            binding.layoutLogin.setVisibility(View.VISIBLE);
+            binding.layoutNotLogin.setVisibility(View.GONE);
+        } else {
+            binding.layoutLogin.setVisibility(View.GONE);
+            binding.layoutNotLogin.setVisibility(View.VISIBLE);
+        }
         return binding.getRoot();
     }
 
@@ -77,40 +83,45 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         filmListBuy = new ArrayList<>();
+        filmList = new ArrayList<>();
         binding.totalPayment.setSelected(true);
         binding.btnBack.setVisibility(View.GONE);
         binding.rlPayment.setVisibility(View.VISIBLE);
         binding.btnPayment.setOnClickListener(view1 -> insertBill());
         initAdapter();
+        observerCartFilm();
+        initLogin();
+    }
+
+    private void initLogin() {
+        binding.btnOk.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(LoginActivity.KEY_FROM,DetailFilmActivity.FROM_CART);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        });
     }
 
     private void observerCartFilm() {
-        Disposable disposable = cartViewModel.getFilmCart().subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Cart>>() {
-                    @Override
-                    public void accept(List<Cart> carts) throws Exception {
-                        filmList = carts;
-                        if (carts.size() > 0) {
-                            binding.txtNoData.setVisibility(View.GONE);
-                            binding.rlPayment.setVisibility(View.VISIBLE);
-                            if (cartAdapter != null) {
-                                cartAdapter.setFilmListDB(carts);
-                                slPaymentAllFilm(carts);
-                            }
-                        } else {
-                            binding.txtNoData.setVisibility(View.VISIBLE);
-                            binding.rlPayment.setVisibility(View.GONE);
-                        }
-                    }
-                });
-        compositeDisposable.add(disposable);
+        cartViewModel.getCartListMutableLiveData().observe(getActivity(), cartList -> {
+            filmList = cartList;
+            if (filmList.size() > 0) {
+                binding.txtNoData.setVisibility(View.GONE);
+                binding.rlPayment.setVisibility(View.VISIBLE);
+                if (cartAdapter != null) {
+                    cartAdapter.setFilmListDB(filmList);
+                    slPaymentAllFilm(filmList);
+                }
+            } else {
+                binding.txtNoData.setVisibility(View.VISIBLE);
+                binding.rlPayment.setVisibility(View.GONE);
+            }
+        });
     }
 
     @SuppressLint("SetTextI18n")
     private void initAdapter() {
-        if (filmList == null)
-            filmList = new ArrayList<>();
         cartAdapter = new CartAdapter(filmList, getContext(), this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -120,11 +131,11 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onClickCart(int position, boolean isChoose, int numberChoice, Cart cart) {
+    public void onClickCart(int position, boolean isChoose, int numberChoice, CartFB cart) {
         if (isChoose) {
             totalPrice += (filmList.get(position).getFilmRate() * 4);
-            if (cart != null)
-                filmListBuy.add(cart);
+//            if (cart != null)
+//                filmListBuy.add(cart);
         } else {
             totalPrice -= (filmList.get(position).getFilmRate() * 4);
             if (cart != null)
@@ -146,17 +157,16 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void onCLickDelete(Cart film, int position) {
-        cartViewModel.deleteFilm(film);
+    public void onCLickDelete(CartFB film, int position) {
         cartAdapter.notifyItemRemoved(position);
     }
 
     @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
-    private void slPaymentAllFilm(List<Cart> filmList) {
+    private void slPaymentAllFilm(List<CartFB> filmList) {
         binding.cbSlAll.setOnClickListener(view -> {
             if (binding.cbSlAll.isChecked()) {
                 if (cartAdapter != null) {
-                    for (Cart film : filmList)
+                    for (CartFB film : filmList)
                         film.setChecked(true);
                     cartAdapter.setFilmListDB(filmList);
                     cartAdapter.notifyDataSetChanged();
@@ -166,7 +176,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
                     binding.btnPayment.setText("Payment (" + filmList.size() + ")");
                 }
             } else {
-                for (Cart film : filmList)
+                for (CartFB film : filmList)
                     film.setChecked(false);
                 cartAdapter.setFilmListDB(filmList);
                 cartAdapter.notifyDataSetChanged();
@@ -177,12 +187,6 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
             binding.totalPayment.setText("Total Payment : " + Converter.df.format(totalPrice) + " $");
         });
 
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        compositeDisposable.dispose();
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -227,7 +231,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
                                         Toast.makeText(getContext(), "Please Choose Film You Want To Buy !", Toast.LENGTH_LONG).show();
                                     else {
                                         for (Cart cart : filmListBuy)
-                                            cartViewModel.deleteFilm(cart);
+//                                            cartViewModel.deleteFilm(cart);
                                         filmListBuy.clear();
                                         CartAdapter.numberChoice = filmList.size();
                                     }

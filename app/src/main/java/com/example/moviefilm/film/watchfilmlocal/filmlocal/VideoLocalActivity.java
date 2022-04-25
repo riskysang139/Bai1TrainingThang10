@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.util.Rational;
 import android.util.SparseArray;
@@ -64,7 +63,7 @@ public class VideoLocalActivity extends AppCompatActivity implements View.OnClic
     private List<IconModel> iconModelList;
     private RecyclerView rcvIcon;
     private static boolean isMute = false;
-    private static boolean isNightMode = false;
+    private static boolean isLightMode = false;
 
     public enum ControlMode {
 
@@ -84,27 +83,6 @@ public class VideoLocalActivity extends AppCompatActivity implements View.OnClic
         getData();
 //        initYoutube();
         initAdapterIcon();
-    }
-
-    private void initYoutube() {
-        playerView = new SimpleExoPlayer.Builder(VideoLocalActivity.this).build();
-        new YouTubeExtractor(this)
-        {
-            @Override
-            protected void onExtractionComplete(@Nullable SparseArray<YtFile> ytFiles, @Nullable VideoMeta videoMeta) {
-                if (ytFiles != null) {
-                    int videoTag = 137;
-                    int audioTag = 140;
-                    concatenatingMediaSource = new ConcatenatingMediaSource();
-                    MediaSource mediaSource = new ProgressiveMediaSource.Factory(new DefaultHttpDataSource.Factory()).createMediaSource(MediaItem.fromUri(ytFiles.get(audioTag).getUrl()));
-                    MediaSource mediaSource1 = new ProgressiveMediaSource.Factory(new DefaultHttpDataSource.Factory()).createMediaSource(MediaItem.fromUri(ytFiles.get(videoTag).getUrl()));
-                    playerView.setMediaSource(new MergingMediaSource(true, mediaSource1, mediaSource), true);
-                }
-                playerView.prepare();
-                playerView.setPlayWhenReady(true);
-                playerView.seekTo(0,0);
-            }
-        }.extract("https://www.youtube.com/watch?v=iHpVBq0s8I4", false, true);
     }
 
     private void getData() {
@@ -207,10 +185,14 @@ public class VideoLocalActivity extends AppCompatActivity implements View.OnClic
         switch (view.getId()) {
             case R.id.img_next:
                 try {
-                    playerView.stop();
-                    position++;
-                    playVideo();
-                    btnPlay.setImageResource(R.drawable.pause_button);
+                    if (position == mediaFileList.size() - 1) {
+                        Toast.makeText(getBaseContext(), "No next video", Toast.LENGTH_SHORT).show();
+                    } else {
+                        playerView.stop();
+                        position++;
+                        playVideo();
+                        btnPlay.setImageResource(R.drawable.pause_button);
+                    }
                 } catch (Exception e) {
                     Toast.makeText(getBaseContext(), "No next video", Toast.LENGTH_LONG).show();
                 }
@@ -224,6 +206,7 @@ public class VideoLocalActivity extends AppCompatActivity implements View.OnClic
                 } catch (Exception e) {
                     Toast.makeText(getBaseContext(), "No previous video", Toast.LENGTH_LONG).show();
                 }
+                break;
             case R.id.img_back:
                 if (playerView != null) {
                     playerView.release();
@@ -330,18 +313,18 @@ public class VideoLocalActivity extends AppCompatActivity implements View.OnClic
                 }
                 break;
             case "dark_mode":
-                if (isNightMode) {
-                    isNightMode = false;
+                if (isLightMode) {
+                    isLightMode = false;
                     iconModel.setImageView(R.drawable.ic_baseline_nights_stay_24);
                     iconModel.setIconTitle("Dark mode");
                     playbackIconsAdapter.notifyItemChanged(position);
-                    binding.nightMode.setVisibility(View.VISIBLE);
+                    binding.nightMode.setVisibility(View.GONE);
                 } else {
-                    isNightMode = true;
+                    isLightMode = true;
                     iconModel.setImageView(R.drawable.ic_baseline_wb_sunny_24);
                     iconModel.setIconTitle("Light mode");
                     playbackIconsAdapter.notifyItemChanged(position);
-                    binding.nightMode.setVisibility(View.GONE);
+                    binding.nightMode.setVisibility(View.VISIBLE);
                 }
                 break;
         }

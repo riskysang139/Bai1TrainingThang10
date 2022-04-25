@@ -84,7 +84,7 @@ public class WatchFilmLocalFragment extends Fragment implements WatchFilmLocalAd
             if (mediaFiles.size() == 0) {
                 binding.txtNoData.setVisibility(View.VISIBLE);
             } else {
-                mediaFileList.addAll(mediaFiles);
+                mediaFileList = mediaFiles;
                 binding.txtNoData.setVisibility(View.GONE);
                 if (folderAdapter != null) {
                     folderAdapter.setMediaFileList(mediaFiles);
@@ -140,7 +140,6 @@ public class WatchFilmLocalFragment extends Fragment implements WatchFilmLocalAd
         Toast.makeText(getContext(), "Delete file successfully !", Toast.LENGTH_LONG).show();
         bottomSheetEditVideoLocalDialog.dismiss();
         viewModels.fetchListFilm(getContext());
-        SystemClock.sleep(200);
         binding.rcvFilmLocal.smoothScrollToPosition(0);
     }
 

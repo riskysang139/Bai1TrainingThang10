@@ -3,6 +3,10 @@ package com.example.moviefilm.film.cart.repo;
 import android.app.Application;
 import android.util.Log;
 
+import androidx.lifecycle.MutableLiveData;
+
+import com.example.moviefilm.film.cart.model.CartFB;
+import com.example.moviefilm.film.cart.model.CartResult;
 import com.example.moviefilm.roomdb.billdb.Bill;
 import com.example.moviefilm.roomdb.billdb.BillDao;
 import com.example.moviefilm.roomdb.billdb.BillDatabase;
@@ -12,7 +16,11 @@ import com.example.moviefilm.roomdb.cartdb.CartDatabase;
 import com.example.moviefilm.roomdb.filmdb.Film;
 import com.example.moviefilm.roomdb.filmdb.FilmDao;
 import com.example.moviefilm.roomdb.filmdb.FilmDatabase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -28,6 +36,10 @@ public class CartRepository {
     private CartDao cartDao;
     private BillDao billDao;
     private FilmDao filmDao;
+    private List<CartFB> cartList;
+    private MutableLiveData<List<CartFB>> cartListResponseLiveData = new MutableLiveData<>();
+    private FirebaseFirestore firebaseDB;
+    private Application application;
 
     public CartRepository(Application application) {
         FilmDatabase filmDatabase = FilmDatabase.getInstance(application);
@@ -36,6 +48,8 @@ public class CartRepository {
         cartDao = cartDatabase.cartDao();
         BillDatabase billDatabase = BillDatabase.getInstance(application);
         billDao = billDatabase.billDao();
+        firebaseDB = FirebaseFirestore.getInstance();
+        this.application = application;
     }
     //Get all film cart
     public Flowable<List<Cart>> getAllCart(){
@@ -158,6 +172,33 @@ public class CartRepository {
                         Log.d(TAG, "onError: Called"+e.getMessage());
                     }
                 });
+    }
+
+    public void fetchFilmCart() {
+        cartList = new ArrayList<>();
+        firebaseDB.collection("FilmCart")
+                .addSnapshotListener((value, error) -> {
+                    if (value.getDocumentChanges() != null) {
+                        for (DocumentChange doc : value.getDocumentChanges()) {
+                            if (doc.getDocument().getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                                if (doc.getType() == DocumentChange.Type.ADDED) {
+                                    CartResult cartResult = doc.getDocument().toObject(CartResult.class);
+                                    if (cartResult.getCart() != null) {
+                                        cartList.addAll(cartResult.getCart());
+                                        cartListResponseLiveData.postValue(cartList);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+        if (cartListResponseLiveData.getValue() == null)
+            cartListResponseLiveData.postValue(cartList);
+    }
+
+    public MutableLiveData<List<CartFB>> getCartListResponseLiveData() {
+        return cartListResponseLiveData;
     }
 
 }
