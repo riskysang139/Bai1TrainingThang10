@@ -5,13 +5,13 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class CartResult {
-    private List<CartFB> Cart;
+    private List<FilmBill.CartFB> Cart;
 
-    public List<CartFB> getCart() {
+    public List<FilmBill.CartFB> getCart() {
         return Cart;
     }
 
-    public void setCart(List<CartFB> cart) {
+    public void setCart(List<FilmBill.CartFB> cart) {
         Cart = cart;
     }
 }

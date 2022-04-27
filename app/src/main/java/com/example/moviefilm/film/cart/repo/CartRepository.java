@@ -3,10 +3,12 @@ package com.example.moviefilm.film.cart.repo;
 import android.app.Application;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.moviefilm.film.cart.model.CartFB;
+
 import com.example.moviefilm.film.cart.model.CartResult;
+import com.example.moviefilm.film.cart.model.FilmBill;
 import com.example.moviefilm.roomdb.billdb.Bill;
 import com.example.moviefilm.roomdb.billdb.BillDao;
 import com.example.moviefilm.roomdb.billdb.BillDatabase;
@@ -16,12 +18,21 @@ import com.example.moviefilm.roomdb.cartdb.CartDatabase;
 import com.example.moviefilm.roomdb.filmdb.Film;
 import com.example.moviefilm.roomdb.filmdb.FilmDao;
 import com.example.moviefilm.roomdb.filmdb.FilmDatabase;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
@@ -36,8 +47,8 @@ public class CartRepository {
     private CartDao cartDao;
     private BillDao billDao;
     private FilmDao filmDao;
-    private List<CartFB> cartList;
-    private MutableLiveData<List<CartFB>> cartListResponseLiveData = new MutableLiveData<>();
+    private List<FilmBill.CartFB> cartList;
+    private MutableLiveData<List<FilmBill.CartFB>> cartListResponseLiveData = new MutableLiveData<>();
     private FirebaseFirestore firebaseDB;
     private Application application;
 
@@ -51,8 +62,9 @@ public class CartRepository {
         firebaseDB = FirebaseFirestore.getInstance();
         this.application = application;
     }
+
     //Get all film cart
-    public Flowable<List<Cart>> getAllCart(){
+    public Flowable<List<Cart>> getAllCart() {
         return cartDao.getCart();
     }
 
@@ -78,23 +90,23 @@ public class CartRepository {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, "onError: "+e.getMessage());
+                        Log.d(TAG, "onError: " + e.getMessage());
                     }
                 });
     }
 
     //Get all film watch
-    public Flowable<List<Film>> getFilmWithWatched(int isWatched){
-        return filmDao.getFilmWatched(isWatched);
+    public Flowable<List<Film>> getFilmWithWatched(int isWatched, String userId) {
+        return filmDao.getFilmWatched(isWatched, userId );
     }
 
     //Get all film watch
-    public Flowable<List<Film>> getFilmWithLoved(int isWatched) {
-        return filmDao.getFilmLoved(isWatched);
+    public Flowable<List<Film>> getFilmWithLoved(int isWatched, String userId) {
+        return filmDao.getFilmLoved(isWatched, userId);
     }
 
     //Delete Movie Id
-    public void deleteFilmID(Cart cart){
+    public void deleteFilmID(Cart cart) {
         Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
@@ -115,18 +127,18 @@ public class CartRepository {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, "onError: "+ e.getMessage());
+                        Log.d(TAG, "onError: " + e.getMessage());
                     }
                 });
     }
 
     //Update Movie
-    public void updateMovie(final Film film){
-            Completable.fromAction(new Action() {
-                @Override
-                public void run() throws Exception {
-                    filmDao.updateFilm(film);
-                }
+    public void updateMovie(final Film film) {
+        Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                filmDao.updateFilm(film);
+            }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CompletableObserver() {
@@ -142,13 +154,13 @@ public class CartRepository {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, "onError: "+ e.getMessage());
+                        Log.d(TAG, "onError: " + e.getMessage());
                     }
                 });
     }
 
     //Delete all Movie in Cart
-    public void deleteAllMovies(){
+    public void deleteAllMovies() {
         Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
@@ -169,7 +181,7 @@ public class CartRepository {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, "onError: Called"+e.getMessage());
+                        Log.d(TAG, "onError: Called" + e.getMessage());
                     }
                 });
     }
@@ -193,12 +205,42 @@ public class CartRepository {
                         }
                     }
                 });
-        if (cartListResponseLiveData.getValue() == null)
-            cartListResponseLiveData.postValue(cartList);
     }
 
-    public MutableLiveData<List<CartFB>> getCartListResponseLiveData() {
+    public MutableLiveData<List<FilmBill.CartFB>> getCartListResponseLiveData() {
         return cartListResponseLiveData;
     }
 
+    public void deleteFilmLoveFirebase(int position, FilmBill.CartFB cartFB) {
+        firebaseDB.collection("FilmCart")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .update("Cart", FieldValue.arrayRemove(cartFB));
+    }
+
+    public void deleteAllFilmLoveFirebase() {
+        firebaseDB.collection("FilmCart")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .update("Cart", FieldValue.delete());
+    }
+
+    public void insertFilmBillFirebase(List<FilmBill.CartFB> listFilm, String price, String dayBuy, String id) {
+        Map<String, Object> docData = new HashMap<>();
+//
+        List<FilmBill> filmBillList = new ArrayList<>();
+        FilmBill filmBill = new FilmBill();
+        filmBill.setIdFilm(id);
+        filmBill.setListFilm(listFilm);
+        filmBill.setTotalPrice(price);
+        filmBill.setDayBuy(dayBuy);
+        filmBill.setTotalFilm(listFilm.size() + "");
+        filmBillList.add(filmBill);
+
+        docData.put("Bill", filmBillList);
+
+        DocumentReference documentReference = firebaseDB.collection("FilmBill")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        documentReference.update("Bill", FieldValue.arrayUnion(filmBill))
+                .addOnFailureListener(e -> documentReference.set(docData));
+    }
 }

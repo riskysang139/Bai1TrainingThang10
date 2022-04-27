@@ -11,20 +11,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moviefilm.R;
+import com.example.moviefilm.film.cart.model.FilmBill;
 import com.example.moviefilm.roomdb.billdb.Bill;
 
 import java.util.List;
 
 public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
-    List<Bill> billList;
+    List<FilmBill> billList;
     Context context;
 
-    public BillAdapter(List<Bill> billList, Context context) {
+    public BillAdapter(List<FilmBill> billList, Context context) {
         this.billList = billList;
         this.context = context;
     }
 
-    public void setBillList(List<Bill> billList) {
+    public void setBillList(List<FilmBill> billList) {
         this.billList = billList;
         notifyDataSetChanged();
     }
@@ -65,17 +66,17 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
             txtTotalPayment.setSelected(true);
             txtTotalProduct.setSelected(true);
             txtEmail.setSelected(true);
-            Bill bill = billList.get(position);
+            FilmBill filmBill = billList.get(position);
             if (position >= 0)
                 viewDivided.setVisibility(View.VISIBLE);
             else if (position == billList.size())
                 viewDivided.setVisibility(View.GONE);
             else
                 viewDivided.setVisibility(View.GONE);
-            txtEmail.setText("Email : "+bill.getIdUser());
-            txtDate.setText("Date buy : "+bill.getDateBuy());
-            txtTotalPayment.setText("Total payment : "+bill.getTotalPayment() + " $");
-            txtTotalProduct.setText("Total product : "+bill.getTotalFilmBuy());
+            txtEmail.setText("Id bill: " + filmBill.getIdFilm());
+            txtTotalPayment.setText("Total payment: " + filmBill.getTotalPrice() +"$");
+            txtTotalProduct.setText("Total product: " + filmBill.getTotalFilm());
+            txtDate.setText("Date buy: " + filmBill.getDayBuy());
         }
     }
 }

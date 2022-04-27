@@ -22,11 +22,11 @@ public interface FilmDao {
     @Query("SELECT * from movie_database WHERE filmId ==:id")
     Flowable<Film> getFilmWithId(String id);
 
-    @Query("SELECT * from movie_database WHERE film_watch ==:isWatched")
-    Flowable<List<Film>> getFilmWatched(int isWatched);
+    @Query("SELECT * from movie_database WHERE film_watch ==:isWatched AND userId ==:userId")
+    Flowable<List<Film>> getFilmWatched(int isWatched, String userId);
 
-    @Query("SELECT * from movie_database WHERE film_love ==:isLoved")
-    Flowable<List<Film>> getFilmLoved(int isLoved);
+    @Query("SELECT * from movie_database WHERE film_love ==:isLoved AND userId ==:userId")
+    Flowable<List<Film>> getFilmLoved(int isLoved, String userId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Film... films);

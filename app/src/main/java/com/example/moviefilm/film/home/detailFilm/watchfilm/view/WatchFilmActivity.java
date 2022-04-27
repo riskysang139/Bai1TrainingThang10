@@ -18,6 +18,7 @@ import com.example.moviefilm.databinding.ActivityWatchFilmBinding;
 import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.film.home.detailFilm.watchfilm.viewmodels.WatchFilmViewModels;
 import com.example.moviefilm.roomdb.filmdb.Film;
+import com.google.firebase.auth.FirebaseAuth;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 
@@ -82,6 +83,8 @@ public class WatchFilmActivity extends AppCompatActivity {
         if (films.getFilmWatch() == 0) {
             Film film = films;
             film.setFilmWatch(1);
+            if (FirebaseAuth.getInstance().getCurrentUser() != null)
+                film.setUserId(FirebaseAuth.getInstance().getCurrentUser().getUid());
             watchFilmViewModels.updateFilm(film);
         }
     }

@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.moviefilm.film.cart.model.FilmBill;
 import com.example.moviefilm.film.home.detailFilm.models.CastResponse;
 import com.example.moviefilm.film.home.detailFilm.models.DetailFilm;
 import com.example.moviefilm.film.home.detailFilm.models.VideoResponse;
@@ -13,7 +14,6 @@ import com.example.moviefilm.film.home.detailFilm.repo.DetailFilmRepo;
 import com.example.moviefilm.film.models.ResultResponse;
 import com.example.moviefilm.film.user.model.FilmLove;
 import com.example.moviefilm.roomdb.cartdb.Cart;
-import com.example.moviefilm.film.cart.model.CartFB;
 import com.example.moviefilm.roomdb.filmdb.Film;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class DetailFilmViewModels extends AndroidViewModel {
     private MutableLiveData<ResultResponse> similarFilmLiveData;
     private MutableLiveData<ResultResponse> recommendFilmLiveData;
     private MutableLiveData<CastResponse> castResponseMutableLiveData;
-    private MutableLiveData<List<CartFB>> cartListMutableLiveData;
+    private MutableLiveData<List<FilmBill.CartFB>> cartListMutableLiveData;
     private MutableLiveData<List<FilmLove>> filmLoveListMutableLiveData;
     private DetailFilmRepo detailFilmRepo;
 
@@ -113,7 +113,7 @@ public class DetailFilmViewModels extends AndroidViewModel {
         detailFilmRepo.fetchCastFilm(id,apiKey);
     }
 
-    public void insertFilmCartFirebase(List<CartFB> cartList) {
+    public void insertFilmCartFirebase(List<FilmBill.CartFB> cartList) {
         detailFilmRepo.insertFilmCartFirebase(cartList);
     }
 
@@ -121,13 +121,13 @@ public class DetailFilmViewModels extends AndroidViewModel {
         detailFilmRepo.fetchFilmCart();
     }
 
-    public MutableLiveData<List<CartFB>> getCartListMutableLiveData() {
+    public MutableLiveData<List<FilmBill.CartFB>> getCartListMutableLiveData() {
         if (cartListMutableLiveData == null)
             return detailFilmRepo.getCartListResponseLiveData();
         return cartListMutableLiveData;
     }
 
-    public void setCartListMutableLiveData(MutableLiveData<List<CartFB>> cartListMutableLiveData) {
+    public void setCartListMutableLiveData(MutableLiveData<List<FilmBill.CartFB>> cartListMutableLiveData) {
         this.cartListMutableLiveData = cartListMutableLiveData;
     }
 

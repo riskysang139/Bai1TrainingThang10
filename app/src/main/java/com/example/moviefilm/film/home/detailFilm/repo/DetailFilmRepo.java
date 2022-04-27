@@ -8,8 +8,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.moviefilm.base.FilmApi;
 import com.example.moviefilm.base.RetroClass;
-import com.example.moviefilm.film.cart.model.CartFB;
 import com.example.moviefilm.film.cart.model.CartResult;
+import com.example.moviefilm.film.cart.model.FilmBill;
 import com.example.moviefilm.film.home.detailFilm.models.CastResponse;
 import com.example.moviefilm.film.home.detailFilm.models.DetailFilm;
 import com.example.moviefilm.film.home.detailFilm.models.VideoResponse;
@@ -23,11 +23,9 @@ import com.example.moviefilm.roomdb.filmdb.Film;
 import com.example.moviefilm.roomdb.filmdb.FilmDao;
 import com.example.moviefilm.roomdb.filmdb.FilmDatabase;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,17 +51,17 @@ public class DetailFilmRepo {
     private MutableLiveData<ResultResponse> similarFilmMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<ResultResponse> recommendMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<CastResponse> castResponseMutableLiveData = new MutableLiveData<>();
-    private MutableLiveData<List<CartFB>> cartListResponseLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<FilmBill.CartFB>> cartListResponseLiveData = new MutableLiveData<>();
     private MutableLiveData<List<FilmLove>> filmLoveListResponseLiveData = new MutableLiveData<>();
     private FilmDao filmDao;
     private CartDao cartDao;
     private FirebaseFirestore firebaseDB;
     private Application application;
-    private List<CartFB> cartList;
+    private List<FilmBill.CartFB> cartList;
     private List<FilmLove> filmLoveList;
 
 
-    public List<CartFB> getCartList() {
+    public List<FilmBill.CartFB> getCartList() {
         return cartList;
     }
 
@@ -323,7 +321,7 @@ public class DetailFilmRepo {
         });
     }
 
-    public void insertFilmCartFirebase(List<CartFB> cartList) {
+    public void insertFilmCartFirebase(List<FilmBill.CartFB> cartList) {
         Map<String, Object> docData = new HashMap<>();
         docData.put("Cart", cartList);
 
@@ -359,7 +357,7 @@ public class DetailFilmRepo {
         cartListResponseLiveData.postValue(cartList);
     }
 
-    public MutableLiveData<List<CartFB>> getCartListResponseLiveData() {
+    public MutableLiveData<List<FilmBill.CartFB>> getCartListResponseLiveData() {
         return cartListResponseLiveData;
     }
 
@@ -382,7 +380,7 @@ public class DetailFilmRepo {
     public void deleteFilmLoveFirebase(int position) {
         firebaseDB.collection("FilmLove")
                 .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .update("Love", FieldValue.arrayRemove(position+ ""));
+                .update("Love", FieldValue.arrayRemove(position + ""));
     }
 
     public void fetchFilmLove() {

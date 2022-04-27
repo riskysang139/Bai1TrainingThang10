@@ -3,10 +3,19 @@ package com.example.moviefilm.film.user.bill.repo;
 import android.app.Application;
 import android.util.Log;
 
+import androidx.lifecycle.MutableLiveData;
+
+import com.example.moviefilm.film.cart.model.CartResult;
+import com.example.moviefilm.film.cart.model.FilmBill;
+import com.example.moviefilm.film.user.bill.model.BillResult;
 import com.example.moviefilm.roomdb.billdb.Bill;
 import com.example.moviefilm.roomdb.billdb.BillDao;
 import com.example.moviefilm.roomdb.billdb.BillDatabase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -20,11 +29,14 @@ import io.reactivex.schedulers.Schedulers;
 public class BillRepository {
     private static final String TAG = "TAG";
     private BillDao billDao;
-    private Flowable<List<Bill>> allBill;
+    private FirebaseFirestore firebaseDB;
+    private List<FilmBill> billList;
+    private MutableLiveData<List<FilmBill>> billListResponseLiveData = new MutableLiveData<>();
 
     public BillRepository(Application application) {
         BillDatabase billDatabase = BillDatabase.getInstance(application);
         billDao = billDatabase.billDao();
+        firebaseDB = FirebaseFirestore.getInstance();
     }
 
 
@@ -35,12 +47,7 @@ public class BillRepository {
 
     //Delete bill
     public void deleteBill(final Bill bill) {
-        Completable.fromAction(new Action() {
-            @Override
-            public void run() throws Exception {
-                billDao.deleteBill(bill);
-            }
-        }).subscribeOn(Schedulers.io())
+        Completable.fromAction(() -> billDao.deleteBill(bill)).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CompletableObserver() {
                     @Override
@@ -58,5 +65,30 @@ public class BillRepository {
                         Log.d(TAG, "onError: " + e.getMessage());
                     }
                 });
+    }
+
+    public void fetchFilmBill() {
+        billList = new ArrayList<>();
+        firebaseDB.collection("FilmBill")
+                .addSnapshotListener((value, error) -> {
+                    if (value.getDocumentChanges() != null) {
+                        for (DocumentChange doc : value.getDocumentChanges()) {
+                            if (doc.getDocument().getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                                if (doc.getType() == DocumentChange.Type.ADDED) {
+                                    BillResult billResult = doc.getDocument().toObject(BillResult.class);
+                                    if (billResult.getBill() != null) {
+                                        billList.addAll(billResult.getBill());
+                                        billListResponseLiveData.postValue(billList);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+    }
+
+    public MutableLiveData<List<FilmBill>> getBillResponseLiveData() {
+        return billListResponseLiveData;
     }
 }

@@ -5,8 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-
-import com.example.moviefilm.film.cart.model.CartFB;
+import com.example.moviefilm.film.cart.model.FilmBill;
 import com.example.moviefilm.film.cart.repo.CartRepository;
 import com.example.moviefilm.roomdb.billdb.Bill;
 import com.example.moviefilm.roomdb.cartdb.Cart;
@@ -18,7 +17,7 @@ import io.reactivex.Flowable;
 
 public class CartViewModel extends AndroidViewModel {
     private CartRepository cartRepository;
-    private MutableLiveData<List<CartFB>> cartListMutableLiveData;
+    private MutableLiveData<List<FilmBill.CartFB>> cartListMutableLiveData;
 
     public CartViewModel(@NonNull Application application) {
         super(application);
@@ -31,13 +30,13 @@ public class CartViewModel extends AndroidViewModel {
     }
 
     //Get Movie with love
-    public Flowable<List<Film>> getFilmWLoved(int isWatched) {
-        return cartRepository.getFilmWithLoved(isWatched);
+    public Flowable<List<Film>> getFilmWLoved(int isWatched, String userId) {
+        return cartRepository.getFilmWithLoved(isWatched, userId);
     }
 
     //Get Movie with watch
-    public Flowable<List<Film>> getFilmWatched(int isWatched) {
-        return cartRepository.getFilmWithWatched(isWatched);
+    public Flowable<List<Film>> getFilmWatched(int isWatched, String userId) {
+        return cartRepository.getFilmWithWatched(isWatched, userId);
     }
 
     //Update Movie
@@ -50,22 +49,34 @@ public class CartViewModel extends AndroidViewModel {
         cartRepository.deleteAllMovies();
     }
 
-    //Insert Bill
+    //Insert FilmBill
     public void insertBill(Bill bill){
         cartRepository.insertBill(bill);
     }
 
-    public MutableLiveData<List<CartFB>> getCartListMutableLiveData() {
+    public MutableLiveData<List<FilmBill.CartFB>> getCartListMutableLiveData() {
         if (cartListMutableLiveData == null)
             return cartRepository.getCartListResponseLiveData();
         return cartListMutableLiveData;
     }
 
-    public void setCartListMutableLiveData(MutableLiveData<List<CartFB>> cartListMutableLiveData) {
+    public void setCartListMutableLiveData(MutableLiveData<List<FilmBill.CartFB>> cartListMutableLiveData) {
         this.cartListMutableLiveData = cartListMutableLiveData;
     }
 
     public void fetchFilmCart() {
         cartRepository.fetchFilmCart();
+    }
+
+    public void deleteFilmCart(int position, FilmBill.CartFB cartFB) {
+        cartRepository.deleteFilmLoveFirebase(position, cartFB);
+    }
+
+    public void deleteAllFilmCart() {
+        cartRepository.deleteAllFilmLoveFirebase();
+    }
+
+    public void insertFilmBuy(List<FilmBill.CartFB> cartFBList, String totalFilm, String timeStamp, String id) {
+        cartRepository.insertFilmBillFirebase(cartFBList, totalFilm, timeStamp, id);
     }
 }

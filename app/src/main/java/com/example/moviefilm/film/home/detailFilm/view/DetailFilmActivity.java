@@ -22,11 +22,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.moviefilm.R;
@@ -36,6 +34,7 @@ import com.example.moviefilm.base.LoadingDialog;
 import com.example.moviefilm.base.OnClickListener;
 import com.example.moviefilm.base.customview.CircleAnimationUtil;
 import com.example.moviefilm.databinding.ActivityDetailFilmBinding;
+import com.example.moviefilm.film.cart.model.FilmBill;
 import com.example.moviefilm.film.home.adapter.FilmAdapter;
 import com.example.moviefilm.film.home.allfilm.view.AllFilmActivity;
 import com.example.moviefilm.film.home.detailFilm.adapter.CastAdapter;
@@ -47,7 +46,6 @@ import com.example.moviefilm.film.models.Results;
 import com.example.moviefilm.film.user.model.FilmLove;
 import com.example.moviefilm.film.view.MainActivity;
 import com.example.moviefilm.roomdb.cartdb.Cart;
-import com.example.moviefilm.film.cart.model.CartFB;
 import com.example.moviefilm.roomdb.filmdb.Film;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -100,7 +98,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
     private CastAdapter castAdapter;
     private FirebaseAuth firebaseAuth;
     private List<Cart> cartFilmList = new ArrayList<>();
-    private List<CartFB> cartFilmListFB = new ArrayList<>();
+    private List<FilmBill.CartFB> cartFilmListFB = new ArrayList<>();
     private List<FilmLove> filmLoveList = new ArrayList<>();
     private String videoResponseStr = "";
     private boolean seeMore = true;
@@ -157,6 +155,11 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
         binding.rlLove.setOnClickListener(view -> {
             if (firebaseAuth.getCurrentUser() == null) {
                 Toast.makeText(getBaseContext(), "Please login to add film to list love", Toast.LENGTH_SHORT).show();
+            }
+        });
+        binding.payment.setOnClickListener(view -> {
+            if (firebaseAuth.getCurrentUser() == null) {
+                Toast.makeText(getBaseContext(), "Please login to add film to cart", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -391,7 +394,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
             binding.payment.setVisibility(View.VISIBLE);
             if (cartFilmListFB != null) {
                 binding.txtNumCart.setText(cartFilmListFB.size() + "");
-                for (CartFB cartFB : cartFilmListFB) {
+                for (FilmBill.CartFB cartFB : cartFilmListFB) {
                     if (cartFB.getFilmId() == detailFilms.getId()) {
                         binding.payment.setVisibility(View.GONE);
                         break;
@@ -405,7 +408,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
                     @Override
                     public void onAnimationStart(Animator animator) {
                         if (cartFilmListFB != null || cartFilmListFB.size() != 0) {
-                            CartFB cartFB = new CartFB();
+                            FilmBill.CartFB cartFB = new FilmBill.CartFB();
                             cartFB.setFilmId(detailFilm.getId());
                             cartFB.setFilmName(detailFilm.getTitle());
                             cartFB.setFilmImage(MainActivity.HEADER_URL_IMAGE + detailFilm.getPosterPath());
@@ -457,6 +460,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
                 } else {
                     Film film = films;
                     film.setFilmLove(0);
+                    film.setUserId(firebaseUser.getUid());
                     detailFilmViewModels.updateFilm(film);
                     binding.imgHeart.setImageResource(R.drawable.heart);
                 }
@@ -468,12 +472,14 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
                 } else {
                     Film film = films;
                     film.setFilmLove(1);
+                    film.setUserId(firebaseUser.getUid());
                     detailFilmViewModels.updateFilm(film);
                     binding.imgHeart.setImageResource(R.drawable.heart_red);
                 }
             });
         }
     }
+
     private void refreshLayout() {
         Handler handler = new Handler();
         binding.swipeRefreshLayout.setOnRefreshListener(() -> handler.postDelayed(new Runnable() {

@@ -35,6 +35,15 @@ public class Film {
     private boolean isChecked2 = false;
 
     private float totalPrice;
+    private String userId ="";
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public Film(int filmId, String filmName, String filmImage, float filmRate, String filmReleaseDate, int filmLove, int isWantBuy, int filmWatch) {
         this.filmId = filmId;

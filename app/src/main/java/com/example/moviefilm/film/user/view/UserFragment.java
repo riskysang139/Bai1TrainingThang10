@@ -13,14 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.bumptech.glide.Glide;
 import com.example.moviefilm.R;
 import com.example.moviefilm.databinding.FragmentUserBinding;
+import com.example.moviefilm.film.cart.viewmodels.CartViewModel;
 import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.film.user.bill.view.BillActivity;
 import com.example.moviefilm.film.user.login.view.LoginActivity;
-import com.example.moviefilm.film.watchfilmlocal.view.WatchFilmLocalFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -28,6 +29,7 @@ public class UserFragment extends Fragment {
 
     FragmentUserBinding binding;
     private FirebaseAuth firebaseAuth;
+    private CartViewModel cartViewModel;
 
     public static UserFragment getInstance() {
         Bundle args = new Bundle();
@@ -41,6 +43,7 @@ public class UserFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_user, container, false);
         firebaseAuth = FirebaseAuth.getInstance();
+        cartViewModel = ViewModelProviders.of(this).get(CartViewModel.class);
         checkUser();
         return binding.getRoot();
     }
@@ -53,7 +56,7 @@ public class UserFragment extends Fragment {
         openBillScreen();
         openVideoHistory();
         openLoveHistory();
-        openFeaure();
+        openFeature();
         logOut();
     }
 
@@ -78,13 +81,18 @@ public class UserFragment extends Fragment {
             binding.bnLoveHis.setVisibility(View.VISIBLE);
             binding.btnBill.setVisibility(View.VISIBLE);
             binding.linearSignInUp.setVisibility(View.INVISIBLE);
-            if (firebaseUser.getDisplayName() == null || firebaseUser.getDisplayName().equals(""))
-                binding.txtTitleUserId.setVisibility(View.INVISIBLE);
-            else {
+            if (firebaseUser.getDisplayName() == null || firebaseUser.getDisplayName().equals("")) {
+                binding.titleNickName.setText("User id: ");
+                binding.txtUserId.setText(firebaseUser.getUid());
+            } else {
                 binding.txtUserId.setText(firebaseUser.getDisplayName());
-                binding.txtTitleUserId.setVisibility(View.VISIBLE);
             }
-            binding.txtEmail.setText(firebaseUser.getEmail());
+            if (firebaseUser.getEmail() == null || firebaseUser.getEmail().equals("")) {
+                binding.titleEmail.setText("User id: ");
+                binding.txtEmail.setText(firebaseUser.getUid());
+            } else {
+                binding.txtEmail.setText(firebaseUser.getEmail());
+            }
             if (firebaseUser.getPhotoUrl() == null || firebaseUser.getPhotoUrl().equals(""))
                 Glide.with(UserFragment.this).load(R.drawable.logo_movie_app).into(binding.imgProfile);
             else
@@ -93,28 +101,22 @@ public class UserFragment extends Fragment {
     }
 
     private void login() {
-        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString(LoginActivity.KEY_FROM, LoginActivity.FROM_LOGIN);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
+        binding.btnLogin.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(LoginActivity.KEY_FROM, LoginActivity.FROM_LOGIN);
+            intent.putExtras(bundle);
+            startActivity(intent);
         });
     }
 
     private void register() {
-        binding.btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString(LoginActivity.KEY_FROM, LoginActivity.FROM_REGISTER);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
+        binding.btnRegister.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(LoginActivity.KEY_FROM, LoginActivity.FROM_REGISTER);
+            intent.putExtras(bundle);
+            startActivity(intent);
         });
     }
 
@@ -143,12 +145,13 @@ public class UserFragment extends Fragment {
             new AlertDialog.Builder(getContext())
                     .setTitle("Notification")
                     .setMessage("Do you want to log out !")
-                    .setNegativeButton("Cancel", (dialogInterface, i) -> {})
+                    .setNegativeButton("Cancel", (dialogInterface, i) -> {
+                    })
                     .setPositiveButton("Yes", (dialogInterface, i) -> {
+                        cartViewModel.setCartListMutableLiveData(null);
                         firebaseAuth.signOut();
                         Toast.makeText(getContext(), "Log out Success !!!", Toast.LENGTH_SHORT).show();
                         checkUser();
-
                     }).setIcon(R.drawable.logo_movie_app)
                     .show();
         });
@@ -158,7 +161,7 @@ public class UserFragment extends Fragment {
         binding.btnBill.setOnClickListener(view -> startActivity(new Intent(getActivity(), BillActivity.class)));
     }
 
-    private void openFeaure() {
+    private void openFeature() {
         // about us
         binding.btnAboutUs.setOnClickListener(view -> {
             String url = "https://www.facebook.com/riskysang.139";
@@ -167,8 +170,8 @@ public class UserFragment extends Fragment {
             startActivity(i);
         });
         // feedback, setting, free data
-        binding.btnFreeData.setOnClickListener(view -> Toast.makeText(getContext(), "The feauture will be soon updated", Toast.LENGTH_LONG).show());
-        binding.btnSetting.setOnClickListener(view -> Toast.makeText(getContext(), "The feauture will be soon updated", Toast.LENGTH_LONG).show());
-        binding.btnFeedBack.setOnClickListener(view -> Toast.makeText(getContext(), "The feauture will be soon updated", Toast.LENGTH_LONG).show());
+        binding.btnFreeData.setOnClickListener(view -> Toast.makeText(getContext(), "The feature will be soon updated", Toast.LENGTH_LONG).show());
+        binding.btnSetting.setOnClickListener(view -> Toast.makeText(getContext(), "The feature will be soon updated", Toast.LENGTH_LONG).show());
+        binding.btnFeedBack.setOnClickListener(view -> Toast.makeText(getContext(), "The feature will be soon updated", Toast.LENGTH_LONG).show());
     }
 }

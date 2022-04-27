@@ -16,6 +16,7 @@ import com.example.moviefilm.film.cart.viewmodels.CartViewModel;
 import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.roomdb.cartdb.Cart;
 import com.example.moviefilm.roomdb.filmdb.Film;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +76,7 @@ public class HistoryFilmActivity extends AppCompatActivity implements HistoryFil
     }
 
     private void observerFilmWatched(int isWatched) {
-        Disposable disposable = filmViewModels.getFilmWatched(isWatched).subscribeOn(Schedulers.io())
+        Disposable disposable = filmViewModels.getFilmWatched(isWatched, FirebaseAuth.getInstance().getCurrentUser().getUid()).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(films -> {
                     if (films.size() > 0) {
@@ -94,7 +95,7 @@ public class HistoryFilmActivity extends AppCompatActivity implements HistoryFil
     }
 
     private void observerFilmLoved(int isLoved) {
-        Disposable disposable = filmViewModels.getFilmWLoved(isLoved).subscribeOn(Schedulers.io())
+        Disposable disposable = filmViewModels.getFilmWLoved(isLoved, FirebaseAuth.getInstance().getCurrentUser().getUid()).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(films -> {
                     if (films.size() > 0) {

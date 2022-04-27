@@ -21,14 +21,10 @@ import com.example.moviefilm.R;
 import com.example.moviefilm.base.Converter;
 import com.example.moviefilm.databinding.FragmentCartBinding;
 import com.example.moviefilm.film.cart.adapter.CartAdapter;
-import com.example.moviefilm.film.cart.model.CartFB;
+import com.example.moviefilm.film.cart.model.FilmBill;
 import com.example.moviefilm.film.cart.viewmodels.CartViewModel;
 import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.film.user.login.view.LoginActivity;
-import com.example.moviefilm.film.view.MainActivity;
-import com.example.moviefilm.roomdb.billdb.Bill;
-import com.example.moviefilm.roomdb.cartdb.Cart;
-import com.example.moviefilm.roomdb.filmdb.Film;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -37,21 +33,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-
 public class CartFragment extends Fragment implements CartAdapter.OnCartClickListener {
     FragmentCartBinding binding;
     private CartAdapter cartAdapter;
-    private List<CartFB> filmList;
+    private List<FilmBill.CartFB> filmList;
     private CartViewModel cartViewModel;
     private String keyFrom = "";
     public static float totalPrice = 0;
     private FirebaseAuth firebaseAuth;
-    private List<Cart> filmListBuy;
+    private List<FilmBill.CartFB> filmListBuy;
 
     public static CartFragment getInstance() {
         Bundle args = new Bundle();
@@ -97,7 +87,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
         binding.btnOk.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putString(LoginActivity.KEY_FROM,DetailFilmActivity.FROM_CART);
+            bundle.putString(LoginActivity.KEY_FROM, DetailFilmActivity.FROM_CART);
             intent.putExtras(bundle);
             startActivity(intent);
         });
@@ -106,12 +96,12 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
     private void observerCartFilm() {
         cartViewModel.getCartListMutableLiveData().observe(getActivity(), cartList -> {
             filmList = cartList;
-            if (filmList.size() > 0) {
+            if (cartList.size() > 0) {
                 binding.txtNoData.setVisibility(View.GONE);
                 binding.rlPayment.setVisibility(View.VISIBLE);
                 if (cartAdapter != null) {
-                    cartAdapter.setFilmListDB(filmList);
-                    slPaymentAllFilm(filmList);
+                    cartAdapter.setFilmListDB(cartList);
+                    slPaymentAllFilm(cartList);
                 }
             } else {
                 binding.txtNoData.setVisibility(View.VISIBLE);
@@ -120,9 +110,20 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
         });
     }
 
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
+        if (menuVisible && FirebaseAuth.getInstance().getCurrentUser() == null) {
+            binding.layoutNotLogin.setVisibility(View.VISIBLE);
+            binding.layoutLogin.setVisibility(View.GONE);
+        } else if (menuVisible && FirebaseAuth.getInstance().getCurrentUser() != null) {
+            cartViewModel.fetchFilmCart();
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     private void initAdapter() {
-        cartAdapter = new CartAdapter(filmList, getContext(), this);
+        cartAdapter = new CartAdapter(new ArrayList<>(), getContext(), this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         binding.rcvCart.setLayoutManager(layoutManager);
@@ -131,15 +132,15 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onClickCart(int position, boolean isChoose, int numberChoice, CartFB cart) {
+    public void onClickCart(int position, boolean isChoose, int numberChoice, FilmBill.CartFB cart) {
         if (isChoose) {
             totalPrice += (filmList.get(position).getFilmRate() * 4);
-//            if (cart != null)
-//                filmListBuy.add(cart);
+            filmListBuy.add(cart);
         } else {
             totalPrice -= (filmList.get(position).getFilmRate() * 4);
-            if (cart != null)
-                filmListBuy.remove(cart);
+            if (totalPrice <= 0)
+                totalPrice = 0;
+            filmListBuy.remove(cart);
         }
         binding.totalPayment.setText("Total Payment : " + Converter.df.format(totalPrice) + " $");
         binding.btnPayment.setText("Payment (" + numberChoice + ")");
@@ -157,16 +158,19 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
-    public void onCLickDelete(CartFB film, int position) {
+    public void onCLickDelete(FilmBill.CartFB film, int position) {
+        cartViewModel.deleteFilmCart(position, film);
+        filmList.remove(position);
         cartAdapter.notifyItemRemoved(position);
+        cartViewModel.fetchFilmCart();
     }
 
     @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
-    private void slPaymentAllFilm(List<CartFB> filmList) {
+    private void slPaymentAllFilm(List<FilmBill.CartFB> filmList) {
         binding.cbSlAll.setOnClickListener(view -> {
             if (binding.cbSlAll.isChecked()) {
                 if (cartAdapter != null) {
-                    for (CartFB film : filmList)
+                    for (FilmBill.CartFB film : filmList)
                         film.setChecked(true);
                     cartAdapter.setFilmListDB(filmList);
                     cartAdapter.notifyDataSetChanged();
@@ -176,7 +180,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
                     binding.btnPayment.setText("Payment (" + filmList.size() + ")");
                 }
             } else {
-                for (CartFB film : filmList)
+                for (FilmBill.CartFB film : filmList)
                     film.setChecked(false);
                 cartAdapter.setFilmListDB(filmList);
                 cartAdapter.notifyDataSetChanged();
@@ -201,7 +205,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Intent intent = new Intent(getActivity(), LoginActivity.class);
                             Bundle bundle = new Bundle();
-                            bundle.putString(LoginActivity.KEY_FROM,DetailFilmActivity.FROM_CART);
+                            bundle.putString(LoginActivity.KEY_FROM, DetailFilmActivity.FROM_CART);
                             intent.putExtras(bundle);
                             startActivity(intent);
                         }
@@ -220,18 +224,28 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
-                                cartViewModel.insertBill(new Bill(CartAdapter.numberChoice, totalPrice, timeStamp, firebaseUser.getEmail()));
+                                long unixTime = System.currentTimeMillis();
                                 if (binding.cbSlAll.isChecked()) {
-                                    cartViewModel.deleteAllFilm();
+                                    cartViewModel.insertFilmBuy(filmList, totalPrice + "", timeStamp, unixTime + "");
+                                    cartViewModel.deleteAllFilmCart();
+                                    cartViewModel.fetchFilmCart();
+                                    binding.cbSlAll.setChecked(false);
                                     filmList.clear();
-                                    binding.cbSlAll.setSelected(false);
+                                    filmListBuy.clear();
                                     CartAdapter.numberChoice = 0;
+                                    totalPrice = 0;
+                                    binding.txtNoData.setVisibility(View.VISIBLE);
+                                    cartAdapter.notifyDataSetChanged();
                                 } else {
                                     if (filmListBuy.size() == 0)
                                         Toast.makeText(getContext(), "Please Choose Film You Want To Buy !", Toast.LENGTH_LONG).show();
                                     else {
-                                        for (Cart cart : filmListBuy)
-//                                            cartViewModel.deleteFilm(cart);
+                                        cartViewModel.insertFilmBuy(filmListBuy, totalPrice + " $", timeStamp, unixTime + "");
+                                        for (FilmBill.CartFB cart : filmListBuy)
+                                            cartViewModel.deleteFilmCart(1, cart);
+                                        cartViewModel.fetchFilmCart();
+                                        cartAdapter.notifyDataSetChanged();
+                                        totalPrice = 0;
                                         filmListBuy.clear();
                                         CartAdapter.numberChoice = filmList.size();
                                     }
@@ -246,4 +260,5 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
             }
         }
     }
+
 }

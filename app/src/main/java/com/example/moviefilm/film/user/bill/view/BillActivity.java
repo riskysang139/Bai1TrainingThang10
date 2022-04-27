@@ -2,6 +2,7 @@ package com.example.moviefilm.film.user.bill.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -11,6 +12,7 @@ import android.view.View;
 
 import com.example.moviefilm.R;
 import com.example.moviefilm.databinding.ActivityBillBinding;
+import com.example.moviefilm.film.cart.model.FilmBill;
 import com.example.moviefilm.film.user.bill.adapter.BillAdapter;
 import com.example.moviefilm.film.user.bill.viewmodel.BillViewModel;
 import com.example.moviefilm.roomdb.billdb.Bill;
@@ -29,15 +31,17 @@ public class BillActivity extends AppCompatActivity {
     private BillViewModel billViewModel;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private BillAdapter billAdapter;
-    private List<Bill> billList;
+    private List<FilmBill> billList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_bill);
         billViewModel = ViewModelProviders.of(this).get(BillViewModel.class);
-        observerData();
+        billViewModel.fetchFilmBill();
+//        observerData();
         initAdapter();
+        observeFilmBill();
         initView();
     }
 
@@ -48,14 +52,28 @@ public class BillActivity extends AppCompatActivity {
                     if (bills.size() > 0) {
                         binding.rcvBill.setVisibility(View.VISIBLE);
                         binding.txtNoData.setVisibility(View.GONE);
-                        if (billAdapter != null)
-                            billAdapter.setBillList(bills);
+//                        if (billAdapter != null)
+//                            billAdapter.setBillList(bills);
                     } else {
                         binding.rcvBill.setVisibility(View.GONE);
                         binding.txtNoData.setVisibility(View.VISIBLE);
                     }
                 });
         compositeDisposable.add(disposable);
+    }
+
+    private void observeFilmBill() {
+        billViewModel.getBillListResponseLiveData().observe(this, filmBills -> {
+            if (filmBills.size() > 0) {
+                binding.rcvBill.setVisibility(View.VISIBLE);
+                binding.txtNoData.setVisibility(View.GONE);
+                if (billAdapter != null)
+                    billAdapter.setBillList(filmBills);
+            } else {
+                binding.rcvBill.setVisibility(View.GONE);
+                binding.txtNoData.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     private void initAdapter() {

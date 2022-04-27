@@ -18,26 +18,27 @@ import com.bumptech.glide.Glide;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.example.moviefilm.R;
-import com.example.moviefilm.film.cart.model.CartFB;
-import com.example.moviefilm.roomdb.cartdb.Cart;
+import com.example.moviefilm.film.cart.model.FilmBill;
 
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
-    private List<CartFB> filmListDB;
+    private List<FilmBill.CartFB> filmListDB;
     private final Context context;
     public OnCartClickListener onCartClickListener;
     private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
     public static int numberChoice = 0;
     private String isCheckScreen = "";
+    private boolean isChecked = false;
 
-    public CartAdapter(List<CartFB> filmListDB, Context context, OnCartClickListener onCartClickListener) {
+    public CartAdapter(List<FilmBill.CartFB> filmListDB, Context context, OnCartClickListener onCartClickListener) {
         this.filmListDB = filmListDB;
         this.context = context;
         this.onCartClickListener = onCartClickListener;
     }
 
-    public void setFilmListDB(List<CartFB> filmListDB) {
+    @SuppressLint("NotifyDataSetChanged")
+    public void setFilmListDB(List<FilmBill.CartFB> filmListDB) {
         this.filmListDB = filmListDB;
         notifyDataSetChanged();
     }
@@ -84,18 +85,20 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
         @SuppressLint("SetTextI18n")
         private void initView(int position) {
-            CartFB film = filmListDB.get(position);
+            FilmBill.CartFB film = filmListDB.get(position);
             Glide.with(context).load(film.getFilmImage()).into(imgFilm);
             txtPrice.setText(film.getFilmRate() * 4 + " $");
             txtNameFilm.setText(film.getFilmName());
             txtReleaseDate.setText(film.getFilmReleaseDate());
             cbCart.setOnClickListener(view -> {
                 if (cbCart.isChecked()) {
+                    isChecked = true;
                     numberChoice++;
-                    onCartClickListener.onClickCart(position, true, numberChoice, film);
+                    onCartClickListener.onClickCart(position, isChecked, numberChoice, film);
                 } else {
+                    isChecked = false;
                     numberChoice--;
-                    onCartClickListener.onClickCart(position, false, numberChoice, film);
+                    onCartClickListener.onClickCart(position, isChecked, numberChoice, film);
                 }
             });
             if (film.isChecked()) {
@@ -110,7 +113,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             rlDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    filmListDB.remove(position);
                     onCartClickListener.onCLickDelete(film, position);
                 }
             });
@@ -119,11 +121,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     }
 
     public interface OnCartClickListener {
-        void onClickCart(int position, boolean isChoose, int numberChoice, CartFB cart);
+        void onClickCart(int position, boolean isChoose, int numberChoice, FilmBill.CartFB cart);
 
         void onClickDetail(String id);
 
-        void onCLickDelete(CartFB film, int position);
+        void onCLickDelete(FilmBill.CartFB film, int position);
     }
 
 }
