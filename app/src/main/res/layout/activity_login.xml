@@ -13,7 +13,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/image_login">
+        android:background="@drawable/image_login"
+        android:paddingTop="20dp">
 
         <ImageView
             android:id="@+id/btn_back"

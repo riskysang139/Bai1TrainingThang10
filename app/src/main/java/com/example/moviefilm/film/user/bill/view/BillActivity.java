@@ -6,9 +6,11 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.moviefilm.R;
 import com.example.moviefilm.databinding.ActivityBillBinding;
@@ -39,27 +41,11 @@ public class BillActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_bill);
         billViewModel = ViewModelProviders.of(this).get(BillViewModel.class);
         billViewModel.fetchFilmBill();
-//        observerData();
+        billViewModel.fetchMyWallet();
         initAdapter();
         observeFilmBill();
+        observeFilmWallet();
         initView();
-    }
-
-    private void observerData() {
-        Disposable disposable = billViewModel.getAllBill().subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(bills -> {
-                    if (bills.size() > 0) {
-                        binding.rcvBill.setVisibility(View.VISIBLE);
-                        binding.txtNoData.setVisibility(View.GONE);
-//                        if (billAdapter != null)
-//                            billAdapter.setBillList(bills);
-                    } else {
-                        binding.rcvBill.setVisibility(View.GONE);
-                        binding.txtNoData.setVisibility(View.VISIBLE);
-                    }
-                });
-        compositeDisposable.add(disposable);
     }
 
     private void observeFilmBill() {
@@ -76,6 +62,14 @@ public class BillActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("SetTextI18n")
+    private void observeFilmWallet() {
+        billViewModel.getWalletResponseLiveData().observe(this, filmWallet -> {
+            if (filmWallet != null)
+                binding.txtMoney.setText(Long.parseLong(filmWallet.getTotalMoney()) + " $");
+        });
+    }
+
     private void initAdapter() {
         if (billList == null)
             billList = new ArrayList<>();
@@ -87,17 +81,10 @@ public class BillActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        binding.btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        compositeDisposable.dispose();
+        binding.btnBack.setOnClickListener(view -> finish());
+        binding.layoutPayment.setOnClickListener(view -> Toast.makeText(getBaseContext(), "The feature will be update soon", Toast.LENGTH_SHORT).show());
+        binding.layoutScan.setOnClickListener(view -> Toast.makeText(getBaseContext(), "The feature will be update soon", Toast.LENGTH_SHORT).show());
+        binding.layoutTopUp.setOnClickListener(view -> Toast.makeText(getBaseContext(), "The feature will be update soon", Toast.LENGTH_SHORT).show());
+        binding.layoutTransfer.setOnClickListener(view -> Toast.makeText(getBaseContext(), "The feature will be update soon", Toast.LENGTH_SHORT).show());
     }
 }

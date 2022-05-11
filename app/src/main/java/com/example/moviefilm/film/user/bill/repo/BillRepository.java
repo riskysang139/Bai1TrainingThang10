@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.moviefilm.film.cart.model.CartResult;
 import com.example.moviefilm.film.cart.model.FilmBill;
 import com.example.moviefilm.film.user.bill.model.BillResult;
+import com.example.moviefilm.film.user.bill.model.Wallet;
 import com.example.moviefilm.roomdb.billdb.Bill;
 import com.example.moviefilm.roomdb.billdb.BillDao;
 import com.example.moviefilm.roomdb.billdb.BillDatabase;
@@ -32,6 +33,7 @@ public class BillRepository {
     private FirebaseFirestore firebaseDB;
     private List<FilmBill> billList;
     private MutableLiveData<List<FilmBill>> billListResponseLiveData = new MutableLiveData<>();
+    private MutableLiveData<Wallet.WalletResult> walletResponseLiveData = new MutableLiveData<>();
 
     public BillRepository(Application application) {
         BillDatabase billDatabase = BillDatabase.getInstance(application);
@@ -90,5 +92,28 @@ public class BillRepository {
 
     public MutableLiveData<List<FilmBill>> getBillResponseLiveData() {
         return billListResponseLiveData;
+    }
+
+    public void fetchMyWallet() {
+        firebaseDB.collection("FilmWallet")
+                .addSnapshotListener((value, error) -> {
+                    if (value.getDocumentChanges() != null) {
+                        for (DocumentChange doc : value.getDocumentChanges()) {
+                            if (doc.getDocument().getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                                if (doc.getType() == DocumentChange.Type.ADDED) {
+                                    Wallet wallet = doc.getDocument().toObject(Wallet.class);
+                                    if (wallet.getWallet() != null) {
+                                        walletResponseLiveData.postValue(wallet.getWallet());
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+    }
+
+    public MutableLiveData<Wallet.WalletResult> getWalletResponseLiveData() {
+        return walletResponseLiveData;
     }
 }

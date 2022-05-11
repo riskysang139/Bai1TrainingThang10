@@ -2,10 +2,13 @@ package com.example.moviefilm.film.home.detailFilm.watchfilm.view;
 
 import android.app.PictureInPictureParams;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Rational;
+import android.view.View;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +20,7 @@ import com.example.moviefilm.R;
 import com.example.moviefilm.databinding.ActivityWatchFilmBinding;
 import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.film.home.detailFilm.watchfilm.viewmodels.WatchFilmViewModels;
+import com.example.moviefilm.film.view.MainActivity;
 import com.example.moviefilm.roomdb.filmdb.Film;
 import com.google.firebase.auth.FirebaseAuth;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
@@ -39,6 +43,10 @@ public class WatchFilmActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_watch_film);
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(Color.BLACK);
+        }
+
         getData();
         watchFilmViewModels = ViewModelProviders.of(this).get(WatchFilmViewModels.class);
         observerFilm();

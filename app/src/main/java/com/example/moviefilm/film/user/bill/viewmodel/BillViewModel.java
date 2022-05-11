@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.moviefilm.film.cart.model.FilmBill;
+import com.example.moviefilm.film.user.bill.model.Wallet;
 import com.example.moviefilm.film.user.bill.repo.BillRepository;
 import com.example.moviefilm.roomdb.billdb.Bill;
 
@@ -17,6 +18,7 @@ import io.reactivex.Flowable;
 public class BillViewModel extends AndroidViewModel {
     private BillRepository billRepository;
     private MutableLiveData<List<FilmBill>> billListResponseLiveData;
+    private MutableLiveData<Wallet.WalletResult> walletResponseLiveData;
 
     public BillViewModel(@NonNull Application application) {
         super(application);
@@ -43,7 +45,14 @@ public class BillViewModel extends AndroidViewModel {
         return billListResponseLiveData;
     }
 
-    public void setBillListResponseLiveData(MutableLiveData<List<FilmBill>> billListResponseLiveData) {
-        this.billListResponseLiveData = billListResponseLiveData;
+    public void fetchMyWallet() {
+        billRepository.fetchMyWallet();
+    }
+
+
+    public MutableLiveData<Wallet.WalletResult> getWalletResponseLiveData() {
+        if (walletResponseLiveData == null)
+            return billRepository.getWalletResponseLiveData();
+        return walletResponseLiveData;
     }
 }

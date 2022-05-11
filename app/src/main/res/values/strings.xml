@@ -17,5 +17,7 @@
     <string name="title_cart_fragment" translatable="false">Cart</string>
     <string name="facebook_app_id">344120937612160</string>
     <string name="fb_login_protocol_scheme">fb344120937612160</string>
+    <string name="payment">Payment</string>
+    <string name="completed">Completed</string>
 
 </resources>

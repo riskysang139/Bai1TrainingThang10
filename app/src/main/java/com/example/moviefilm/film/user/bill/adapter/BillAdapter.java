@@ -48,7 +48,7 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txtTotalPayment, txtEmail, txtTotalProduct, txtDate;
+        TextView txtTotalPayment, txtTotalProduct, txtDate;
         View viewDivided;
 
         public ViewHolder(@NonNull View itemView) {
@@ -56,7 +56,6 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
             txtDate = itemView.findViewById(R.id.txt_date_buy);
             txtTotalPayment = itemView.findViewById(R.id.txt_total_payment);
             txtTotalProduct = itemView.findViewById(R.id.txt_total_product);
-            txtEmail = itemView.findViewById(R.id.txt_email);
             viewDivided = itemView.findViewById(R.id.view_divide);
         }
 
@@ -64,8 +63,6 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
         private void initView(int position) {
             txtDate.setSelected(true);
             txtTotalPayment.setSelected(true);
-            txtTotalProduct.setSelected(true);
-            txtEmail.setSelected(true);
             FilmBill filmBill = billList.get(position);
             if (position >= 0)
                 viewDivided.setVisibility(View.VISIBLE);
@@ -73,10 +70,8 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
                 viewDivided.setVisibility(View.GONE);
             else
                 viewDivided.setVisibility(View.GONE);
-            txtEmail.setText("Id bill: " + filmBill.getIdFilm());
-            txtTotalPayment.setText("Total payment: " + filmBill.getTotalPrice() +"$");
-            txtTotalProduct.setText("Total product: " + filmBill.getTotalFilm());
-            txtDate.setText("Date buy: " + filmBill.getDayBuy());
+            txtTotalPayment.setText(filmBill.getTotalPrice() +"$");
+            txtDate.setText(filmBill.getDayBuy());
         }
     }
 }

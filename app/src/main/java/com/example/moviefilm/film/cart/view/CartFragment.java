@@ -168,6 +168,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
     @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
     private void slPaymentAllFilm(List<FilmBill.CartFB> filmList) {
         binding.cbSlAll.setOnClickListener(view -> {
+            totalPrice = 0;
             if (binding.cbSlAll.isChecked()) {
                 if (cartAdapter != null) {
                     for (FilmBill.CartFB film : filmList)
@@ -223,35 +224,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
-                                long unixTime = System.currentTimeMillis();
-                                if (binding.cbSlAll.isChecked()) {
-                                    cartViewModel.insertFilmBuy(filmList, totalPrice + "", timeStamp, unixTime + "");
-                                    cartViewModel.deleteAllFilmCart();
-                                    cartViewModel.fetchFilmCart();
-                                    binding.cbSlAll.setChecked(false);
-                                    filmList.clear();
-                                    filmListBuy.clear();
-                                    CartAdapter.numberChoice = 0;
-                                    totalPrice = 0;
-                                    binding.txtNoData.setVisibility(View.VISIBLE);
-                                    cartAdapter.notifyDataSetChanged();
-                                } else {
-                                    if (filmListBuy.size() == 0)
-                                        Toast.makeText(getContext(), "Please Choose Film You Want To Buy !", Toast.LENGTH_LONG).show();
-                                    else {
-                                        cartViewModel.insertFilmBuy(filmListBuy, totalPrice + " $", timeStamp, unixTime + "");
-                                        for (FilmBill.CartFB cart : filmListBuy)
-                                            cartViewModel.deleteFilmCart(1, cart);
-                                        cartViewModel.fetchFilmCart();
-                                        cartAdapter.notifyDataSetChanged();
-                                        totalPrice = 0;
-                                        filmListBuy.clear();
-                                        CartAdapter.numberChoice = filmList.size();
-                                    }
-                                }
-                                Toast.makeText(getContext(), "Buy Film SuccessFully !", Toast.LENGTH_LONG).show();
-                                cartAdapter.notifyDataSetChanged();
+                                paymentFilm();
                             }
                         })
                         .setNegativeButton("No", null)
@@ -259,6 +232,39 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
                         .show();
             }
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void paymentFilm() {
+        @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+        long unixTime = System.currentTimeMillis();
+        if (binding.cbSlAll.isChecked()) {
+            cartViewModel.insertFilmBuy(filmList, totalPrice + "", timeStamp, unixTime + "");
+            cartViewModel.deleteAllFilmCart();
+            cartViewModel.fetchFilmCart();
+            binding.cbSlAll.setChecked(false);
+            filmList.clear();
+            filmListBuy.clear();
+            CartAdapter.numberChoice = 0;
+            totalPrice = 0;
+            binding.txtNoData.setVisibility(View.VISIBLE);
+            cartAdapter.notifyDataSetChanged();
+        } else {
+            if (filmListBuy.size() == 0)
+                Toast.makeText(getContext(), "Please Choose Film You Want To Buy !", Toast.LENGTH_LONG).show();
+            else {
+                cartViewModel.insertFilmBuy(filmListBuy, totalPrice + " $", timeStamp, unixTime + "");
+                for (FilmBill.CartFB cart : filmListBuy)
+                    cartViewModel.deleteFilmCart(1, cart);
+                cartViewModel.fetchFilmCart();
+                cartAdapter.notifyDataSetChanged();
+                totalPrice = 0;
+                filmListBuy.clear();
+                CartAdapter.numberChoice = filmList.size();
+            }
+        }
+        Toast.makeText(getContext(), "Buy Film SuccessFully !", Toast.LENGTH_LONG).show();
+        cartAdapter.notifyDataSetChanged();
     }
 
 }

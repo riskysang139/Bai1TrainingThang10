@@ -12,14 +12,14 @@
             android:id="@+id/ll_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
 
             <ImageView
                 android:id="@+id/btn_back"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_45sdp"
                 android:layout_marginLeft="15dp"
-                android:layout_marginTop="@dimen/_15sdp"
                 android:padding="8dp"
                 android:src="@drawable/vtecom_ic_back"
                 android:visibility="visible" />
@@ -28,31 +28,192 @@
                 android:id="@+id/txt_title"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_45sdp"
-                android:layout_marginTop="@dimen/_15sdp"
                 android:fontFamily="@font/beau_sans_pro_bold"
                 android:gravity="left|center"
                 android:paddingStart="@dimen/_15sdp"
-                android:text="Bill"
+                android:text="My Wallet"
                 android:textColor="#ffffff"
                 android:textSize="@dimen/_22sdp"
                 android:textStyle="bold"
                 tools:ignore="RtlSymmetry,SpUsage" />
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rcv_bill"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/ll_header" />
-
         <TextView
-            android:id="@+id/txt_no_data"
+            android:id="@+id/txt_money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_below="@id/ll_header"
+            android:layout_marginTop="10dp"
             android:fontFamily="@font/beau_sans_pro_bold"
-            android:text="No data"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:gravity="left|center"
+            android:paddingStart="16dp"
+            android:text="0 $"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:ignore="RtlSymmetry,SpUsage" />
+
+        <LinearLayout
+            android:id="@+id/layout_payment"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_below="@id/txt_money"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_wallet">
+
+            <LinearLayout
+                android:id="@+id/layout_top_up"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_wallet" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/beau_sans_pro_bold"
+                    android:gravity="center_horizontal"
+                    android:text="Top Up"
+                    android:textColor="#ffffff"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_scan"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_scan" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/beau_sans_pro_bold"
+                    android:gravity="center_horizontal"
+                    android:text="Scan"
+                    android:textColor="#ffffff"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_pay"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_qr" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/beau_sans_pro_bold"
+                    android:gravity="center_horizontal"
+                    android:text="Pay"
+                    android:textColor="#ffffff"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_transfer"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_transfer_new" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/beau_sans_pro_bold"
+                    android:gravity="center_horizontal"
+                    android:text="Transfer"
+                    android:textColor="#ffffff"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txt_title_transaction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_payment"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/beau_sans_pro_bold"
+            android:gravity="center_horizontal"
+            android:text="Transaction History"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/view_divide"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/txt_title_transaction"
+            android:layout_marginTop="10dp"
+            android:background="@color/category" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/view_divide"
+            android:layout_marginTop="10dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcv_bill"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/txt_no_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/beau_sans_pro_bold"
+                android:text="No data"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+        </RelativeLayout>
     </RelativeLayout>
 </layout>

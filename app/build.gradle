@@ -139,6 +139,7 @@ dependencies {
 
     implementation 'com.google.android.exoplayer:exoplayer:2.14.1'
 
-
     implementation 'androidx.multidex:multidex:2.0.1'
+
+    implementation 'me.relex:circleindicator:2.1.6'
 }

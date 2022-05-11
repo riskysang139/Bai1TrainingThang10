@@ -1,10 +1,13 @@
 package com.example.moviefilm.film.user.login.view;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,8 +19,10 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.moviefilm.R;
 import com.example.moviefilm.databinding.ActivityLoginBinding;
+import com.example.moviefilm.film.cart.model.FilmBill;
 import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.film.home.detailFilm.viewmodel.DetailFilmViewModels;
+import com.example.moviefilm.film.user.bill.model.Wallet;
 import com.example.moviefilm.film.user.login.model.User;
 import com.example.moviefilm.film.user.login.viewmodels.LoginViewModels;
 import com.example.moviefilm.film.view.MainActivity;
@@ -43,8 +48,16 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -76,12 +89,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private String fromScreen = "";
     private DetailFilmViewModels detailFilmViewModels;
+    private FirebaseFirestore firebaseDB;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         detailFilmViewModels = ViewModelProviders.of(this).get(DetailFilmViewModels.class);
+        firebaseDB = FirebaseFirestore.getInstance();
+        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
+            MainActivity.setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+        }
+        if (Build.VERSION.SDK_INT >= 19) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        }
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            MainActivity.setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
+
         getData();
         observedLogin();
 
@@ -263,6 +290,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         bundle.putString(DetailFilmActivity.KEY_FROM,DetailFilmActivity.FROM_CART);
                         intent.putExtras(bundle);
                     }
+                    createMyWallet();
                     startActivity(intent);
                     finishAffinity();
                     Toast.makeText(getBaseContext(), "Welcome \n" + (firebaseUser.getDisplayName() == null ? "" : firebaseUser.getDisplayName()), Toast.LENGTH_SHORT).show();
@@ -297,6 +325,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             bundle.putString(DetailFilmActivity.KEY_FROM,DetailFilmActivity.FROM_CART);
             intent.putExtras(bundle);
         }
+        createMyWallet();
         startActivity(intent);
         finishAffinity();
     }
@@ -383,5 +412,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 setUpViewRegister();
             }
         });
+    }
+
+    private void createMyWallet() {
+        Map<String, Object> docData = new HashMap<>();
+        Wallet.WalletResult wallet = new Wallet.WalletResult();
+        wallet.setTotalMoney("100");
+        docData.put("Wallet", wallet);
+
+        DocumentReference documentReference = firebaseDB.collection("FilmWallet").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+             documentReference.get().addOnCompleteListener(task -> {
+                 if (task.isSuccessful()) {
+                     DocumentSnapshot document = task.getResult();
+                     if (document.exists()) {
+                         Log.d("TAG", "Document exists!");
+                     } else {
+                         documentReference.set(docData);
+                     }
+                 } else {
+                     Log.d("TAG", "Failed with: ", task.getException());
+                 }
+             });
     }
 }
