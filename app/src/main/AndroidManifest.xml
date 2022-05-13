@@ -18,14 +18,17 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
+            android:name=".admin.AdminActivity"
+            android:exported="false" />
+        <activity
             android:name=".film.watchfilmlocal.filmlocal.VideoLocalActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:supportsPictureInPicture="true"
             android:windowSoftInputMode="stateAlwaysHidden"
-            tools:targetApi="n"
-            android:excludeFromRecents="true"/>
+            tools:targetApi="n" />
         <!--
      Set custom default icon. This is used when no icon is set for incoming notification messages.
      See README(https://goo.gl/l4GJaQ) for more.
@@ -42,7 +45,7 @@
             android:resource="@color/color_D7201E1E" />
 
         <activity
-            android:name=".film.user.bill.view.BillActivity"
+            android:name=".film.bill.view.BillActivity"
             android:exported="false"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
@@ -59,7 +62,7 @@
             android:name=".film.user.view.HistoryFilmActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".film.home.detailFilm.watchfilm.view.WatchFilmActivity"
+            android:name=".film.detailFilm.watchfilm.view.WatchFilmActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
@@ -67,19 +70,19 @@
             android:windowSoftInputMode="stateAlwaysHidden"
             tools:targetApi="n" />
         <activity
-            android:name=".film.home.detailFilm.view.DetailFilmActivity"
+            android:name=".film.detailFilm.view.DetailFilmActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".film.view.MainActivity"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden" />
         <activity
-            android:name=".film.home.searchFilm.SearchFilmActivity"
+            android:name=".film.searchFilm.SearchFilmActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".film.home.allfilm.view.AllFilmActivity"
+            android:name=".film.allfilm.view.AllFilmActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".film.user.login.view.LoginActivity"
+            android:name=".film.login.view.LoginActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
         <meta-data

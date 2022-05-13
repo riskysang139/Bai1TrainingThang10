@@ -18,8 +18,7 @@ import com.bumptech.glide.Glide;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.example.moviefilm.R;
-import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
-import com.example.moviefilm.roomdb.cartdb.Cart;
+import com.example.moviefilm.film.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.roomdb.filmdb.Film;
 
 import java.util.List;

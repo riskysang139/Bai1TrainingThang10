@@ -23,8 +23,8 @@ import com.example.moviefilm.databinding.FragmentCartBinding;
 import com.example.moviefilm.film.cart.adapter.CartAdapter;
 import com.example.moviefilm.film.cart.model.FilmBill;
 import com.example.moviefilm.film.cart.viewmodels.CartViewModel;
-import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
-import com.example.moviefilm.film.user.login.view.LoginActivity;
+import com.example.moviefilm.film.detailFilm.view.DetailFilmActivity;
+import com.example.moviefilm.film.login.view.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -42,6 +42,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
     public static float totalPrice = 0;
     private FirebaseAuth firebaseAuth;
     private List<FilmBill.CartFB> filmListBuy;
+    private int myMoneyWallet = 0;
 
     public static CartFragment getInstance() {
         Bundle args = new Bundle();
@@ -57,6 +58,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
         cartViewModel = ViewModelProviders.of(this).get(CartViewModel.class);
         firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() != null) {
+            cartViewModel.fetchMyWallet();
             cartViewModel.fetchFilmCart();
             totalPrice = 0;
             keyFrom = getArguments().getString(DetailFilmActivity.KEY_FROM, "");
@@ -72,6 +74,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        observeFilmWallet();
         filmListBuy = new ArrayList<>();
         filmList = new ArrayList<>();
         binding.totalPayment.setSelected(true);
@@ -239,32 +242,54 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
         @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
         long unixTime = System.currentTimeMillis();
         if (binding.cbSlAll.isChecked()) {
-            cartViewModel.insertFilmBuy(filmList, totalPrice + "", timeStamp, unixTime + "");
-            cartViewModel.deleteAllFilmCart();
-            cartViewModel.fetchFilmCart();
-            binding.cbSlAll.setChecked(false);
-            filmList.clear();
-            filmListBuy.clear();
-            CartAdapter.numberChoice = 0;
-            totalPrice = 0;
-            binding.txtNoData.setVisibility(View.VISIBLE);
-            cartAdapter.notifyDataSetChanged();
+            if (myMoneyWallet > 0) {
+                cartViewModel.insertFilmBuy(filmList, totalPrice + "", timeStamp, unixTime + "");
+                cartViewModel.deleteAllFilmCart();
+                cartViewModel.fetchFilmCart();
+                binding.cbSlAll.setChecked(false);
+                filmList.clear();
+                filmListBuy.clear();
+                CartAdapter.numberChoice = 0;
+                totalPrice = 0;
+                binding.txtNoData.setVisibility(View.VISIBLE);
+                Toast.makeText(getContext(), "Buy Film SuccessFully !", Toast.LENGTH_LONG).show();
+                cartAdapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(getContext(), "Please top up to make the payment !", Toast.LENGTH_LONG).show();
+            }
         } else {
             if (filmListBuy.size() == 0)
                 Toast.makeText(getContext(), "Please Choose Film You Want To Buy !", Toast.LENGTH_LONG).show();
             else {
-                cartViewModel.insertFilmBuy(filmListBuy, totalPrice + " $", timeStamp, unixTime + "");
-                for (FilmBill.CartFB cart : filmListBuy)
-                    cartViewModel.deleteFilmCart(1, cart);
-                cartViewModel.fetchFilmCart();
-                cartAdapter.notifyDataSetChanged();
-                totalPrice = 0;
-                filmListBuy.clear();
-                CartAdapter.numberChoice = filmList.size();
+                if (myMoneyWallet > 0) {
+                    cartViewModel.insertFilmBuy(filmListBuy, totalPrice + " $", timeStamp, unixTime + "");
+                    for (FilmBill.CartFB cart : filmListBuy)
+                        cartViewModel.deleteFilmCart(1, cart);
+                    cartViewModel.fetchFilmCart();
+                    cartAdapter.notifyDataSetChanged();
+                    totalPrice = 0;
+                    filmListBuy.clear();
+                    CartAdapter.numberChoice = filmList.size();
+                    Toast.makeText(getContext(), "Buy Film SuccessFully !", Toast.LENGTH_LONG).show();
+                    cartAdapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(getContext(), "Please top up to make the payment !", Toast.LENGTH_LONG).show();
+                }
             }
         }
-        Toast.makeText(getContext(), "Buy Film SuccessFully !", Toast.LENGTH_LONG).show();
-        cartAdapter.notifyDataSetChanged();
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void observeFilmWallet() {
+        cartViewModel.getWalletResponseLiveData().observe(getActivity(), filmWallet -> {
+            if (filmWallet != null) {
+                try {
+                    myMoneyWallet = Integer.parseInt(filmWallet.getTotalMoney());
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 }

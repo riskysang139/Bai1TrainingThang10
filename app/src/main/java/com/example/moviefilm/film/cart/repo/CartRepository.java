@@ -3,12 +3,12 @@ package com.example.moviefilm.film.cart.repo;
 import android.app.Application;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 
 import com.example.moviefilm.film.cart.model.CartResult;
 import com.example.moviefilm.film.cart.model.FilmBill;
+import com.example.moviefilm.film.bill.model.Wallet;
 import com.example.moviefilm.roomdb.billdb.Bill;
 import com.example.moviefilm.roomdb.billdb.BillDao;
 import com.example.moviefilm.roomdb.billdb.BillDatabase;
@@ -18,21 +18,17 @@ import com.example.moviefilm.roomdb.cartdb.CartDatabase;
 import com.example.moviefilm.roomdb.filmdb.Film;
 import com.example.moviefilm.roomdb.filmdb.FilmDao;
 import com.example.moviefilm.roomdb.filmdb.FilmDatabase;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
@@ -51,6 +47,7 @@ public class CartRepository {
     private MutableLiveData<List<FilmBill.CartFB>> cartListResponseLiveData = new MutableLiveData<>();
     private FirebaseFirestore firebaseDB;
     private Application application;
+    private MutableLiveData<Wallet.WalletResult> walletResponseLiveData = new MutableLiveData<>();
 
     public CartRepository(Application application) {
         FilmDatabase filmDatabase = FilmDatabase.getInstance(application);
@@ -70,12 +67,7 @@ public class CartRepository {
 
     //Insert film
     public void insertBill(final Bill bill) {
-        Completable.fromAction(new Action() {
-            @Override
-            public void run() throws Exception {
-                billDao.insertBill(bill);
-            }
-        }).subscribeOn(Schedulers.io())
+        Completable.fromAction(() -> billDao.insertBill(bill)).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CompletableObserver() {
                     @Override
@@ -242,5 +234,39 @@ public class CartRepository {
 
         documentReference.update("Bill", FieldValue.arrayUnion(filmBill))
                 .addOnFailureListener(e -> documentReference.set(docData));
+    }
+
+    public void fetchMyWallet() {
+//        firebaseDB.collection("FilmWallet")
+//                .addSnapshotListener((value, error) -> {
+//                    if (value.getDocumentChanges() != null) {
+//                        for (DocumentChange doc : value.getDocumentChanges()) {
+//                            if (doc.getDocument().getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+//                                if (doc.getType() == DocumentChange.Type.ADDED) {
+//                                    Wallet wallet = doc.getDocument().toObject(Wallet.class);
+//                                    if (wallet.getWallet() != null) {
+//                                        walletResponseLiveData.postValue(wallet.getWallet());
+//                                        break;
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                });
+         firebaseDB.collection("FilmBill")
+                 .get()
+                 .addOnCompleteListener(task -> {
+                     if (task.isSuccessful()) {
+                         for (QueryDocumentSnapshot document : task.getResult()) {
+                             Log.d(TAG, document.getId() + " => " + document.getData());
+                         }
+                     } else {
+                         Log.d(TAG, "Error getting documents: ", task.getException());
+                     }
+                 });
+    }
+
+    public MutableLiveData<Wallet.WalletResult> getWalletResponseLiveData() {
+        return walletResponseLiveData;
     }
 }

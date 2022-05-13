@@ -27,7 +27,6 @@ public class FilmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Results> resultsList;
     private Context context;
     private OnClickListener onClickListener;
-    private static final DecimalFormat df = new DecimalFormat("0.0");
     private static final int VIEW_TYPE_SECTION = 1;
 
     public FilmAdapter(List<Results> resultsList, Context context, OnClickListener onClickListener) {
@@ -66,7 +65,7 @@ public class FilmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             Results results = resultsList.get(position);
             viewHolder.txtTitle.setText(results.getTitle());
             viewHolder.txtDate.setText(Converter.convertStringToDate(results.getReleaseDate()));
-            viewHolder.txtStar.setText(df.format(results.getVoteAverage() / 2));
+            viewHolder.txtStar.setText(Converter.df.format(results.getVoteAverage() / 2));
             Glide.with(context).load(MainActivity.HEADER_URL_IMAGE + results.getPosterPath()).into(viewHolder.imageView);
         }
     }

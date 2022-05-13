@@ -12,18 +12,14 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.moviefilm.base.FilmApi;
 import com.example.moviefilm.base.RetroClass;
-import com.example.moviefilm.film.home.detailFilm.models.DetailFilm;
+import com.example.moviefilm.film.detailFilm.models.DetailFilm;
 import com.example.moviefilm.film.watchfilmlocal.model.MediaFile;
-import com.example.moviefilm.roomdb.cartdb.CartDatabase;
-import com.example.moviefilm.roomdb.filmdb.FilmDatabase;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class WatchFilmLocalRepo {

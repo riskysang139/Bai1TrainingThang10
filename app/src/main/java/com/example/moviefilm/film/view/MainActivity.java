@@ -11,7 +11,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
@@ -21,10 +20,8 @@ import com.example.moviefilm.R;
 import com.example.moviefilm.base.customview.SearchActionBarView;
 import com.example.moviefilm.databinding.ActivityMainBinding;
 import com.example.moviefilm.film.viewpageradapter.ViewPagerAdapter;
-import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
-import com.example.moviefilm.film.home.searchFilm.SearchFilmViewModel;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.moviefilm.film.detailFilm.view.DetailFilmActivity;
+import com.example.moviefilm.film.searchFilm.SearchFilmViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -61,14 +58,13 @@ public class MainActivity extends AppCompatActivity {
         setUpViewpager();
         initData();
         FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w("TAG", "Fetching FCM registration token failed", task.getException());
-                            return;
-                        }
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w("TAG", "Fetching FCM registration token failed", task.getException());
+                        return;
                     }
+                    // Get new FCM registration token
+                    String token = task.getResult();
                 });
     }
 
@@ -146,4 +142,6 @@ public class MainActivity extends AppCompatActivity {
         }
         win.setAttributes(winParams);
     }
+
+
 }

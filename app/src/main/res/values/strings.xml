@@ -19,5 +19,6 @@
     <string name="fb_login_protocol_scheme">fb344120937612160</string>
     <string name="payment">Payment</string>
     <string name="completed">Completed</string>
+    <string name="revenue">The money was payment(%s - %s)</string>
 
 </resources>

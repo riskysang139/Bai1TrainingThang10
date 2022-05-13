@@ -19,9 +19,9 @@ import com.bumptech.glide.Glide;
 import com.example.moviefilm.R;
 import com.example.moviefilm.databinding.FragmentUserBinding;
 import com.example.moviefilm.film.cart.viewmodels.CartViewModel;
-import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
-import com.example.moviefilm.film.user.bill.view.BillActivity;
-import com.example.moviefilm.film.user.login.view.LoginActivity;
+import com.example.moviefilm.film.detailFilm.view.DetailFilmActivity;
+import com.example.moviefilm.film.bill.view.BillActivity;
+import com.example.moviefilm.film.login.view.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 

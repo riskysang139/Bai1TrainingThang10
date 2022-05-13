@@ -7,12 +7,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.moviefilm.film.home.detailFilm.models.DetailFilm;
+import com.example.moviefilm.film.detailFilm.models.DetailFilm;
 import com.example.moviefilm.film.watchfilmlocal.model.MediaFile;
 import com.example.moviefilm.film.watchfilmlocal.repo.WatchFilmLocalRepo;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class WatchFilmLocalViewModels extends AndroidViewModel {
     private WatchFilmLocalRepo watchFilmLocalRepo;

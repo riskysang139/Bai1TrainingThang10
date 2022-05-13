@@ -1,11 +1,8 @@
 package com.example.moviefilm.film.user.view;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -14,11 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.moviefilm.R;
 import com.example.moviefilm.databinding.FragmentCartBinding;
-import com.example.moviefilm.film.cart.adapter.CartAdapter;
 import com.example.moviefilm.film.cart.viewmodels.CartViewModel;
-import com.example.moviefilm.film.home.detailFilm.view.DetailFilmActivity;
-import com.example.moviefilm.film.view.MainActivity;
-import com.example.moviefilm.roomdb.cartdb.Cart;
+import com.example.moviefilm.film.detailFilm.view.DetailFilmActivity;
 import com.example.moviefilm.roomdb.filmdb.Film;
 import com.google.firebase.auth.FirebaseAuth;
 

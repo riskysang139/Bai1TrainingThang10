@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import com.example.moviefilm.film.cart.model.FilmBill;
 import com.example.moviefilm.film.cart.repo.CartRepository;
+import com.example.moviefilm.film.bill.model.Wallet;
 import com.example.moviefilm.roomdb.billdb.Bill;
 import com.example.moviefilm.roomdb.cartdb.Cart;
 import com.example.moviefilm.roomdb.filmdb.Film;
@@ -18,6 +19,7 @@ import io.reactivex.Flowable;
 public class CartViewModel extends AndroidViewModel {
     private CartRepository cartRepository;
     private MutableLiveData<List<FilmBill.CartFB>> cartListMutableLiveData;
+    private MutableLiveData<Wallet.WalletResult> walletResponseLiveData;
 
     public CartViewModel(@NonNull Application application) {
         super(application);
@@ -78,5 +80,16 @@ public class CartViewModel extends AndroidViewModel {
 
     public void insertFilmBuy(List<FilmBill.CartFB> cartFBList, String totalFilm, String timeStamp, String id) {
         cartRepository.insertFilmBillFirebase(cartFBList, totalFilm, timeStamp, id);
+    }
+
+    public void fetchMyWallet() {
+        cartRepository.fetchMyWallet();
+    }
+
+
+    public MutableLiveData<Wallet.WalletResult> getWalletResponseLiveData() {
+        if (walletResponseLiveData == null)
+            return cartRepository.getWalletResponseLiveData();
+        return walletResponseLiveData;
     }
 }

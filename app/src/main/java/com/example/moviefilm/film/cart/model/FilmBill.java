@@ -1,5 +1,7 @@
 package com.example.moviefilm.film.cart.model;
 
+import com.example.moviefilm.base.Converter;
+
 import java.util.List;
 
 public class FilmBill{
@@ -19,6 +21,10 @@ public class FilmBill{
 
     public String getDayBuy() {
         return dayBuy;
+    }
+
+    public String getDayBuyFormat() {
+        return Converter.convertDate(dayBuy);
     }
 
     public void setDayBuy(String dayBuy) {

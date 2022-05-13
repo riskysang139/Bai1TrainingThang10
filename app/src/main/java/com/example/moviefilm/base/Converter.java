@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.format.DateFormat;
 import android.util.TypedValue;
-import android.view.inputmethod.InputMethodManager;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -30,6 +29,7 @@ public class Converter {
     private static String y = "ÝỲỴýỳỵỶỸỷỹ";
     private static String d = "Đđ";
     public static final DecimalFormat df = new DecimalFormat("0.0");
+    public static SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
     /**
      * convert 1000 to 1.000đ
@@ -46,6 +46,11 @@ public class Converter {
             builder.append(formatter.format(value).replace(",", ".")).append("đ");
         } else builder.append(value).append("đ");
         return builder.toString();
+    }
+
+    public static String convertDateToString(Date date, String formatDate) {
+        SimpleDateFormat sdf = new SimpleDateFormat(formatDate, Locale.getDefault());
+        return sdf.format(date);
     }
 
     /**
@@ -159,6 +164,26 @@ public class Converter {
         return displayDate;
     }
 
+    public static String convertStringDate(String date) {
+        String displayDate = "";
+        try {
+            SimpleDateFormat spf = new SimpleDateFormat("dd/MM/yyyy");
+            Date newDate = null;
+            newDate = spf.parse(date);
+            spf = new SimpleDateFormat("dd/MM");
+            date = spf.format(newDate);
+            displayDate = date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } finally {
+            if (date == null || date.length() == 0)
+                displayDate = "01/01/2099";
+            else
+                displayDate = date;
+        }
+        return displayDate;
+    }
+
 
     public static String convertDate(String date) {
         String year = "";
@@ -197,5 +222,50 @@ public class Converter {
             date = "01/01/2099";
         }
         return date;
+    }
+
+    public static Date cvSDate(String startDate) {
+        Date date = null;
+        try {
+            date = format.parse(startDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            date = new Date();
+        }
+        return date;
+    }
+
+    public static Date cvSDateBefore(String startDate) {
+        Date date = null;
+        Date dateYesterday = null;
+        try {
+            date = format.parse(startDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.DAY_OF_MONTH, -1);
+            dateYesterday = calendar.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            date = new Date();
+            dateYesterday = new Date();
+        }
+        return dateYesterday;
+    }
+
+    public static Date cvSDateAfter(String startDate) {
+        Date date = null;
+        Date dateTomorrow = null;
+        try {
+            date = format.parse(startDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            dateTomorrow = calendar.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            date = new Date();
+            dateTomorrow = new Date();
+        }
+        return dateTomorrow;
     }
 }
