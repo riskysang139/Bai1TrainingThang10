@@ -6,28 +6,46 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.example.moviefilm.R;
+import com.example.moviefilm.admin.AdminActivity;
+import com.example.moviefilm.base.Converter;
 import com.example.moviefilm.databinding.ActivityBillBinding;
 import com.example.moviefilm.film.cart.model.FilmBill;
 import com.example.moviefilm.film.bill.adapter.BillAdapter;
 import com.example.moviefilm.film.bill.viewmodel.BillViewModel;
+import com.example.moviefilm.film.view.MainActivity;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 
-public class BillActivity extends AppCompatActivity {
+public class BillActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     ActivityBillBinding binding;
     private BillViewModel billViewModel;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private BillAdapter billAdapter;
     private List<FilmBill> billList;
+    private String dateFrom = "";
+    private String dateTo = "";
+    private Calendar calFrom;
+    private Calendar calTo;
+    private int typeDate; //0 dateStart, 1 dateEnd
+    private DatePickerDialog datePickerStart, datePickerEnd;
+    private List<FilmBill> turNoverFilterList = new ArrayList<>();
+    private List<FilmBill> turNoverList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +59,7 @@ public class BillActivity extends AppCompatActivity {
         observeFilmBill();
         observeFilmWallet();
         initView();
+        setUpDatePicker();
     }
 
     private void observeFilmBill() {
@@ -48,8 +67,8 @@ public class BillActivity extends AppCompatActivity {
             if (filmBills.size() > 0) {
                 binding.rcvBill.setVisibility(View.VISIBLE);
                 binding.txtNoData.setVisibility(View.GONE);
-                if (billAdapter != null)
-                    billAdapter.setBillList(filmBills);
+                filterTurnoverDefault(filmBills);
+                turNoverList = filmBills;
             } else {
                 binding.rcvBill.setVisibility(View.GONE);
                 binding.txtNoData.setVisibility(View.VISIBLE);
@@ -61,7 +80,7 @@ public class BillActivity extends AppCompatActivity {
     private void observeFilmWallet() {
         billViewModel.getWalletResponseLiveData().observe(this, filmWallet -> {
             if (filmWallet != null)
-                binding.txtMoney.setText(Long.parseLong(filmWallet.getTotalMoney()) + " $");
+                binding.txtMoney.setText(filmWallet.getTotalMoney() + " $");
         });
     }
 
@@ -73,6 +92,23 @@ public class BillActivity extends AppCompatActivity {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         binding.rcvBill.setLayoutManager(layoutManager);
         binding.rcvBill.setAdapter(billAdapter);
+
+        calFrom = Calendar.getInstance();
+        calFrom.add(Calendar.DATE, -30);
+        calTo = Calendar.getInstance();
+        dateFrom = Converter.convertDateToString(calFrom.getTime(), "dd/MM/yyyy");
+        dateTo = Converter.convertDateToString(calTo.getTime(), "dd/MM/yyyy");
+
+        datePickerStart = new DatePickerDialog(this, this,
+                calFrom.get(Calendar.YEAR), calFrom.get(Calendar.MONTH), calFrom.get(Calendar.DAY_OF_MONTH));
+        datePickerStart.getDatePicker().setMaxDate(new Date().getTime());
+
+        datePickerEnd = new DatePickerDialog(this, this,
+                calTo.get(Calendar.YEAR), calTo.get(Calendar.MONTH), calTo.get(Calendar.DAY_OF_MONTH));
+        datePickerEnd.getDatePicker().setMaxDate(new Date().getTime());
+
+        binding.txtDateFrom.setText(dateFrom);
+        binding.txtDateTo.setText(dateTo);
     }
 
     private void initView() {
@@ -81,5 +117,87 @@ public class BillActivity extends AppCompatActivity {
         binding.layoutScan.setOnClickListener(view -> Toast.makeText(getBaseContext(), "The feature will be update soon", Toast.LENGTH_SHORT).show());
         binding.layoutTopUp.setOnClickListener(view -> Toast.makeText(getBaseContext(), "The feature will be update soon", Toast.LENGTH_SHORT).show());
         binding.layoutTransfer.setOnClickListener(view -> Toast.makeText(getBaseContext(), "The feature will be update soon", Toast.LENGTH_SHORT).show());
+    }
+
+    private void setUpDatePicker() {
+        binding.txtDateFrom.setOnClickListener(view -> {
+            typeDate = 0;
+            datePickerStart.show();
+        });
+        binding.txtDateTo.setOnClickListener(view -> {
+            typeDate = 1;
+            datePickerEnd.show();
+        });
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+        if (typeDate != 0) {
+            calTo.set(year, monthOfYear, dayOfMonth);
+            dateTo = Converter.convertDateToString(calTo.getTime(), "dd/MM/yyyy");
+            if (calTo.before(calFrom)) {
+                calFrom.setTime(calTo.getTime());
+                dateFrom = Converter.convertDateToString(calFrom.getTime(), "dd/MM/yyyy");
+            }
+        } else {
+            calFrom.set(year, monthOfYear, dayOfMonth);
+            dateFrom = Converter.convertDateToString(calFrom.getTime(), "dd/MM/yyyy");
+            if (calFrom.after(calTo)) {
+                calTo.setTime(calFrom.getTime());
+                dateTo = Converter.convertDateToString(calTo.getTime(), "dd/MM/yyyy");
+            }
+        }
+        binding.txtDateFrom.setText(dateFrom);
+        binding.txtDateTo.setText(dateTo);
+        filterTurnover();
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void filterTurnover() {
+        if (turNoverList != null) {
+            turNoverFilterList.clear();
+            for (FilmBill filmBill : turNoverList) {
+                if (Converter.cvSDate(filmBill.getDayBuy()).before(Converter.cvSDateAfter(dateTo)) && (Converter.cvSDate(filmBill.getDayBuy()).after(Converter.cvSDateBefore(dateFrom)))) {
+                    turNoverFilterList.add(filmBill);
+                    Collections.sort(turNoverFilterList, (t1, t2) -> {
+                        if (Converter.cvSDate(t2.getDayBuy()).before(Converter.cvSDate(t1.getDayBuy())))
+                            return  1;
+                        else if (Converter.cvSDate(t2.getDayBuy()).after(Converter.cvSDate(t1.getDayBuy())))
+                            return -1;
+                        else
+                            return 0;
+                    });
+                }
+            }
+            if (billAdapter != null && turNoverFilterList != null && turNoverFilterList.size() > 0) {
+                binding.txtNoData.setVisibility(View.GONE);
+                billAdapter.setBillList(turNoverFilterList);
+            } else {
+                binding.txtNoData.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    private void filterTurnoverDefault(List<FilmBill> filmBills) {
+        turNoverFilterList.clear();
+        for (FilmBill filmBill : filmBills) {
+            if (Converter.cvSDate(filmBill.getDayBuy()).before(Converter.cvSDateAfter(dateTo)) && (Converter.cvSDate(filmBill.getDayBuy()).after(Converter.cvSDateBefore(dateFrom)))) {
+                turNoverFilterList.add(filmBill);
+                Collections.sort(turNoverFilterList, (t1, t2) -> {
+                    if (Converter.cvSDate(t2.getDayBuy()).before(Converter.cvSDate(t1.getDayBuy())))
+                        return  1;
+                    else if (Converter.cvSDate(t2.getDayBuy()).after(Converter.cvSDate(t1.getDayBuy())))
+                        return -1;
+                    else
+                        return 0;
+                });
+            }
+        }
+        if (billAdapter != null && turNoverFilterList != null && turNoverFilterList.size() > 0) {
+            binding.txtNoData.setVisibility(View.GONE);
+            billAdapter.setBillList(turNoverFilterList);
+        } else {
+            binding.txtNoData.setVisibility(View.VISIBLE);
+        }
     }
 }

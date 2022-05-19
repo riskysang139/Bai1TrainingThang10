@@ -5,10 +5,9 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
-
+import com.example.moviefilm.film.bill.model.Wallet;
 import com.example.moviefilm.film.cart.model.CartResult;
 import com.example.moviefilm.film.cart.model.FilmBill;
-import com.example.moviefilm.film.bill.model.Wallet;
 import com.example.moviefilm.roomdb.billdb.Bill;
 import com.example.moviefilm.roomdb.billdb.BillDao;
 import com.example.moviefilm.roomdb.billdb.BillDatabase;
@@ -23,7 +22,6 @@ import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,7 +87,7 @@ public class CartRepository {
 
     //Get all film watch
     public Flowable<List<Film>> getFilmWithWatched(int isWatched, String userId) {
-        return filmDao.getFilmWatched(isWatched, userId );
+        return filmDao.getFilmWatched(isWatched, userId);
     }
 
     //Get all film watch
@@ -237,33 +235,48 @@ public class CartRepository {
     }
 
     public void fetchMyWallet() {
-//        firebaseDB.collection("FilmWallet")
-//                .addSnapshotListener((value, error) -> {
-//                    if (value.getDocumentChanges() != null) {
-//                        for (DocumentChange doc : value.getDocumentChanges()) {
-//                            if (doc.getDocument().getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-//                                if (doc.getType() == DocumentChange.Type.ADDED) {
-//                                    Wallet wallet = doc.getDocument().toObject(Wallet.class);
-//                                    if (wallet.getWallet() != null) {
-//                                        walletResponseLiveData.postValue(wallet.getWallet());
-//                                        break;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                });
-         firebaseDB.collection("FilmBill")
-                 .get()
-                 .addOnCompleteListener(task -> {
-                     if (task.isSuccessful()) {
-                         for (QueryDocumentSnapshot document : task.getResult()) {
-                             Log.d(TAG, document.getId() + " => " + document.getData());
-                         }
-                     } else {
-                         Log.d(TAG, "Error getting documents: ", task.getException());
-                     }
-                 });
+        firebaseDB.collection("FilmWallet")
+                .addSnapshotListener((value, error) -> {
+                    if (value.getDocumentChanges() != null) {
+                        for (DocumentChange doc : value.getDocumentChanges()) {
+                            if (doc.getDocument().getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                                if (doc.getType() == DocumentChange.Type.ADDED) {
+                                    Wallet wallet = new Wallet();
+                                    try {
+                                        wallet = doc.getDocument().toObject(Wallet.class);
+                                    } catch (RuntimeException e) {
+                                    }
+                                    if (wallet.getWallet() != null) {
+                                        walletResponseLiveData.postValue(wallet.getWallet());
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+//         firebaseDB.collection("FilmBill")
+//                 .get()
+//                 .addOnCompleteListener(task -> {
+//                     if (task.isSuccessful()) {
+//                         for (QueryDocumentSnapshot document : task.getResult()) {
+//                             Log.d(TAG, document.getId() + " => " + document.getData());
+//                         }
+//                     } else {
+//                         Log.d(TAG, "Error getting documents: ", task.getException());
+//                     }
+//                 });
+    }
+
+    public void updateMyWallet(String myMoney) {
+        Map<String, Object> docData = new HashMap<>();
+
+        docData.put("totalMoney", myMoney);
+
+        DocumentReference documentReference = firebaseDB.collection("FilmWallet")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        documentReference.update("Wallet", docData);
     }
 
     public MutableLiveData<Wallet.WalletResult> getWalletResponseLiveData() {

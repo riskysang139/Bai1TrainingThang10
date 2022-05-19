@@ -113,6 +113,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
         });
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void setMenuVisibility(boolean menuVisible) {
         super.setMenuVisibility(menuVisible);
@@ -121,6 +122,11 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
             binding.layoutLogin.setVisibility(View.GONE);
         } else if (menuVisible && FirebaseAuth.getInstance().getCurrentUser() != null) {
             cartViewModel.fetchFilmCart();
+            binding.cbSlAll.setChecked(false);
+            totalPrice = 0;
+            CartAdapter.numberChoice = 0;
+            binding.totalPayment.setText("Total Payment : " + Converter.df.format(totalPrice) + " $");
+            binding.btnPayment.setText("Payment (" + 0 + ")");
         }
     }
 
@@ -237,15 +243,17 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+    @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
     private void paymentFilm() {
         @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
         long unixTime = System.currentTimeMillis();
         if (binding.cbSlAll.isChecked()) {
-            if (myMoneyWallet > 0) {
+            if (myMoneyWallet > 0 && myMoneyWallet > totalPrice) {
                 cartViewModel.insertFilmBuy(filmList, totalPrice + "", timeStamp, unixTime + "");
                 cartViewModel.deleteAllFilmCart();
+                cartViewModel.updateMyWallet((myMoneyWallet - totalPrice) + "");
                 cartViewModel.fetchFilmCart();
+                cartViewModel.fetchMyWallet();
                 binding.cbSlAll.setChecked(false);
                 filmList.clear();
                 filmListBuy.clear();
@@ -254,6 +262,8 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
                 binding.txtNoData.setVisibility(View.VISIBLE);
                 Toast.makeText(getContext(), "Buy Film SuccessFully !", Toast.LENGTH_LONG).show();
                 cartAdapter.notifyDataSetChanged();
+                binding.totalPayment.setText("Total Payment : " + Converter.df.format(totalPrice) + " $");
+                binding.btnPayment.setText("Payment (" + 0 + ")");
             } else {
                 Toast.makeText(getContext(), "Please top up to make the payment !", Toast.LENGTH_LONG).show();
             }
@@ -261,10 +271,12 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
             if (filmListBuy.size() == 0)
                 Toast.makeText(getContext(), "Please Choose Film You Want To Buy !", Toast.LENGTH_LONG).show();
             else {
-                if (myMoneyWallet > 0) {
+                if (myMoneyWallet > 0 && myMoneyWallet > totalPrice) {
                     cartViewModel.insertFilmBuy(filmListBuy, totalPrice + " $", timeStamp, unixTime + "");
                     for (FilmBill.CartFB cart : filmListBuy)
                         cartViewModel.deleteFilmCart(1, cart);
+                    cartViewModel.updateMyWallet((myMoneyWallet - totalPrice) + "");
+                    cartViewModel.fetchFilmCart();
                     cartViewModel.fetchFilmCart();
                     cartAdapter.notifyDataSetChanged();
                     totalPrice = 0;
@@ -272,6 +284,8 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
                     CartAdapter.numberChoice = filmList.size();
                     Toast.makeText(getContext(), "Buy Film SuccessFully !", Toast.LENGTH_LONG).show();
                     cartAdapter.notifyDataSetChanged();
+                    binding.totalPayment.setText("Total Payment : " + Converter.df.format(totalPrice) + " $");
+                    binding.btnPayment.setText("Payment (" + 0 + ")");
                 } else {
                     Toast.makeText(getContext(), "Please top up to make the payment !", Toast.LENGTH_LONG).show();
                 }

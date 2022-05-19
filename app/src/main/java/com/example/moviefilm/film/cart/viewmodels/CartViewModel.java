@@ -86,6 +86,10 @@ public class CartViewModel extends AndroidViewModel {
         cartRepository.fetchMyWallet();
     }
 
+    public void updateMyWallet(String myMoney) {
+        cartRepository.updateMyWallet(myMoney);
+    }
+
 
     public MutableLiveData<Wallet.WalletResult> getWalletResponseLiveData() {
         if (walletResponseLiveData == null)
