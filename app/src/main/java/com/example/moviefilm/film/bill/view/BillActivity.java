@@ -1,28 +1,24 @@
 package com.example.moviefilm.film.bill.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.example.moviefilm.R;
-import com.example.moviefilm.admin.AdminActivity;
 import com.example.moviefilm.base.Converter;
 import com.example.moviefilm.databinding.ActivityBillBinding;
-import com.example.moviefilm.film.cart.model.FilmBill;
 import com.example.moviefilm.film.bill.adapter.BillAdapter;
 import com.example.moviefilm.film.bill.viewmodel.BillViewModel;
-import com.example.moviefilm.film.view.MainActivity;
+import com.example.moviefilm.film.cart.model.FilmBill;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -161,7 +157,7 @@ public class BillActivity extends AppCompatActivity implements DatePickerDialog.
                     turNoverFilterList.add(filmBill);
                     Collections.sort(turNoverFilterList, (t1, t2) -> {
                         if (Converter.cvSDate(t2.getDayBuy()).before(Converter.cvSDate(t1.getDayBuy())))
-                            return  1;
+                            return 1;
                         else if (Converter.cvSDate(t2.getDayBuy()).after(Converter.cvSDate(t1.getDayBuy())))
                             return -1;
                         else
@@ -185,7 +181,7 @@ public class BillActivity extends AppCompatActivity implements DatePickerDialog.
                 turNoverFilterList.add(filmBill);
                 Collections.sort(turNoverFilterList, (t1, t2) -> {
                     if (Converter.cvSDate(t2.getDayBuy()).before(Converter.cvSDate(t1.getDayBuy())))
-                        return  1;
+                        return 1;
                     else if (Converter.cvSDate(t2.getDayBuy()).after(Converter.cvSDate(t1.getDayBuy())))
                         return -1;
                     else
