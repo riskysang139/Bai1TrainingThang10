@@ -100,7 +100,7 @@ public class FilmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             relativeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickListener.onClickNowDetailFilm(resultsList.get(getAdapterPosition()), getAdapterPosition());
+                    onClickListener.onClickNowDetailFilm(resultsList.get(getAbsoluteAdapterPosition()), getAbsoluteAdapterPosition());
                 }
             });
         }
@@ -123,7 +123,7 @@ public class FilmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             relativeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickListener.onClickNowDetailFilm(resultsList.get(getAdapterPosition()), getAdapterPosition());
+                    onClickListener.onClickNowDetailFilm(resultsList.get(getAbsoluteAdapterPosition()), getAbsoluteAdapterPosition());
                 }
             });
         }

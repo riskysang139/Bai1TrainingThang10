@@ -201,13 +201,13 @@ public class CartRepository {
         return cartListResponseLiveData;
     }
 
-    public void deleteFilmLoveFirebase(int position, FilmBill.CartFB cartFB) {
+    public void deleteFilmCartFirebase(int position, FilmBill.CartFB cartFB) {
         firebaseDB.collection("FilmCart")
                 .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .update("Cart", FieldValue.arrayRemove(cartFB));
     }
 
-    public void deleteAllFilmLoveFirebase() {
+    public void deleteAllFilmCartFirebase() {
         firebaseDB.collection("FilmCart")
                 .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .update("Cart", FieldValue.delete());

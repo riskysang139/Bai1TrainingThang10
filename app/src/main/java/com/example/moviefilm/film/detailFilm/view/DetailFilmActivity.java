@@ -117,11 +117,11 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_film);
+        getData();
         detailFilmViewModels = ViewModelProviders.of(this).get(DetailFilmViewModels.class);
-        observerVideoTrailerFilm();
+        observerDetailFilm();
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         initView();
-        getData();
         observerFilm();
         observerRecommendFilm();
         observeSimilarFilm();
@@ -215,10 +215,10 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
                 detailFilmViewModels.fetchDetailFilm(id, MainActivity.API_KEY);
             } else {
                 detailFilms = detailFilm;
-                setUpViewDetail();
+                setUpViewDetail(detailFilm);
                 insertFilm(detailFilm);
                 insertFilmToCart(detailFilm);
-                watchFilmLoad();
+                observerVideoTrailerFilm();
             }
         });
     }
@@ -227,17 +227,12 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
         detailFilmViewModels.fetchVideoTrailerFilm(id, MainActivity.API_KEY);
         detailFilmViewModels.getVideoFilmLiveData().observe(DetailFilmActivity.this, videoResponse -> {
             if (videoResponse != null && videoResponse.getResults().size() > 0) {
-                film_key = videoResponse.getResults().get(0).getKey();
+                watchFilm(videoResponse.getResults().get(0).getKey());
+                downloadVideo(VIDEO_LINK + videoResponse.getResults().get(0).getKey());
             } else {
                 Toast.makeText(getBaseContext(), "The movies is will be updated soon", Toast.LENGTH_LONG).show();
             }
-            observerDetailFilm();
         });
-    }
-
-    private void watchFilmLoad() {
-        watchFilm(film_key);
-        downloadVideo(VIDEO_LINK + film_key);
     }
 
     public void observeSimilarFilm() {
@@ -280,7 +275,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
     }
 
     @SuppressLint("SetTextI18n")
-    private void setUpViewDetail() {
+    private void setUpViewDetail(DetailFilm detailFilms) {
         if (detailFilms != null) {
             binding.layoutMain.setVisibility(View.VISIBLE);
             binding.rlDownload.setVisibility(View.VISIBLE);
@@ -304,12 +299,13 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
                 txtAdult.setVisibility(View.GONE);
             txtRelease.setText(Converter.convertDate(detailFilms.getReleaseDate()));
             binding.txtPrice.setText("Add to cart : " + detailFilms.getVoteAverage() * 2 + " $");
-            if (txtDetail.getLayout().getLineCount() <= 5) {
+            if (txtDetail.getLayout().getLineCount() <= 5 && !isReload) {
                 binding.txtExpanded.setVisibility(View.GONE);
                 isReload = true;
-            } else {
+            } else if (!isReload){
                 binding.txtExpanded.setVisibility(View.VISIBLE);
                 txtDetail.setMaxLines(5);
+                isReload = true;
             }
         } else {
             binding.layoutMain.setVisibility(View.GONE);
@@ -511,6 +507,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
                 if (firebaseAuth.getCurrentUser() != null)
                     detailFilmViewModels.fetchFilmCart();
                 binding.swipeRefreshLayout.setRefreshing(false);
+                binding.progressLoading.setVisibility(View.GONE);
             }, 1000);
         });
     }

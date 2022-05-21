@@ -71,11 +71,11 @@ public class CartViewModel extends AndroidViewModel {
     }
 
     public void deleteFilmCart(int position, FilmBill.CartFB cartFB) {
-        cartRepository.deleteFilmLoveFirebase(position, cartFB);
+        cartRepository.deleteFilmCartFirebase(position, cartFB);
     }
 
     public void deleteAllFilmCart() {
-        cartRepository.deleteAllFilmLoveFirebase();
+        cartRepository.deleteAllFilmCartFirebase();
     }
 
     public void insertFilmBuy(List<FilmBill.CartFB> cartFBList, String totalFilm, String timeStamp, String id) {
