@@ -202,13 +202,14 @@ public class HomeFragment extends Fragment implements OnClickListener {
 
     public void onRefresh() {
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
-            Handler handler = new Handler();
-            handler.postDelayed(() -> {
+            binding.progressLoading.setVisibility(View.VISIBLE);
+            new Handler().postDelayed(() -> {
                 filmViewModels.fetchPopularMovies(MainActivity.API_KEY, 1);
                 filmViewModels.fetchTopRateMovies(MainActivity.API_KEY, 1);
                 filmViewModels.fetchUpcomingMovies(MainActivity.API_KEY, 1);
                 filmViewModels.fetchMovieAdverb();
                 binding.swipeRefreshLayout.setRefreshing(false);
+                binding.progressLoading.setVisibility(View.GONE);
             }, 1000);
         });
     }

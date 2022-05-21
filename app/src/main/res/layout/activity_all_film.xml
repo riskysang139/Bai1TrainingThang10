@@ -40,25 +40,34 @@
                 android:textSize="@dimen/_22sdp" />
 
         </RelativeLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/all_film"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/header"
-            android:layout_centerInParent="true"
-            android:background="@color/main_color" />
-
-        <TextView
-            android:id="@+id/txt_no_data"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:fontFamily="@font/beau_sans_pro_bold"
-            android:text="No data"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:visibility="gone" />
+            android:layout_below="@id/header">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/all_film"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/main_color" />
+
+            <TextView
+                android:id="@+id/txt_no_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/beau_sans_pro_bold"
+                android:text="No data"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:visibility="gone" />
+
+            <com.example.moviefilm.base.LoadingDialog
+                android:id="@+id/progress_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone" />
+        </RelativeLayout>
     </RelativeLayout>
 
 </layout>

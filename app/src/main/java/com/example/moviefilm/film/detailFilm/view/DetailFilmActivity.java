@@ -38,14 +38,14 @@ import com.example.moviefilm.base.LoadingDialog;
 import com.example.moviefilm.base.OnClickListener;
 import com.example.moviefilm.base.customview.CircleAnimationUtil;
 import com.example.moviefilm.databinding.ActivityDetailFilmBinding;
-import com.example.moviefilm.film.cart.model.FilmBill;
-import com.example.moviefilm.film.home.adapter.FilmAdapter;
 import com.example.moviefilm.film.allfilm.view.AllFilmActivity;
+import com.example.moviefilm.film.cart.model.FilmBill;
 import com.example.moviefilm.film.detailFilm.adapter.CastAdapter;
 import com.example.moviefilm.film.detailFilm.models.Cast;
 import com.example.moviefilm.film.detailFilm.models.DetailFilm;
 import com.example.moviefilm.film.detailFilm.viewmodel.DetailFilmViewModels;
 import com.example.moviefilm.film.detailFilm.watchfilm.view.WatchFilmActivity;
+import com.example.moviefilm.film.home.adapter.FilmAdapter;
 import com.example.moviefilm.film.models.Results;
 import com.example.moviefilm.film.user.model.FilmLove;
 import com.example.moviefilm.film.view.MainActivity;
@@ -108,6 +108,8 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
     private boolean seeMore = true;
     private List<Cast> castListFB = new ArrayList<>();
     private Film filmDB;
+    private String film_key = "";
+    private boolean isReload = false;
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -116,16 +118,15 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_film);
         detailFilmViewModels = ViewModelProviders.of(this).get(DetailFilmViewModels.class);
+        observerVideoTrailerFilm();
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         initView();
         getData();
-        observerDetailFilm();
         observerFilm();
         observerRecommendFilm();
         observeSimilarFilm();
         observerCastFilm();
         observerCartList();
-        observerVideoTrailerFilm();
         onComeback();
         setUpReFilmAdapter();
         setUpSimFilmAdapter();
@@ -211,17 +212,13 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
         detailFilmViewModels.fetchDetailFilm(id, MainActivity.API_KEY);
         detailFilmViewModels.getDetailFilmLiveData().observe(this, detailFilm -> {
             if (detailFilm == null) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        detailFilmViewModels.fetchDetailFilm(id, MainActivity.API_KEY);
-                    }
-                }, 1000);
+                detailFilmViewModels.fetchDetailFilm(id, MainActivity.API_KEY);
             } else {
                 detailFilms = detailFilm;
                 setUpViewDetail();
                 insertFilm(detailFilm);
                 insertFilmToCart(detailFilm);
+                watchFilmLoad();
             }
         });
     }
@@ -230,12 +227,17 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
         detailFilmViewModels.fetchVideoTrailerFilm(id, MainActivity.API_KEY);
         detailFilmViewModels.getVideoFilmLiveData().observe(DetailFilmActivity.this, videoResponse -> {
             if (videoResponse != null && videoResponse.getResults().size() > 0) {
-                watchFilm(videoResponse.getResults().get(0).getKey());
-                downloadVideo(VIDEO_LINK + videoResponse.getResults().get(0).getKey());
+                film_key = videoResponse.getResults().get(0).getKey();
             } else {
                 Toast.makeText(getBaseContext(), "The movies is will be updated soon", Toast.LENGTH_LONG).show();
             }
+            observerDetailFilm();
         });
+    }
+
+    private void watchFilmLoad() {
+        watchFilm(film_key);
+        downloadVideo(VIDEO_LINK + film_key);
     }
 
     public void observeSimilarFilm() {
@@ -304,6 +306,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
             binding.txtPrice.setText("Add to cart : " + detailFilms.getVoteAverage() * 2 + " $");
             if (txtDetail.getLayout().getLineCount() <= 5) {
                 binding.txtExpanded.setVisibility(View.GONE);
+                isReload = true;
             } else {
                 binding.txtExpanded.setVisibility(View.VISIBLE);
                 txtDetail.setMaxLines(5);
@@ -497,10 +500,9 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
     }
 
     private void refreshLayout() {
-        Handler handler = new Handler();
-        binding.swipeRefreshLayout.setOnRefreshListener(() -> handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            binding.progressLoading.setVisibility(View.VISIBLE);
+            new Handler().postDelayed(() -> {
                 detailFilmViewModels.fetchDetailFilm(id, MainActivity.API_KEY);
                 detailFilmViewModels.fetchRecommendFilm(id, MainActivity.API_KEY);
                 detailFilmViewModels.fetchCastFilm(id, MainActivity.API_KEY);
@@ -509,8 +511,8 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
                 if (firebaseAuth.getCurrentUser() != null)
                     detailFilmViewModels.fetchFilmCart();
                 binding.swipeRefreshLayout.setRefreshing(false);
-            }
-        }, 1000));
+            }, 1000);
+        });
     }
 
     public void downloadVideo(String link) {
@@ -559,31 +561,27 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
         compositeDisposable.dispose();
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.detail_film:
             case R.id.txt_expanded:
                 if (detailFilms != null) {
-                    if ((detailFilms.getOverview() != null || detailFilms.getOverview().length() != 0) && txtDetail.getLineCount() >= 5) {
-                        binding.txtExpanded.setVisibility(View.VISIBLE);
-                        if (seeMore) {
-                            if (txtDetail.getLineCount() >= 5) {
-                                binding.titleExpand.setText("Collapse");
-                                binding.imgExpand.setImageResource(R.drawable.ic_arrown_up);
-                                txtDetail.setMaxLines(1000);
-                                seeMore = false;
-                            }
-                        } else {
-                            binding.titleExpand.setText("See more");
-                            binding.imgExpand.setImageResource(R.drawable.ic_arrown_down);
-                            txtDetail.setMaxLines(5);
-                            seeMore = true;
+                    if (seeMore) {
+                        if (txtDetail.getLineCount() >= 5) {
+                            binding.titleExpand.setText("Collapse");
+                            binding.imgExpand.setImageResource(R.drawable.ic_arrown_up);
+                            txtDetail.setMaxLines(1000);
+                            seeMore = false;
                         }
-                        break;
+                    } else {
+                        binding.titleExpand.setText("See more");
+                        binding.imgExpand.setImageResource(R.drawable.ic_arrown_down);
+                        txtDetail.setMaxLines(5);
+                        seeMore = true;
                     }
-                } else {
-                    binding.txtExpanded.setVisibility(View.GONE);
+                    break;
                 }
         }
     }

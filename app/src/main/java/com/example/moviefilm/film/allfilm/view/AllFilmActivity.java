@@ -3,7 +3,9 @@ package com.example.moviefilm.film.allfilm.view;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -189,6 +191,7 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
                     int currentTotalCount = layoutManager.getItemCount();
 
                     if (currentTotalCount <= lastItem + visibleThreshold) {
+                        binding.progressLoading.setVisibility(View.VISIBLE);
                         switch (fromScreen) {
                             case DetailFilmActivity.FROM_POPULAR:
                                 filmViewModels.fetchPopularMovies(MainActivity.API_KEY, page_);
@@ -207,6 +210,9 @@ public class AllFilmActivity extends AppCompatActivity implements OnClickListene
                                 break;
                         }
                         page_++;
+                        new Handler().postDelayed(() -> {
+                            binding.progressLoading.setVisibility(View.GONE);
+                        },1000);
                     }
                 }
             }

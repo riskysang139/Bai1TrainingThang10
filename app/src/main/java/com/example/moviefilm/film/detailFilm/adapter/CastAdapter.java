@@ -1,5 +1,6 @@
 package com.example.moviefilm.film.detailFilm.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,11 +39,15 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.ViewHolder> {
         return new ViewHolder(layoutInflater.inflate(R.layout.item_cast_film, parent, false));
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Cast cast = castList.get(position);
         holder.txtNameCast.setText(cast.getOriginalName());
-        Glide.with(context).load(MainActivity.HEADER_URL_IMAGE + cast.getProfilePath()).into(holder.imgCast);
+        if (cast.getProfilePath() == null || cast.getProfilePath().equals(""))
+            holder.imgCast.setImageResource(R.drawable.ic_profile_user);
+        else
+            Glide.with(context).load(MainActivity.HEADER_URL_IMAGE + cast.getProfilePath()).into(holder.imgCast);
     }
 
     @Override
