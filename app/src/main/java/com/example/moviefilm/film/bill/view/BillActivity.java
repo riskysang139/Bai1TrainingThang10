@@ -1,11 +1,21 @@
 package com.example.moviefilm.film.bill.view;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.text.InputType;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,12 +24,15 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.moviefilm.R;
+import com.example.moviefilm.base.CommonUtilis;
 import com.example.moviefilm.base.Converter;
 import com.example.moviefilm.databinding.ActivityBillBinding;
 import com.example.moviefilm.film.bill.adapter.BillAdapter;
 import com.example.moviefilm.film.bill.viewmodel.BillViewModel;
 import com.example.moviefilm.film.cart.model.FilmBill;
+import com.example.moviefilm.film.cart.viewmodels.CartViewModel;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -42,6 +55,7 @@ public class BillActivity extends AppCompatActivity implements DatePickerDialog.
     private DatePickerDialog datePickerStart, datePickerEnd;
     private List<FilmBill> turNoverFilterList = new ArrayList<>();
     private List<FilmBill> turNoverList = new ArrayList<>();
+    private float myWallet = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +89,14 @@ public class BillActivity extends AppCompatActivity implements DatePickerDialog.
     @SuppressLint("SetTextI18n")
     private void observeFilmWallet() {
         billViewModel.getWalletResponseLiveData().observe(this, filmWallet -> {
-            if (filmWallet != null)
+            if (filmWallet != null) {
+                try {
+                    myWallet = Float.parseFloat(filmWallet.getTotalMoney());
+                } catch (NumberFormatException e) {
+                    myWallet = 0;
+                }
                 binding.txtMoney.setText(filmWallet.getTotalMoney() + " $");
+            }
         });
     }
 
@@ -111,7 +131,7 @@ public class BillActivity extends AppCompatActivity implements DatePickerDialog.
         binding.btnBack.setOnClickListener(view -> finish());
         binding.layoutPayment.setOnClickListener(view -> Toast.makeText(getBaseContext(), "The feature will be update soon", Toast.LENGTH_SHORT).show());
         binding.layoutScan.setOnClickListener(view -> Toast.makeText(getBaseContext(), "The feature will be update soon", Toast.LENGTH_SHORT).show());
-        binding.layoutTopUp.setOnClickListener(view -> Toast.makeText(getBaseContext(), "The feature will be update soon", Toast.LENGTH_SHORT).show());
+        binding.layoutTopUp.setOnClickListener(view -> getPopUpDialog());
         binding.layoutTransfer.setOnClickListener(view -> Toast.makeText(getBaseContext(), "The feature will be update soon", Toast.LENGTH_SHORT).show());
     }
 
@@ -195,5 +215,27 @@ public class BillActivity extends AppCompatActivity implements DatePickerDialog.
         } else {
             binding.txtNoData.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void getPopUpDialog() {
+        EditText editText = new EditText(this);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        new AlertDialog.Builder(this)
+                .setIcon(R.drawable.logo_movie_app)
+                .setTitle("Top up your wallet")
+                .setView(editText)
+                .setPositiveButton("OK", (dialogInterface, i) -> {
+                    float moneyTopUp = 0;
+                    try {
+                        moneyTopUp = Float.parseFloat(editText.getText().toString());
+                    } catch (NumberFormatException e) {
+                        moneyTopUp = 0;
+                    }
+                    billViewModel.updateMyWallet(String.valueOf(moneyTopUp + myWallet));
+                    billViewModel.fetchMyWallet();
+
+                }).setNegativeButton("Cancel", (dialogInterface, i) -> {
+        }).show();
+        editText.requestFocus();
     }
 }

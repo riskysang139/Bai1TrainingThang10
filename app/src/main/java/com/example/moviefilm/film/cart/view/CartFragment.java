@@ -122,6 +122,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartClickLis
             binding.layoutNotLogin.setVisibility(View.VISIBLE);
             binding.layoutLogin.setVisibility(View.GONE);
         } else if (menuVisible && FirebaseAuth.getInstance().getCurrentUser() != null) {
+            cartViewModel.fetchMyWallet();
             cartViewModel.fetchFilmCart();
             binding.cbSlAll.setChecked(false);
             totalPrice = 0;

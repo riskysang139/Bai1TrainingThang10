@@ -55,4 +55,8 @@ public class BillViewModel extends AndroidViewModel {
             return billRepository.getWalletResponseLiveData();
         return walletResponseLiveData;
     }
+
+    public void updateMyWallet(String myMoney) {
+        billRepository.updateMyWallet(myMoney);
+    }
 }

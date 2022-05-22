@@ -13,10 +13,13 @@ import com.example.moviefilm.roomdb.billdb.BillDao;
 import com.example.moviefilm.roomdb.billdb.BillDatabase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
@@ -113,5 +116,16 @@ public class BillRepository {
 
     public MutableLiveData<Wallet.WalletResult> getWalletResponseLiveData() {
         return walletResponseLiveData;
+    }
+
+    public void updateMyWallet(String myMoney) {
+        Map<String, Object> docData = new HashMap<>();
+
+        docData.put("totalMoney", myMoney);
+
+        DocumentReference documentReference = firebaseDB.collection("FilmWallet")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        documentReference.update("Wallet", docData);
     }
 }
