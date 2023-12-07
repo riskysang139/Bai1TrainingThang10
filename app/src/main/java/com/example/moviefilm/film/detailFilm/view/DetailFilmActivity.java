@@ -543,7 +543,7 @@ public class DetailFilmActivity extends AppCompatActivity implements OnClickList
                                     downloadmanager.enqueue(request);
                                 }
                             }
-                        }.extract(link);
+                        }.extract(link, true, true);
                     }
                 } else
                     Toast.makeText(getBaseContext(), "Please wait a minute", Toast.LENGTH_SHORT).show();
